@@ -12,6 +12,7 @@ export class NewRequestComponent implements OnInit {
   imageSize: string = '1024x1024';
   nVariations: number = 1;
   isAccordionOpen = false;
+  translate: boolean = true;
   imageGenerationUuid: string = '';
   public imageUrls: string[] = [];
   public fullSizeImageUrl: SafeUrl | undefined;
@@ -82,7 +83,12 @@ export class NewRequestComponent implements OnInit {
 
   generate(): void {
     this.imageService
-      .createImageGeneration(this.prompt, this.imageSize, this.nVariations)
+      .createImageGeneration(
+        this.prompt,
+        this.imageSize,
+        this.nVariations,
+        this.translate
+      )
       .subscribe((response) => {
         this.imageGenerationUuid = response.uuid;
         const arrData = JSON.parse(response.images).images.data;
