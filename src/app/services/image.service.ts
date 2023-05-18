@@ -20,11 +20,12 @@ export class ImageService {
   createImageGeneration(
     prompt: string,
     size: string,
-    variations: number
+    variations: number,
+    translate: boolean
   ): Observable<any> {
     return this.http.post<any>(
       `${environment.apiUrl}/image/create-image-free`,
-      { prompt, size, variations },
+      { prompt, size, variations, translate },
       {
         headers: this.authService.headerSigned(),
       }

@@ -20,6 +20,11 @@ const Routing: Routes = [
       import('./image/image.module').then((m) => m.ImageModule),
   },
   {
+    path: 'contextual',
+    loadChildren: () =>
+      import('./contextual/contextual.module').then((m) => m.ContextualModule),
+  },
+  {
     path: 'account',
     loadChildren: () =>
       import('./account/account.module').then((m) => m.AccountModule),

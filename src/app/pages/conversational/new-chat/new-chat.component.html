@@ -8,14 +8,17 @@
           Selecione um dos modelos abaixo para iniciar uma nova conversa.
         </p>
 
-        <mat-form-field>
-          <mat-label>Modelo</mat-label>
-          <mat-select [(value)]="selectedModel">
-            <mat-option *ngFor="let model of models" [value]="model.uuid">
+        <div class="w-100">
+          <select
+            *ngIf="models$ | async as _models"
+            class="form-select h-60px w-400px fs-4 d-inline-block text-center"
+            [(value)]="selectedModel"
+          >
+            <option *ngFor="let model of _models" [value]="model.uuid">
               {{ model.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+            </option>
+          </select>
+        </div>
 
         <div class="mt-10">
           <button
