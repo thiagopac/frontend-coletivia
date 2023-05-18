@@ -1,0 +1,49 @@
+<ng-container *ngIf="user">
+  <div class="card mb-5 mb-xl-10">
+    <div class="card-header">
+      <div class="card-title m-0">
+        <h3 class="fw-bolder m-0">Dados do perfil</h3>
+      </div>
+
+      <a
+        routerLink="/account/settings"
+        class="btn btn-primary align-self-center"
+      >
+        Alterar dados
+      </a>
+    </div>
+
+    <div class="card-body p-9">
+      <div class="row mb-7">
+        <label class="col-lg-4 fw-bold text-muted">Nome completo</label>
+
+        <div class="col-lg-8">
+          <span class="fw-bolder fs-6 text-dark">{{
+            user | userFullnamePipe
+          }}</span>
+        </div>
+      </div>
+
+      <div class="row mb-7">
+        <label class="col-lg-4 fw-bold text-muted"> Telefone </label>
+
+        <div class="col-lg-8 d-flex align-items-center">
+          <span class="fw-bolder fs-6 me-2">{{ user?.info?.phone }}</span>
+
+          <!-- <span class="badge badge-success">Verificado</span> -->
+        </div>
+      </div>
+
+      <div class="row mb-7">
+        <label class="col-lg-4 fw-bold text-muted"> Localidade </label>
+
+        <div class="col-lg-8">
+          <span class="fw-bolder fs-6 text-dark"
+            >{{ user?.info?.city?.name }} -
+            {{ user?.info?.city?.state_letter }}</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

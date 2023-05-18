@@ -1,0 +1,31 @@
+<div class="px-2 py-5">
+  <div class="fs-5 text-dark fw-bolder">
+    <i class="las la-comments fs-2 text-dark me-2"></i>
+    Conversas
+  </div>
+</div>
+
+<div class="separator border-gray-200"></div>
+
+<div class="scroll-y">
+  <table class="table table-row-bordered">
+    <tbody>
+      <tr *ngFor="let chat of chats">
+        <td class="align-middle">
+          <div class="fw-bold text-hover-primary fs-6 px-5">
+            <span class="cursor-pointer" (click)="goToChat(chat.uuid)">
+              {{ chat.title }}
+            </span>
+          </div>
+        </td>
+        <!-- <td class="align-middle">
+          <button class="btn btn-icon btn-danger mx-2 btn-sm">
+            <i class="las la-trash fs-2"></i>
+          </button>
+        </td> -->
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="chats.length === 0">Você ainda não tem nenhuma conversa</div>

@@ -1,0 +1,121 @@
+/* You can add global styles to this file, and also import other style files */
+@import './assets/sass/style';
+
+// Replace above style with this SCSS file to enable dark mode styles
+//@import "./assets/sass/style.dark";
+
+@import './assets/sass/style.angular.scss';
+
+// @import "~@ng-select/ng-select/themes/default.theme.css";
+
+html,
+body {
+  height: 100%;
+}
+
+mat-table {
+  font-family: Poppins, Helvetica, 'sans-serif' !important;
+}
+
+mat-header-cell {
+  color: $gray-400 !important;
+  text-align: center !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  font-size: 0.95rem !important;
+  justify-content: center;
+  overflow: visible !important;
+  white-space: nowrap !important;
+}
+
+mat-row,
+mat-header-row,
+mat-footer-row {
+  display: flex !important;
+  border-width: 0 !important;
+  border-bottom-width: 1px !important;
+  border-style: dashed !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+  border-color: $gray-300 !important;
+  padding: 4px 0 !important;
+  text-align: center !important;
+}
+
+mat-cell {
+  display: flex;
+  text-align: center !important;
+  justify-content: center;
+}
+
+.table-filter {
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 10px 0;
+  gap: 10px;
+}
+
+.mat-dialog-title {
+  font-family: Poppins, Helvetica, 'sans-serif' !important;
+}
+
+mat-divider {
+  margin: 0px -24px 15px -24px !important;
+}
+
+mat-dialog-actions {
+  padding: 0 0 15px 0 !important;
+}
+
+button.close-button {
+  margin-top: -55px !important;
+}
+
+mat-select,
+mat-option,
+.mat-select-value {
+  font-family: Poppins, Helvetica, 'sans-serif' !important;
+  font-weight: 500 !important;
+  color: #5e6278 !important;
+}
+
+ng-select {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #181c32;
+  background-color: #ffffff;
+  background-clip: padding-box;
+  border: 1px solid #e4e6ef;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #f5f8fa;
+  border-color: #f5f8fa;
+  color: #5e6278;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  border-radius: 0.475rem;
+}
+
+.ng-dropdown-panel {
+  border-bottom-color: #e6e6e6;
+  border-radius: 0.5rem !important;
+  margin-bottom: -1px;
+  background-color: white !important;
+  border: 1px solid #ccc;
+  box-shadow: 0 1px 0 rgb(0 0 0 / 6%);
+  font-size: 14px !important;
+  font-family: Poppins, Helvetica, 'sans-serif' !important;
+  font-weight: 500 !important;
+  color: #5e6278 !important;
+  padding: 6px !important;
+  line-height: 28px !important;
+}
+
+.ng-select .ng-clear-wrapper {
+  top: 2px !important;
+}

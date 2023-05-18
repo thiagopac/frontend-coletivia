@@ -1,0 +1,10 @@
+//import variables from file _variables.custom.scss inside assets/sass/components in next line
+@import '/src/assets/sass/components/_variables.custom.scss';
+
+:host {
+  height: 100%;
+}
+
+.bg-blue {
+  background-color: $bg-blue;
+}

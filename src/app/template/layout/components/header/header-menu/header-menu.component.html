@@ -1,0 +1,156 @@
+<div
+  class="menu-item menu-lg-down-accordion me-lg-1"
+  data-kt-menu-trigger="click"
+  data-kt-menu-placement="bottom-start"
+>
+  <span
+    class="menu-link py-3"
+    routerLinkActive="active"
+    routerLink="/start"
+    [ngClass]="calculateMenuItemCssClass('/start')"
+  >
+    <i class="bi bi-house text-active-dark text-white fs-3 me-2"></i>
+    <span class="menu-title">Início</span>
+    <span class="menu-arrow d-lg-none"></span>
+  </span>
+</div>
+
+<div
+  class="menu-item menu-lg-down-accordion me-lg-1"
+  data-kt-menu-trigger="click"
+  data-kt-menu-placement="bottom-start"
+>
+  <span
+    class="menu-link py-3"
+    [ngClass]="calculateMenuItemCssClass('/conversational')"
+  >
+    <span class="menu-title">Conversacional</span>
+    <span class="menu-arrow d-lg-none"></span>
+  </span>
+  <div
+    class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-rounded-0 py-lg-4"
+    data-kt-menu-dismiss="true"
+  >
+    <div class="menu-item">
+      <div class="menu-content pb-2">
+        <span class="menu-section text-muted text-uppercase fs-7 fw-bold"
+          >Chat GPT</span
+        >
+      </div>
+    </div>
+
+    <div class="menu-item me-lg-1">
+      <a
+        class="menu-link py-3"
+        routerLinkActive="active"
+        routerLink="/conversational/new-chat"
+      >
+        <span class="menu-icon">
+          <i class="las la-comment fs-1"></i>
+        </span>
+        <span class="menu-title"> Iniciar nova conversa </span>
+      </a>
+    </div>
+
+    <div class="menu-item me-lg-1">
+      <a
+        class="menu-link py-3"
+        routerLinkActive="active"
+        routerLink="/conversational/chat-list"
+      >
+        <span class="menu-icon">
+          <i class="las la-comments fs-1"></i>
+        </span>
+        <span class="menu-title"> Minhas conversas </span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div
+  class="menu-item menu-lg-down-accordion me-lg-1"
+  data-kt-menu-trigger="click"
+  data-kt-menu-placement="bottom-start"
+>
+  <span class="menu-link py-3" [ngClass]="calculateMenuItemCssClass('/image')">
+    <span class="menu-title">Imagem</span>
+    <span class="menu-arrow d-lg-none"></span>
+  </span>
+  <div
+    class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-rounded-0 py-lg-4"
+    data-kt-menu-dismiss="true"
+  >
+    <div class="menu-item">
+      <div class="menu-content pb-2">
+        <span class="menu-section text-muted text-uppercase fs-7 fw-bold"
+          >DALL·E</span
+        >
+      </div>
+    </div>
+
+    <div class="menu-item me-lg-1">
+      <a
+        class="menu-link py-3"
+        routerLinkActive="active"
+        routerLink="/image/new-request"
+      >
+        <span class="menu-icon">
+          <i class="las la-file-image fs-1"></i>
+        </span>
+        <span class="menu-title"> Gerar imagem </span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div
+  class="menu-item menu-lg-down-accordion me-lg-1"
+  data-kt-menu-trigger="click"
+  data-kt-menu-placement="bottom-start"
+>
+  <span
+    class="menu-link py-3"
+    [ngClass]="calculateMenuItemCssClass('/context')"
+  >
+    <span class="menu-title">Perfis de contexto</span>
+    <span class="menu-arrow d-lg-none"></span>
+  </span>
+  <div
+    class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-rounded-0 py-lg-4"
+    data-kt-menu-dismiss="true"
+  >
+    <div class="menu-item">
+      <div class="menu-content pb-2">
+        <span class="menu-section text-muted text-uppercase fs-7 fw-bold"
+          >Conversões de texto</span
+        >
+      </div>
+    </div>
+
+    <div class="menu-item me-lg-1">
+      <a
+        class="menu-link py-3"
+        routerLinkActive="active"
+        routerLink="/context/informal-to-formal"
+      >
+        <span class="menu-icon">
+          <i class="las la-envelope-open-text fs-1"></i>
+        </span>
+        <span class="menu-title"> Informal para formal </span>
+      </a>
+    </div>
+
+    <div class="menu-item me-lg-1">
+      <a
+        class="menu-link py-3"
+        routerLinkActive="active"
+        routerLink="/context/legal-to-informal"
+      >
+        <span class="menu-icon">
+          <i class="lab la-black-tie fs-1"></i>
+        </span>
+        <span class="menu-title"> Jurídico para informal </span>
+      </a>
+    </div>
+  </div>
+</div>

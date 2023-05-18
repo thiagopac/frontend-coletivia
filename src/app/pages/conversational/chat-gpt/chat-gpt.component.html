@@ -1,0 +1,118 @@
+<div class="container" #messageContainer>
+  <div class="card mt-8">
+    <div class="card-header">
+      <div class="card-title">
+        <div
+          class="title-text"
+          #titleDiv
+          (click)="changeTitle(titleInput, titleDiv)"
+        >
+          <span [ngClass]="{ brilho: estadoAnimacao }" class="brilho">{{
+            chatTitle
+          }}</span>
+          <i class="fas fa-pencil fs-3 ms-3"></i>
+        </div>
+        <input
+          class="d-none w-100"
+          [size]="chatTitle.length * 1.3"
+          maxlength="100"
+          #titleInput
+          (blur)="changeTitleSubmit(titleInput, titleDiv)"
+          [value]="chatTitle"
+        />
+      </div>
+      <div class="card-toolbar">
+        <button
+          data-kt-menu-trigger="click"
+          data-kt-menu-placement="bottom-end"
+          data-kt-menu-flip="top-end"
+          class="btn btn-sm btn-bg-light btn-active-color-primary show menu-dropdown"
+        >
+          <i class="las la-comments fs-2"></i>
+          Minhas conversas
+        </button>
+        <app-dropdown-chatlist [chats]="chatList"></app-dropdown-chatlist>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="chat-content">
+        <!-- List -->
+        <div class="chat-list" (mouseleave)="mouseout()">
+          <ng-container *ngFor="let msg of messages; index as i">
+            <!-- User Block -->
+            <div class="chat-item" *ngIf="msg.role === 'user'">
+              <small class="fs-7 text-muted" style="font-style: italic"
+                >Você:</small
+              >
+              <div>{{ msg.content }}</div>
+            </div>
+            <!-- Bot Block -->
+            <div
+              class="chat-item bot"
+              (mouseover)="chatListHover(i)"
+              *ngIf="msg.role === 'assistant'"
+            >
+              <small class="fs-7 text-muted" style="font-style: italic"
+                >ChatGPT:</small
+              >
+              <markdown
+                ngPreserveWhitespaces
+                clipboard
+                [data]="msg.content"
+              ></markdown>
+            </div>
+          </ng-container>
+          <!-- Loading Block -->
+          <div *ngIf="genStart" class="chat-item bot loading">
+            <i class="bi bi-arrow-repeat"></i>
+          </div>
+          <!-- Error Block -->
+          <div *ngIf="haveError" class="chat-item bot error">
+            <i class="bi bi-x-circle-fill"></i>
+            <div>{{ errMessage }}</div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="chat-footer">
+          <div class="footer-bar d-flex">
+            <textarea
+              #textarea
+              class="chat-textarea"
+              name="chat"
+              [(ngModel)]="chatInput"
+              dTextarea
+              (input)="setTextareaHeight()"
+              (keydown)="preventEnter($event)"
+              (keyup)="enter($event)"
+              [disabled]="false"
+            ></textarea>
+            <button
+              class="btn btn-success"
+              (click)="startChat()"
+              [disabled]="false"
+            >
+              <i class="bi bi-send-fill fs-1"
+                ><span class="path1"></span><span class="path2"></span
+              ></i>
+            </button>
+          </div>
+        </div>
+        <div #placeholder class="footer-placeholder">
+          <!-- <button *ngIf="genPendding" (click)="stop()">Parar</button> -->
+
+          <!-- <button
+            *ngIf="
+              !genPendding &&
+              messages.length !== 0 &&
+              chatInputPersistent !== undefined
+            "
+            (click)="reGenerate()"
+          >
+            Recarregar
+          </button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,116 @@
+<div class="card card-flush mb-xxl-10">
+  <!--begin::Header-->
+  <div class="card-header pt-5">
+    <!--begin::Title-->
+    <h3 class="card-title align-items-start flex-column">
+      <span class="card-label fw-bold text-dark"
+        >Modelos de Inteligência Artificial</span
+      >
+
+      <span class="text-gray-400 mt-1 fw-semibold fs-6"
+        >Canais e serviços integrados e status de disponibilidade
+      </span>
+    </h3>
+    <!--end::Title-->
+  </div>
+  <!--end::Header-->
+
+  <!--begin::Body-->
+  <div class="card-body">
+    <!--begin::Nav-->
+    <ul class="nav nav-pills nav-pills-custom mb-3">
+      <!--begin::Item-->
+      <li
+        class="nav-item mb-3 me-3 me-lg-6 cursor-pointer"
+        *ngFor="let featureItem of featureList"
+        (click)="selectedFeature = featureItem"
+      >
+        <!--begin::Link-->
+        <a
+          class="nav-link d-flex justify-content-between flex-column flex-center overflow-hidden w-100px h-100px py-4"
+          [ngClass]="{ active: selectedFeature.name === featureItem.name }"
+        >
+          <!--begin::Icon-->
+          <div class="nav-icon">
+            <div
+              alt=""
+              [inlineSVG]="featureItem.icon"
+              class="svg-icon svg-icon-3x mb-2"
+            ></div>
+          </div>
+          <!--end::Icon-->
+
+          <!--begin::Subtitle-->
+          <span class="nav-text text-gray-700 fw-bold fs-7s">
+            {{ featureItem.name }}
+          </span>
+          <!--end::Subtitle-->
+
+          <!--begin::Bullet-->
+          <span
+            class="bullet-custom position-absolute bottom-0 w-100 h-4px bg-primary"
+          ></span>
+          <!--end::Bullet-->
+        </a>
+        <!--end::Link-->
+      </li>
+      <!--end::Item-->
+    </ul>
+    <!--end::Nav-->
+
+    <!--begin::Tab Content-->
+    <div class="tab-content">
+      <!--begin::Tap pane-->
+      <div class="tab-pane fade active show">
+        <!--begin::Table container-->
+        <div class="table-responsive">
+          <!--begin::Table-->
+          <table class="table align-middle gs-0 gy-4 my-0">
+            <!--begin::Table head-->
+            <thead>
+              <tr class="fs-7 fw-bold text-gray-500">
+                <th class="p-0 min-w-150px d-block pt-3">MODELO</th>
+                <th class="text-end min-w-140px pt-3">DISPONIBILIDADE</th>
+              </tr>
+            </thead>
+            <!--end::Table head-->
+
+            <!--begin::Table body-->
+            <tbody>
+              <tr *ngFor="let featureProfileItem of selectedFeature.profiles">
+                <td>
+                  <span
+                    class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6"
+                    >{{ featureProfileItem.name }}</span
+                  >
+                </td>
+
+                <td class="text-end">
+                  <div
+                    class="badge fs-7 fw-bold text-uppercase w-100px d-inline-block"
+                    [ngClass]="{
+                      'badge-light-success':
+                        featureProfileItem.availability === 'Disponível',
+                      'badge-light-danger':
+                        featureProfileItem.availability === 'Indisponível',
+                      'badge-light-warning':
+                        featureProfileItem.availability === 'Em breve'
+                    }"
+                  >
+                    <span>{{ featureProfileItem.availability }}</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+            <!--end::Table body-->
+          </table>
+          <!--end::Table-->
+        </div>
+        <!--end::Table container-->
+      </div>
+      <!--end::Tap pane-->
+    </div>
+    <!--end::Tab Content-->
+  </div>
+  <!--end: Card Body-->
+</div>
