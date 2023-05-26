@@ -18,7 +18,7 @@ export class ChatListComponent implements OnInit {
   }
 
   getChatList(): void {
-    this.chats$ = this.chatService.getChatList();
+    this.chats$ = this.chatService.getChatListForType('free-chat');
   }
 
   goToChat(chatUuid: string): void {

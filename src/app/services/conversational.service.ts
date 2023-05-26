@@ -21,17 +21,13 @@ export class ConversationalService {
     this.stop$.next();
   }
 
-  chat(chatUuid: string, prompt: string) {
+  chatMessage(chatUuid: string, prompt: string) {
     const body: any = { chat: chatUuid, prompt: prompt };
 
     return this.http
-      .post<ChatResponse>(
-        `${environment.apiUrl}/generative-text/fake-stream`,
-        body,
-        {
-          headers: this.authService.headerSigned(),
-        }
-      )
+      .post<any>(`${environment.apiUrl}/chat/send-messages-single`, body, {
+        headers: this.authService.headerSigned(),
+      })
       .pipe(
         throttleTime(1000),
         catchError((err) => {

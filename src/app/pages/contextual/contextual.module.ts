@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { InformalToFormalComponent } from './informal-to-formal/informal-to-formal.component';
 import { LegalToInformalComponent } from './legal-to-informal/legal-to-informal.component';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
   declarations: [InformalToFormalComponent, LegalToInformalComponent],
@@ -18,6 +20,8 @@ import { RouterModule } from '@angular/router';
         component: LegalToInformalComponent,
       },
     ]),
+    FormsModule,
+    MarkdownModule.forChild(),
   ],
 })
 export class ContextualModule {}

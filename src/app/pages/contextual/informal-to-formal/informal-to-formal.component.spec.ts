@@ -8,9 +8,8 @@ describe('InformalToFormalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InformalToFormalComponent ]
-    })
-    .compileComponents();
+      declarations: [InformalToFormalComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(InformalToFormalComponent);
     component = fixture.componentInstance;

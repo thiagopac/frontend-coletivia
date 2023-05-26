@@ -11,8 +11,8 @@ import { ChatMessagesResponse } from 'src/app/models/chat-messages-response';
 export class ChatService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  getChatList(): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/chat/list`, {
+  getChatListForType(type: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/chat/list/${type}`, {
       headers: this.authService.headerSigned(),
     });
   }
