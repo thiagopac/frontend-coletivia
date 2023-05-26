@@ -81,7 +81,6 @@
               class="chat-textarea"
               name="chat"
               [(ngModel)]="chatInput"
-              dTextarea
               (input)="setTextareaHeight()"
               (keydown)="preventEnter($event)"
               (keyup)="enter($event)"

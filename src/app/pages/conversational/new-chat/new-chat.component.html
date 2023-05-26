@@ -11,8 +11,8 @@
         <div class="w-100">
           <select
             *ngIf="models$ | async as _models"
+            [(ngModel)]="selectedModel"
             class="form-select h-60px w-400px fs-4 d-inline-block text-center"
-            [(value)]="selectedModel"
           >
             <option *ngFor="let model of _models" [value]="model.uuid">
               {{ model.name }}

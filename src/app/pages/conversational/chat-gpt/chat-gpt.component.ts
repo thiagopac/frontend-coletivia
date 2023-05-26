@@ -19,7 +19,6 @@ import {
   animate,
   transition,
 } from '@angular/animations';
-import { MarkdownService } from 'ngx-markdown';
 
 @Component({
   selector: 'app-chat-gpt',
@@ -66,8 +65,7 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
     private conversationalService: ConversationalService,
     private chatService: ChatService,
     private changeDetectorRef: ChangeDetectorRef,
-    private activatedRoute: ActivatedRoute,
-    private markdownService: MarkdownService
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -75,8 +73,6 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
       this.chatUuid = params.get('uuid')!;
       this.loadChatResources(this.chatUuid);
     });
-
-    // this.markdownService
   }
 
   loadChatResources(chatUuid: string) {
@@ -86,7 +82,7 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
       this.changeDetectorRef.detectChanges();
     });
 
-    this.chatService.getChatList().subscribe((res) => {
+    this.chatService.getChatListForType('free-chat').subscribe((res) => {
       this.chatList = res;
     });
   }
@@ -137,7 +133,7 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   chat(prompt: string) {
-    this.conversationalService.chat(this.chatUuid, prompt).subscribe({
+    this.conversationalService.chatMessage(this.chatUuid, prompt).subscribe({
       next: (res: any) => {
         this.genStart = false;
         this.genPendding = false;

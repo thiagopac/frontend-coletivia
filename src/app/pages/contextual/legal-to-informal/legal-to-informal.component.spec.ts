@@ -8,9 +8,8 @@ describe('LegalToInformalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LegalToInformalComponent ]
-    })
-    .compileComponents();
+      declarations: [LegalToInformalComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LegalToInformalComponent);
     component = fixture.componentInstance;
