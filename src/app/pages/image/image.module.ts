@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NewRequestComponent } from './new-request/new-request.component';
 import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
@@ -17,7 +16,6 @@ import { MatInputModule } from '@angular/material/input';
       },
     ]),
     FormsModule,
-    MatFormFieldModule,
     MatInputModule,
   ],
 })

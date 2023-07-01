@@ -8,33 +8,23 @@ import { ChatMessagesResponse } from 'src/app/models/chat-messages-response';
 @Injectable({
   providedIn: 'root',
 })
-export class ImageService {
+export class ContextualService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  getImageGenerationList(): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/image/list`, {
-      headers: this.authService.headerSigned(),
-    });
-  }
-
-  createImageGeneration(
-    prompt: string,
-    size: string,
-    variations: number,
-    translate: boolean
-  ): Observable<any> {
+  createChatInformalToFormal(modelUuid: string): Observable<any> {
     return this.http.post<any>(
-      `${environment.apiUrl}/image/create-image-free`,
-      { prompt, size, variations, translate },
+      `${environment.apiUrl}/chat/create-chat-informal-to-formal`,
+      { model: modelUuid },
       {
         headers: this.authService.headerSigned(),
       }
     );
   }
 
-  deleteImageGeneration(imageGenerationUuid: string): Observable<any> {
-    return this.http.delete<any>(
-      `${environment.apiUrl}/image/${imageGenerationUuid}/delete`,
+  createChatLegalToInformal(modelUuid: string): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}/chat/create-chat-legal-to-informal`,
+      { model: modelUuid },
       {
         headers: this.authService.headerSigned(),
       }

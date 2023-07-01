@@ -1,0 +1,75 @@
+image: docker:19.03.12
+stages:
+  - build
+  - deploy
+
+services:
+  - docker:19.03.12-dind
+
+before_script:
+  - docker info
+  
+variables:
+    IMAGE_NAME: "registry.gitlab.com/thiagopac/frontend-coletivia"
+
+build-master:
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build --build-arg ENV_FLAG=production -t $IMAGE_NAME .
+    - docker push $IMAGE_NAME
+    - docker system prune -af
+  only:
+    - main
+  tags:
+    - docker
+    - aws
+    - metropole
+
+# deploy-master:
+#    stage: deploy
+#    image: alpine:latest
+#    before_script:
+#      - apk update && apk add openssh-client 
+#      - eval $(ssh-agent -s)
+#      - echo "$SSH_PRIVATE_KEY_PROD" | tr -d '\r' | ssh-add -
+#      - mkdir -p ~/.ssh
+#      - chmod 700 ~/.ssh
+#      - ssh-keyscan $SERVER_PROD >> ~/.ssh/known_hosts
+#      - chmod 644 ~/.ssh/known_hosts
+#    script:
+#      -  ssh -t ubuntu@$SERVER_PROD  "docker pull $IMAGE_NAME && docker stack deploy --prune --with-registry-auth --resolve-image always -c manifests/docker-compose.yml smk && docker system prune -af"
+#    only:
+#      - main
+
+build:
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build --build-arg ENV_FLAG=stage -t $IMAGE_NAME/homologacao .
+    - docker push $IMAGE_NAME/homologacao
+    - docker system prune -af
+  only:
+    - staging  
+
+# deploy:
+#   stage: deploy
+#   image: alpine:latest
+#   before_script:
+#      - apk update && apk add openssh-client 
+#      - eval $(ssh-agent -s)
+#      - echo "$SSH_PRIVATE_KEY_HML" | tr -d '\r' | ssh-add -
+#      - mkdir -p ~/.ssh
+#      - chmod 700 ~/.ssh
+#      - ssh-keyscan $SERVER_HOMOLOG >> ~/.ssh/known_hosts
+#      - chmod 644 ~/.ssh/known_hosts
+#   script:
+#      -  ssh -t ubuntu@$SERVER_HOMOLOG  "docker pull $IMAGE_NAME/homologacao && docker stack deploy --prune --with-registry-auth --resolve-image always -c docker-compose.yml smk && docker system prune -af"
+#   only: 
+#      - staging

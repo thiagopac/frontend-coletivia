@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ChatService } from 'src/app/services/chat.service';
@@ -11,19 +11,14 @@ import { ChatService } from 'src/app/services/chat.service';
 export class ChatListComponent implements OnInit {
   chats$: Observable<any[]>;
 
-  constructor(
-    private router: Router,
-    private chatService: ChatService,
-    private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  constructor(private router: Router, private chatService: ChatService) {}
 
   ngOnInit(): void {
     this.getChatList();
   }
 
   getChatList(): void {
-    this.chats$ = this.chatService.getChatList();
-    this.changeDetectorRef.detectChanges();
+    this.chats$ = this.chatService.getChatListForType('free-chat');
   }
 
   goToChat(chatUuid: string): void {
