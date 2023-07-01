@@ -2,6 +2,7 @@ import { ChatService } from 'src/app/services/chat.service';
 import { Component, OnInit } from '@angular/core';
 import { ModelService } from 'src/app/services/model.service';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-new-chat',
@@ -9,7 +10,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./new-chat.component.scss'],
 })
 export class NewChatComponent implements OnInit {
-  models: any[] = [];
+  models$: Observable<any[]>;
   selectedModel: any = undefined;
 
   constructor(
@@ -19,9 +20,7 @@ export class NewChatComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.modelService.getChatModelListForType('text').subscribe((res) => {
-      this.models = res;
-    });
+    this.models$ = this.modelService.getChatModelListForType('text');
   }
 
   createChat(): void {
