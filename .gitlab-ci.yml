@@ -24,10 +24,6 @@ build-master:
     - docker system prune -af
   only:
     - main
-  tags:
-    - docker
-    - aws
-    - metropole
 
 # deploy-master:
 #    stage: deploy
@@ -56,8 +52,7 @@ build:
     - docker push $IMAGE_NAME/homologacao
     - docker system prune -af
   only:
-    - staging  
-
+    - staging
 # deploy:
 #   stage: deploy
 #   image: alpine:latest

@@ -17,6 +17,6 @@ ARG ENV_NGINX
 ENV ENV_NGINX=${ENV_NGINX:-nginx.conf}
 
 COPY ${ENV_NGINX} /etc/nginx/nginx.conf
-COPY --from=build /usr/src/app/dist /usr/share/nginx/html
+COPY --from=build /usr/src/app/dist/frontend-coletivia /usr/share/nginx/html
 
 WORKDIR /usr/share/nginx/html
