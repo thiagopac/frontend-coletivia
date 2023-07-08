@@ -65,6 +65,6 @@ deploy:
      - ssh-keyscan $SERVER_HOMOLOG >> ~/.ssh/known_hosts
      - chmod 644 ~/.ssh/known_hosts
   script:
-     -  ssh -t ubuntu@$SERVER_HOMOLOG  "docker pull $IMAGE_NAME/homologacao && docker stack deploy --prune --with-registry-auth --resolve-image always -c docker-compose.yml smk && docker system prune -af"
+     -  ssh -t ubuntu@$SERVER_HOMOLOG  "docker pull $IMAGE_NAME/homologacao && docker compose -f /home/ubuntu/manifests/coletivia.docker-compose.yml up -d && docker system prune -af"
   only: 
      - staging
