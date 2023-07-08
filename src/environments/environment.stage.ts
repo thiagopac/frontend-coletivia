@@ -4,7 +4,7 @@ export const environment = {
     adminAuthDataKey: 'admin-auth-6cd1acfe5d67',
     adminUserDataKey: 'admin-user-d4c4d6a1473f',
     userDataKey: 'auth-f649fc9a5f55',
-    hostUrl: 'http://localhost:4200',
-    apiUrl: 'http://localhost:3333/api',
+    hostUrl: 'https://frontend-hml.coletivia.crossworkti.com.br',
+    apiUrl: 'https://backend-hml.coletivia.crossworkti.com.br/api',
   };
   
