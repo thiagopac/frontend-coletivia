@@ -94,12 +94,57 @@
             </mat-error>
           </div>
         </div>
+        <div class="row mb-6">
+          <label class="col-lg-4 col-form-label fw-bold fs-6"
+            ><span class="required">Tipo de cadastro e Documento</span></label
+          >
+          <div class="col-md-4 fv-row">
+            <ng-select
+              [items]="[
+                { id: 'PF', name: 'Pessoa Física' },
+                { id: 'PJ', name: 'Pessoa Jurídica' }
+              ]"
+              bindLabel="name"
+              bindValue="id"
+              formControlName="registration_type"
+              (ngModelChange)="updateMask()"
+            >
+            </ng-select>
+            <mat-error
+              *ngIf="
+                fg.get('registration_type')?.errors?.required &&
+                fg.get('registration_type')?.dirty
+              "
+            >
+              Campo obrigatório
+            </mat-error>
+          </div>
+          <div class="col-md-4 fv-row">
+            <input
+              type="cpf_cnpj"
+              class="form-control form-control-solid"
+              placeholder="Ex: 000.000.000-00"
+              formControlName="cpf_cnpj"
+              mat-input
+              [mask]="cpfCnpjMask"
+              [showMaskTyped]="true"
+            />
+            <mat-error
+              *ngIf="
+                fg.get('cpf_cnpj')?.errors?.required &&
+                fg.get('cpf_cnpj')?.dirty
+              "
+            >
+              Campo obrigatório
+            </mat-error>
+          </div>
+        </div>
       </div>
       <div class="card-footer d-flex justify-content-end py-6 px-9">
         <button
           type="button"
           class="btn btn-primary"
-          [disabled]="isLoading"
+          [disabled]="isLoading || !fg.valid"
           (click)="saveSettings()"
         >
           <ng-container *ngIf="!isLoading">Salvar alterações</ng-container>

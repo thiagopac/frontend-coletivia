@@ -25,6 +25,8 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
   states$: Observable<State[]>;
   cities$: Observable<City[]>;
 
+  public cpfCnpjMask = '000.000.000-00';
+
   constructor(
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder,
@@ -62,7 +64,11 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
       phone: [null, [Validators.required]],
       state_id: [null, [Validators.required]],
       city_id: [null, [Validators.required]],
+      registration_type: [null, [Validators.required]],
+      cpf_cnpj: [null, [Validators.required]],
     });
+
+    this.updateMask();
   }
 
   selectedState(event: any) {
@@ -83,6 +89,15 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
     });
 
     this.unsubscribe.push(this.sub);
+  }
+
+  public updateMask(): void {
+    const registrationType = this.fg.get('registration_type')!.value;
+    if (registrationType === 'PF') {
+      this.cpfCnpjMask = '000.000.000-00';
+    } else if (registrationType === 'PJ') {
+      this.cpfCnpjMask = '00.000.000/0000.00';
+    }
   }
 
   ngOnDestroy() {

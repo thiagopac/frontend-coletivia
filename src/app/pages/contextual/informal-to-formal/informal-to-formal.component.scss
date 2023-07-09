@@ -32,53 +32,6 @@
   font-style: italic;
 }
 
-.custom-select-wrapper {
-  position: relative;
-  display: flex;
-  align-items: stretch;
-}
-
-.custom-select-wrapper .select-size {
-  width: 120px;
-}
-
-.custom-select-wrapper .select-nvariations {
-  width: 60px;
-}
-
-.custom-select {
-  flex: 1;
-  min-width: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  border-radius: 0;
-}
-
-.custom-select-arrow {
-  position: absolute;
-  top: 50%;
-  right: 8px;
-  transform: translateY(-50%);
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 5px 4px 0 4px;
-  border-color: #aaa transparent transparent transparent;
-  pointer-events: none;
-}
-
-.select-models {
-  border-top-left-radius: 0.475rem;
-  border-bottom-left-radius: 0.475rem;
-}
-
 .btn-transcript {
-  border-radius: 0 6px 6px 0 !important;
-}
-
-select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: none;
+  border-radius: 6px;
 }

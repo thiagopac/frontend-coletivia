@@ -35,6 +35,16 @@
       </div>
 
       <div class="row mb-7">
+        <label class="col-lg-4 fw-bold text-muted">Documento</label>
+
+        <div class="col-lg-8">
+          <span class="fw-bolder fs-6 text-dark">{{
+            user?.info?.cpf_cnpj | cpfCnpjPipe
+          }}</span>
+        </div>
+      </div>
+
+      <div class="row mb-7">
         <label class="col-lg-4 fw-bold text-muted"> Localidade </label>
 
         <div class="col-lg-8">

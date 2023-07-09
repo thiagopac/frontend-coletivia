@@ -1,0 +1,92 @@
+<div class="wrapper">
+  <div class="card border-0 p-5">
+    <div class="card-header border-0">
+      <div class="card-title"></div>
+      <div class="card-toolbar">
+        <button
+          class="btn btn-bg-light btn-active-color-primary"
+          (click)="toggleContent()"
+        >
+          <i class="las la-image fs-1"></i>
+          Ver opções de imagens geradas
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div [ngStyle]="getContentStyles()" class="content">
+        <ng-container>
+          <p class="fs-3 text-dark text-uppercase fw-bolder">Opções geradas</p>
+          <p class="fs-6 text-muted revert text-uppercase">
+            Clique no botão <strong>GERAR ALTA RESOLUÇÃO</strong> para criar uma
+            versão individual em alta resolução da imagem que desejar
+          </p>
+
+          <div class="row">
+            <div class="col-md-12 mb-4">
+              <div
+                class="card position-relative my-15"
+                *ngFor="
+                  let image of instagramPost?.midjourneyImageGeneration?.images
+                    .images;
+                  let i = index
+                "
+              >
+                <img
+                  class="card-img cursor-pointer"
+                  [src]="
+                    instagramPost?.midjourneyImageGeneration?.images.images[0]
+                      .uri
+                  "
+                  alt="Imagem"
+                  (click)="
+                    showFullSizeImage(
+                      instagramPost?.midjourneyImageGeneration?.images.images[0]
+                        .uri
+                    )
+                  "
+                />
+                <button
+                  class="btn btn-corner top-0 start-0 qd-1"
+                  (click)="confirmUpscale(i, 1)"
+                >
+                  <i class="fs-2 bi bi-badge-hd text-white"></i>
+                  Gerar alta resolução
+                </button>
+
+                <button
+                  class="btn btn-corner top-0 end-0 qd-2"
+                  (click)="confirmUpscale(i, 2)"
+                >
+                  <i class="fs-2 bi bi-badge-hd text-white"></i>
+                  Gerar alta resolução
+                </button>
+
+                <button
+                  class="btn btn-corner bottom-0 start-0 qd-3"
+                  (click)="confirmUpscale(i, 3)"
+                >
+                  <i class="fs-2 bi bi-badge-hd text-white"></i>
+                  Gerar alta resolução
+                </button>
+
+                <button
+                  class="btn btn-corner bottom-0 end-0 qd-4"
+                  (click)="confirmUpscale(i, 4)"
+                >
+                  <i class="fs-2 bi bi-badge-hd text-white"></i>
+                  Gerar alta resolução
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="mt-10 text-center justify-content-center d-flex">
+        <app-instagram-feed-item
+          [instagramPost]="instagramPost"
+        ></app-instagram-feed-item>
+      </div>
+    </div>
+  </div>
+</div>

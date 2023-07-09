@@ -11,6 +11,7 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { PipesModule } from 'src/app/pipes/pipes.module';
 import { TranslationModule } from 'src/app/modules/i18n';
+import { WidgetsModule } from 'src/app/components/widgets/widgets.module';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { TranslationModule } from 'src/app/modules/i18n';
     TranslationModule,
     NgbTooltipModule,
     PipesModule,
+    WidgetsModule,
   ],
   exports: [
     NotificationsInnerComponent,

@@ -17,6 +17,5 @@ export class AccountComponent implements OnInit {
     this.user = this.asyncPipe.transform(
       this.auth.currentUserSubject.asObservable()
     )!;
-    // this.balance$ = this.generalService.getUserBalance();
   }
 }

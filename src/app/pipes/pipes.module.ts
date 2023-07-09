@@ -1,41 +1,22 @@
 import { FlatObjectPipe } from './flat-object.pipe';
-import { FriendlyTransactionStatusPipe } from './friendly-transaction-status.pipe';
-import { FriendlyInvoiceStatusPipe } from './friendly-invoice-status.pipe';
-import { AssetDescToAbbr } from './asset-desc-to-abbr.pipe';
 import { UserFullnamePipe } from './user-fullname.pipe';
 import { UserInitialsPipe } from './user-initials.pipe';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IntToCurrencyPipe } from 'src/app/pipes/int-to-currency.pipe';
-import { FriendlyTransactionDescriptionPipe } from 'src/app/pipes/friendly-transaction-description.pipe';
-import { FriendlyTransactionStatusIconPipe } from 'src/app/pipes/friendly-transaction-status-icon.pipe';
-import { FriendlyEventStatusPipe } from 'src/app/pipes/friendly-event-status.pipe';
+import { DecimalToCurrencyPipe } from 'src/app/pipes/decimal-to-currency.pipe';
+import { CpfCnpjPipe } from 'src/app/pipes/cpf-cnpj.pipe';
+
+const pipes = [
+  DecimalToCurrencyPipe,
+  UserInitialsPipe,
+  UserFullnamePipe,
+  FlatObjectPipe,
+  CpfCnpjPipe,
+];
 
 @NgModule({
-  declarations: [
-    IntToCurrencyPipe,
-    UserInitialsPipe,
-    UserFullnamePipe,
-    AssetDescToAbbr,
-    FriendlyInvoiceStatusPipe,
-    FriendlyTransactionStatusPipe,
-    FriendlyTransactionDescriptionPipe,
-    FriendlyTransactionStatusIconPipe,
-    FlatObjectPipe,
-    FriendlyEventStatusPipe
-  ],
+  declarations: pipes,
   imports: [CommonModule],
-  exports: [
-    IntToCurrencyPipe,
-    UserInitialsPipe,
-    UserFullnamePipe,
-    AssetDescToAbbr,
-    FriendlyInvoiceStatusPipe,
-    FriendlyTransactionStatusPipe,
-    FriendlyTransactionDescriptionPipe,
-    FriendlyTransactionStatusIconPipe,
-    FlatObjectPipe,
-    FriendlyEventStatusPipe
-  ],
+  exports: pipes,
 })
 export class PipesModule {}
