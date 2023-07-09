@@ -1,0 +1,425 @@
+<div class="wrapper">
+  <div class="card border-0 p-5">
+    <div class="card-body">
+      <div class="card-px pt-15 pb-15">
+        <h2 class="fs-2x fw-bold mb-0 text-center">
+          Gere posts para Instagram
+        </h2>
+
+        <mat-stepper
+          class="mt-10"
+          #stepper
+          [linear]="false"
+          orientation="horizontal"
+        >
+          <mat-step [stepControl]="fgPage1">
+            <form [formGroup]="fgPage1">
+              <ng-template matStepLabel> Gerando o texto</ng-template>
+
+              <div class="mt-20">
+                <p class="text-gray-800 fs-4">
+                  Descreva em algumas palavras a motivação da postagem para
+                  auxiliar a Inteligência Artificial gerar um texto mais
+                  assertivo
+                </p>
+
+                <textarea
+                  placeholder="Ex: A importância de se ter um bom planejamento financeiro para que você possa realizar seus sonhos. Destacar os pontos positivos da disciplina financeira e em como isso irá afetar as outras áreas da sua vida."
+                  #textareaPrompt
+                  class="form-control fs-4 textarea"
+                  formControlName="prompt"
+                  (input)="setTextareaHeight('textareaPrompt')"
+                ></textarea>
+                <div
+                  class="form-text"
+                  *ngIf="
+                    fgPage1.controls.prompt.invalid &&
+                    fgPage1.controls.prompt.dirty
+                  "
+                >
+                  Mínimo de 50 caracteres
+                </div>
+              </div>
+
+              <div class="mt-20 text-center">
+                <button
+                  (click)="sendPage1()"
+                  class="btn btn-primary fs-5 btn-upload h-50px w-150px"
+                  [disabled]="fgPage1.invalid"
+                >
+                  <div class="ps-3">
+                    Avançar <i class="las la-arrow-right fs-2"></i>
+                  </div>
+                </button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step [stepControl]="fgPage2">
+            <ng-template matStepLabel>Avalie o texto gerado</ng-template>
+            <form [formGroup]="fgPage2">
+              <div class="mt-20">
+                <p class="text-gray-800 fs-4">
+                  Avalie o texto que a Inteligência Artificial gerou para seu
+                  post
+                </p>
+
+                <div class="d-flex justify-content-end my-2">
+                  <button
+                    class="btn btn-secondary fs-6 btn-sm"
+                    (click)="regenerate()"
+                  >
+                    <i class="las la-redo-alt fs-4"></i> Gerar novamente
+                  </button>
+                </div>
+
+                <textarea
+                  #textareaResult
+                  class="form-control fs-4 textarea"
+                  formControlName="text"
+                  (input)="setTextareaHeight('textareaResult')"
+                ></textarea>
+                <div
+                  class="form-text"
+                  *ngIf="
+                    fgPage2.controls.text.invalid && fgPage2.controls.text.dirty
+                  "
+                >
+                  Campo obrigatório
+                </div>
+              </div>
+
+              <div class="mt-20 text-center">
+                <button
+                  matStepperPrevious
+                  class="btn btn-primary fs-5 btn-upload h-50px w-150px me-3"
+                >
+                  <div class="pe-3">
+                    <i class="las la-arrow-left fs-2"></i>
+                    Voltar
+                  </div>
+                </button>
+                <button
+                  (click)="sendPage2()"
+                  class="btn btn-primary fs-5 btn-upload h-50px w-150px ms-3"
+                  [disabled]="fgPage2.invalid"
+                >
+                  <div class="ps-3">
+                    Avançar <i class="las la-arrow-right fs-2"></i>
+                  </div>
+                </button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step [stepControl]="fgPage3">
+            <ng-template matStepLabel>Gerando as imagens</ng-template>
+            <form [formGroup]="fgPage3">
+              <div class="mt-20">
+                <p class="text-gray-800 fs-4">
+                  Avalie a descrição sugerida pela Inteligência Artificial para
+                  gerar as imagens da postagem. Caso queira, você pode alterar a
+                  descrição para gerar imagens de forma mais assertiva.
+                </p>
+
+                <textarea
+                  #textareaImagine
+                  class="form-control fs-4 textarea"
+                  formControlName="imagine"
+                  (input)="setTextareaHeight('textareaImagine')"
+                ></textarea>
+              </div>
+              <div class="my-4">
+                <div
+                  class="form-check form-switch form-check-custom form-check-success form-check-solid"
+                >
+                  <input
+                    class="form-check-input my-1"
+                    type="checkbox"
+                    formControlName="translate"
+                  />
+                  <label class="form-check-label fs-6">
+                    Traduzir a descrição da imagem para inglês para gerar
+                    imagens com maior nível de detalhes e mais assertividade
+                    <span class="badge badge-danger">Experimental</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="row mt-10">
+                <p class="text-gray-800 fs-4 mt-5 mb-5">
+                  Selecione o tipo de imagem de feed que deseja para seu post.
+                </p>
+                <div class="col-sm-4">
+                  <div
+                    class="form-check form-check-custom form-check-solid form-check-success justify-content-center mb-5"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      value="square"
+                      formControlName="postType"
+                      [ngClass]="{
+                        selected: fgPage3.controls.postType.value === 'square'
+                      }"
+                    />
+                    <div class="form-check-label">Quadrado</div>
+                  </div>
+
+                  <div
+                    class="post"
+                    #postElement
+                    [ngClass]="{
+                      selected: fgPage3.controls.postType.value === 'square'
+                    }"
+                    (click)="updatePostType('square')"
+                  >
+                    <div class="square aspect-ratio-1x1"></div>
+                    <div class="aspect-ratio-label">1:1</div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div
+                    class="form-check form-check-custom form-check-solid form-check-success justify-content-center mb-5"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      value="horizontal"
+                      formControlName="postType"
+                      [ngClass]="{
+                        selected:
+                          fgPage3.controls.postType.value === 'horizontal'
+                      }"
+                    />
+                    <div class="form-check-label">Horizontal</div>
+                  </div>
+
+                  <div
+                    class="post"
+                    #postElement
+                    [ngClass]="{
+                      selected: fgPage3.controls.postType.value === 'horizontal'
+                    }"
+                    (click)="updatePostType('horizontal')"
+                  >
+                    <div class="square aspect-ratio-191x1"></div>
+                    <div class="aspect-ratio-label">1.91:1</div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div
+                    class="form-check form-check-custom form-check-solid form-check-success justify-content-center mb-5"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      value="vertical"
+                      formControlName="postType"
+                      [ngClass]="{
+                        selected: fgPage3.controls.postType.value === 'vertical'
+                      }"
+                    />
+                    <div class="form-check-label">Vertical</div>
+                  </div>
+
+                  <div
+                    class="post"
+                    #postElement
+                    [ngClass]="{
+                      selected: fgPage3.controls.postType.value === 'vertical'
+                    }"
+                    (click)="updatePostType('vertical')"
+                  >
+                    <div class="square aspect-ratio-4x5"></div>
+                    <div class="aspect-ratio-label">4:5</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-20 text-center">
+                <button
+                  matStepperPrevious
+                  class="btn btn-primary fs-5 btn-upload h-50px w-150px me-3"
+                >
+                  <div class="pe-3">
+                    <i class="las la-arrow-left fs-2"></i>
+                    Voltar
+                  </div>
+                </button>
+                <button
+                  (click)="sendPage3()"
+                  class="btn btn-primary fs-5 btn-upload h-50px w-150px ms-3"
+                  [disabled]="fgPage3.invalid"
+                >
+                  <div class="ps-3">
+                    Avançar <i class="las la-arrow-right fs-2"></i>
+                  </div>
+                </button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step [stepControl]="fgPage4">
+            <ng-template matStepLabel>Avalie as imagens geradas</ng-template>
+            <form [formGroup]="fgPage4">
+              <div class="row">
+                <div class="col-md-12 mb-4">
+                  <p class="text-gray-800 fs-4">
+                    Avalie as imagens geradas e clique no botão
+                    <strong>Gerar alta resolução</strong> para gerar a imagem em
+                    alta resolução.
+                    <small
+                      >(Você precisa gerar pelo menos 1 imagem em alta resolução
+                      para prosseguir)</small
+                    >
+                  </p>
+                  <div
+                    class="card position-relative my-15"
+                    *ngFor="
+                      let image of instagramPost?.midjourneyImageGeneration
+                        ?.images.images;
+                      let i = index
+                    "
+                  >
+                    <img
+                      class="card-img cursor-pointer"
+                      [src]="
+                        midjourneyImageGeneration?.images.images[
+                          midjourneyImageGeneration?.images.images.length - 1
+                        ].uri
+                      "
+                      alt="Imagem"
+                      (click)="
+                        showFullSizeImage(
+                          midjourneyImageGeneration?.images.images[
+                            midjourneyImageGeneration?.images.images.length - 1
+                          ].uri
+                        )
+                      "
+                    />
+                    <button
+                      class="btn btn-corner top-0 start-0 qd-1"
+                      (click)="confirmUpscale(i, 1)"
+                    >
+                      <i class="fs-2 bi bi-badge-hd text-white"></i>
+                      Gerar alta resolução
+                    </button>
+
+                    <button
+                      class="btn btn-corner top-0 end-0 qd-2"
+                      (click)="confirmUpscale(i, 2)"
+                    >
+                      <i class="fs-2 bi bi-badge-hd text-white"></i>
+                      Gerar alta resolução
+                    </button>
+
+                    <button
+                      class="btn btn-corner bottom-0 start-0 qd-3"
+                      (click)="confirmUpscale(i, 3)"
+                    >
+                      <i class="fs-2 bi bi-badge-hd text-white"></i>
+                      Gerar alta resolução
+                    </button>
+
+                    <button
+                      class="btn btn-corner bottom-0 end-0 qd-4"
+                      (click)="confirmUpscale(i, 4)"
+                    >
+                      <i class="fs-2 bi bi-badge-hd text-white"></i>
+                      Gerar alta resolução
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <p class="mt-15 fs-3 text-dark text-uppercase fw-bolder">
+                Alta resolução
+              </p>
+              <p class="fs-6 text-muted revert text-uppercase">
+                Clique na imagem para visualizá-la
+              </p>
+              <div class="row">
+                <div
+                  class="col-md-6 mb-4"
+                  id="hd-images"
+                  *ngFor="
+                    let upscale of midjourneyImageGeneration?.upscales.upscales;
+                    let i = index
+                  "
+                >
+                  <div class="card position-relative">
+                    <img
+                      class="card-img cursor-pointer"
+                      [src]="upscale.uri"
+                      alt="Imagem"
+                      (click)="showFullSizeImage(upscale.uri)"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div
+                *ngIf="fullSizeImageUrl"
+                class="full-size-container"
+                (click)="closeFullSizeImage()"
+              >
+                <img [src]="fullSizeImageUrl" class="full-size-image" />
+              </div>
+
+              <div class="mt-20 text-center">
+                <button
+                  matStepperPrevious
+                  class="btn btn-primary fs-5 btn-upload h-50px w-150px me-3"
+                >
+                  <div class="pe-3">
+                    <i class="las la-arrow-left fs-2"></i>
+                    Voltar
+                  </div>
+                </button>
+                <button
+                  (click)="sendPage4()"
+                  [disabled]="fgPage4.invalid"
+                  class="btn btn-primary fs-5 btn-upload h-50px w-150px ms-3"
+                >
+                  <div class="ps-3">
+                    Avançar <i class="las la-arrow-right fs-2"></i>
+                  </div>
+                </button>
+              </div>
+            </form>
+          </mat-step>
+          <mat-step>
+            <ng-template matStepLabel>Pronto!</ng-template>
+
+            <div
+              class="mt-10 text-center justify-content-center d-flex"
+              *ngIf="instagramPost"
+            >
+              <app-instagram-feed-item
+                [instagramPost]="instagramPost"
+              ></app-instagram-feed-item>
+            </div>
+
+            <div class="mt-20 text-center">
+              <button
+                matStepperPrevious
+                class="btn btn-primary fs-5 btn-upload h-50px w-150px me-3"
+              >
+                <div class="pe-3">
+                  <i class="las la-arrow-left fs-2"></i>
+                  Voltar
+                </div>
+              </button>
+              <button
+                (click)="finish()"
+                class="btn btn-primary fs-5 btn-upload h-50px w-150px ms-3"
+              >
+                <div class="">Finalizar</div>
+              </button>
+            </div>
+          </mat-step>
+        </mat-stepper>
+      </div>
+    </div>
+  </div>
+</div>

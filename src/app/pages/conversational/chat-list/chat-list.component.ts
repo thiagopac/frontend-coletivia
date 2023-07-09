@@ -9,32 +9,32 @@ import { ChatService } from 'src/app/services/chat.service';
   styleUrls: ['./chat-list.component.scss'],
 })
 export class ChatListComponent implements OnInit {
-  chats$: Observable<any[]>;
+  items$: Observable<any[]>;
 
   constructor(private router: Router, private chatService: ChatService) {}
 
   ngOnInit(): void {
-    this.getChatList();
+    this.list();
   }
 
-  getChatList(): void {
-    this.chats$ = this.chatService.getChatListForType('free-chat');
+  list(): void {
+    this.items$ = this.chatService.listForType('free-chat');
   }
 
-  goToChat(chatUuid: string): void {
-    // this.router.navigate(['/conversational/chat-gpt', chatUuid]);
-    window.location.href = `/conversational/chat-gpt/${chatUuid}`;
+  goTo(uuid?: string): void {
+    if (!uuid) this.router.navigate(['/conversational/new-chat']);
+    else this.router.navigate(['/conversational/chat-gpt', uuid]);
   }
 
-  confirmDeleteChat(chatUuid: string): void {
+  confirmDelete(uuid: string): void {
     if (confirm('Tem certeza?')) {
-      this.deleteChat(chatUuid);
+      this.deleteChat(uuid);
     }
   }
 
-  deleteChat(chatUuid: string): void {
-    this.chatService.deleteChat(chatUuid).subscribe((res) => {
-      this.getChatList();
+  deleteChat(uuid: string): void {
+    this.chatService.delete(uuid).subscribe((res) => {
+      this.list();
     });
   }
 }

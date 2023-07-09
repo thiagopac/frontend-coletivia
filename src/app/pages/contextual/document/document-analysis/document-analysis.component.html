@@ -1,0 +1,74 @@
+<div class="wrapper">
+  <div class="card border-0 p-5">
+    <div class="card-body">
+      <div class="card-px text-center pt-5 pb-15">
+        <div class="row mb-10">
+          <div class="col-lg-1">
+            <img
+              *ngIf="analysis?.document?.extension === 'pdf'"
+              class="w-100px"
+              src="./assets/media/extensions/pdf.png"
+              alt="img"
+            />
+            <img
+              *ngIf="
+                analysis?.document?.extension === 'doc' ||
+                analysis?.document?.extension === 'docx'
+              "
+              class="w-100px"
+              src="./assets/media/extensions/word.png"
+              alt="img"
+            />
+            <img
+              *ngIf="
+                analysis?.document?.extension === 'xls' ||
+                analysis?.document?.extension === 'xlsx'
+              "
+              class="w-100px"
+              src="./assets/media/extensions/excel.png"
+              alt="img"
+            />
+          </div>
+          <div class="col-lg-10">
+            <h2 class="fs-2x fw-bold mb-20">Análise de documento</h2>
+          </div>
+        </div>
+
+        <div class="row mb-15">
+          <div class="col text-start flex-column mb-5">
+            <div class="fw-bold text-muted text-uppercase">Arquivo</div>
+            <div class="fw-bold fs-5">{{ analysis?.document.title }}</div>
+          </div>
+
+          <div class="col text-start flex-column mb-5">
+            <div class="fw-bold text-muted text-uppercase">Data do envio</div>
+            <div class="fw-bold fs-5">
+              {{ analysis?.document?.created_at | date : 'dd/MM/yyyy HH:mm' }}
+            </div>
+          </div>
+
+          <div class="col text-start flex-column mb-5">
+            <div class="fw-bold text-muted text-uppercase">Data da análise</div>
+            <div class="fw-bold fs-5">
+              {{ analysis?.created_at | date : 'dd/MM/yyyy HH:mm' }}
+            </div>
+          </div>
+
+          <div class="col text-start flex-column mb-5">
+            <div class="fw-bold text-muted text-uppercase">
+              Perfil de contexto
+            </div>
+            <div class="fw-bold fs-5">
+              {{ analysis?.feature.name }}
+            </div>
+          </div>
+        </div>
+
+        <div class="fs-4 text-start" *ngFor="let fragment of analysisContent">
+          <p class="text-muted mt-10 mb-5">{{ fragment.stamp }}</p>
+          {{ fragment.analysis }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -15,13 +15,10 @@ import { NotificationsComponent } from './settings/forms/notifications/notificat
 import { SignInMethodComponent } from './security/forms/sign-in-method/sign-in-method.component';
 import { DropdownMenusModule } from '../../template/partials';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { NgxMaskModule } from 'ngx-mask';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AccountBalanceComponent } from 'src/app/components/account-balance/account-balance.component';
-
-export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
 
 @NgModule({
   declarations: [
@@ -34,7 +31,6 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = {};
     EmailPreferencesComponent,
     NotificationsComponent,
     SignInMethodComponent,
-    AccountBalanceComponent,
   ],
   imports: [
     CommonModule,

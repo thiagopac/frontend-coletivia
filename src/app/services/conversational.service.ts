@@ -21,6 +21,74 @@ export class ConversationalService {
     this.stop$.next();
   }
 
+  continue(chatUuid: string) {
+    return new Observable<any>((observer) => {
+      const body: any = {
+        chat: chatUuid,
+      };
+      const auth = this.authService.getAuthFromLocalStorage();
+
+      this.controller = new AbortController();
+      // fetch(`${environment.apiUrl}/generative-text/fake-stream`, {
+      fetch(`${environment.apiUrl}/chat/continue`, {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${auth?.token}`,
+        },
+        signal: this.controller.signal,
+      })
+        .then((response) => {
+          const reader = response.body?.getReader();
+          const decoder = new TextDecoder();
+          if (!response.ok) {
+            reader?.read().then(({ done, value }) => {
+              try {
+                const err = JSON.parse(decoder.decode(value));
+                // console.log('decoder.decode(value): ', decoder.decode(value));
+                observer.error(err.error.message);
+                console.log('err: ', err);
+              } catch (error) {
+                observer.error(error);
+                console.log('error: ', error);
+              }
+            });
+          }
+
+          function push() {
+            return reader?.read().then(({ done, value }) => {
+              if (done) {
+                observer.complete();
+                return;
+              }
+              const string = decoder.decode(value);
+              const eventStr = string.split('\n\n');
+              let content = '';
+              let finishReason: string | null | undefined;
+              for (let i = 0; i < eventStr.length; i++) {
+                const str = eventStr[i];
+                if (str === 'data: [DONE]') break;
+                if (str && str.slice(0, 6) === 'data: ') {
+                  const jsonStr = str.slice(6);
+                  const data: ChatStreamData = JSON.parse(jsonStr);
+                  const thisContent = data.choices[0].delta?.content || '';
+                  finishReason = data.choices[0].finish_reason;
+                  content += thisContent;
+                }
+              }
+              observer.next({ content, finishReason });
+              push();
+            });
+          }
+          push();
+        })
+        .catch((err: Error) => {
+          observer.error(err?.message ?? `${err}`);
+        });
+    }).pipe(takeUntil(this.stop$));
+  }
+
   chatMessage(chatUuid: string, prompt: string) {
     const body: any = { chat: chatUuid, prompt: prompt };
 
@@ -38,7 +106,7 @@ export class ConversationalService {
   }
 
   chatStream(chatUuid: string, prompt: string) {
-    return new Observable<string>((observer) => {
+    return new Observable<any>((observer) => {
       const body: any = {
         chat: chatUuid,
         prompt: prompt,
@@ -82,6 +150,7 @@ export class ConversationalService {
               const string = decoder.decode(value);
               const eventStr = string.split('\n\n');
               let content = '';
+              let finishReason: string | null | undefined;
               for (let i = 0; i < eventStr.length; i++) {
                 const str = eventStr[i];
                 if (str === 'data: [DONE]') break;
@@ -89,10 +158,11 @@ export class ConversationalService {
                   const jsonStr = str.slice(6);
                   const data: ChatStreamData = JSON.parse(jsonStr);
                   const thisContent = data.choices[0].delta?.content || '';
+                  finishReason = data.choices[0].finish_reason;
                   content += thisContent;
                 }
               }
-              observer.next(content);
+              observer.next({ content, finishReason });
               push();
             });
           }

@@ -1,6 +1,5 @@
 import { ChatService } from 'src/app/services/chat.service';
 import { Component, OnInit } from '@angular/core';
-import { ModelService } from 'src/app/services/model.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -10,27 +9,14 @@ import { Observable } from 'rxjs';
   styleUrls: ['./new-chat.component.scss'],
 })
 export class NewChatComponent implements OnInit {
-  models$: Observable<any[]>;
   selectedModel: any = undefined;
 
-  constructor(
-    private modelService: ModelService,
-    private chatService: ChatService,
-    private router: Router
-  ) {}
+  constructor(private chatService: ChatService, private router: Router) {}
 
-  ngOnInit(): void {
-    this.models$ = this.modelService.getChatModelListForType('text');
-  }
+  ngOnInit(): void {}
 
   createChat(): void {
-    // this.router.navigate([
-    //   '/conversational/chat-gpt',
-    //   'c1dc051b-ebb3-4c4d-a86f-201de2b69836',
-    // ]);
-    this.chatService.createChatFree(this.selectedModel).subscribe((res) => {
-      console.log(res);
-      //route to /chat-gpt and uuid of returned chat
+    this.chatService.create().subscribe((res) => {
       this.router.navigate(['/conversational/chat-gpt', res.uuid]);
     });
   }

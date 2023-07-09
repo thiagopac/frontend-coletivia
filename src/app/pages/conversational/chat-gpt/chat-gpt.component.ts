@@ -5,6 +5,7 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
+  Renderer2,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -38,6 +39,8 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('placeholder', { read: ElementRef })
   placeholder: ElementRef<HTMLDivElement>;
   @ViewChild('messageContainer') messageContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('messageWrapper', { read: ElementRef })
+  messageWrapper!: ElementRef<HTMLDivElement>;
 
   //chat
   chatUuid: string;
@@ -60,12 +63,14 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
 
   chatList: any[] = [];
   estadoAnimacao: boolean = false;
+  showContinueButton: boolean = false;
 
   constructor(
     private conversationalService: ConversationalService,
     private chatService: ChatService,
     private changeDetectorRef: ChangeDetectorRef,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private renderer: Renderer2
   ) {}
 
   ngOnInit(): void {
@@ -82,7 +87,7 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
       this.changeDetectorRef.detectChanges();
     });
 
-    this.chatService.getChatListForType('free-chat').subscribe((res) => {
+    this.chatService.listForType('free-chat').subscribe((res) => {
       this.chatList = res;
     });
   }
@@ -153,18 +158,19 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   chatStream(prompt: string) {
+    this.scrollToBottom();
     this.conversationalService.chatStream(this.chatUuid, prompt).subscribe({
-      next: (text: any) => {
+      next: (obs: any) => {
+        if (obs.finishReason === 'length') this.showContinueButton = true;
         const message = this.messages;
         const lastMsg = message[message.length - 1];
         if (lastMsg.role === 'user') {
           this.genStart = false;
-          message.push({ role: 'assistant', content: text });
+          message.push({ role: 'assistant', content: obs.content });
         } else {
-          lastMsg.content += text;
+          lastMsg.content += obs.content;
         }
         this.changeDetectorRef.detectChanges();
-        this.scrollToBottom();
       },
       complete: () => {
         console.log(this.messages.length);
@@ -173,6 +179,7 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
           this.retrieveSuggestedTitle();
         }
         this.genPendding = false;
+        this.changeDetectorRef.detectChanges();
       },
       error: (errMsg: any) => {
         console.log('errMsg: ', errMsg);
@@ -186,9 +193,44 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   retrieveSuggestedTitle() {
-    this.chatService.retrieveChat(this.chatUuid).subscribe((res) => {
+    this.chatService.retrieve(this.chatUuid).subscribe((res) => {
       this.chatTitle = res.title;
       this.animateRenamedChat();
+    });
+  }
+
+  continue() {
+    this.scrollToBottom();
+    this.conversationalService.continue(this.chatUuid).subscribe({
+      next: (obs: any) => {
+        if (obs.finishReason === 'length') this.showContinueButton = true;
+        const message = this.messages;
+        const lastMsg = message[message.length - 1];
+        if (lastMsg.role === 'user') {
+          this.genStart = false;
+          message.push({ role: 'assistant', content: obs.content });
+        } else {
+          lastMsg.content += obs.content;
+        }
+        this.changeDetectorRef.detectChanges();
+      },
+      complete: () => {
+        console.log(this.messages.length);
+
+        if (this.messages.length === 2) {
+          this.retrieveSuggestedTitle();
+        }
+        this.genPendding = false;
+        this.changeDetectorRef.detectChanges();
+      },
+      error: (errMsg: any) => {
+        console.log('errMsg: ', errMsg);
+        this.genStart = false;
+        this.genPendding = false;
+        this.haveError = true;
+        this.errMessage = errMsg;
+        this.changeDetectorRef.detectChanges();
+      },
     });
   }
 
@@ -232,7 +274,7 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
     input.classList.add('d-none');
     title.classList.remove('d-none');
 
-    this.chatService.renameChat(this.chatUuid, value).subscribe((res) => {});
+    this.chatService.rename(this.chatUuid, value).subscribe((res) => {});
     this.animateRenamedChat();
   }
 
@@ -240,12 +282,19 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
     this.hoverIndex = index;
   }
 
+  // scrollToBottom() {
+  //   if (this.messageContainer) {
+  //     this.messageContainer.nativeElement.scrollIntoView({
+  //       behavior: 'auto',
+  //       block: 'end',
+  //     });
+  //   }
+  // }
+
   scrollToBottom() {
-    if (this.messageContainer) {
-      this.messageContainer.nativeElement.scrollIntoView({
-        behavior: 'auto',
-        block: 'end',
-      });
+    if (this.messageWrapper) {
+      const containerElement = this.messageWrapper.nativeElement;
+      containerElement.scrollIntoView();
     }
   }
 
