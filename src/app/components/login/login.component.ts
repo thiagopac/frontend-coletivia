@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   hasError: boolean;
   returnUrl: string;
   isLoading$: Observable<boolean>;
+  showErrors: boolean = false;
 
   // private fields
   private unsubscribe: Subscription[] = [];

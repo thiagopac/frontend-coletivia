@@ -188,6 +188,10 @@
   float: right;
 }
 
+.action-buttons-wrapper {
+  top: -50px;
+}
+
 ::ng-deep .markdown-clipboard-button {
   background-color: #17a3eb;
   color: #fff;

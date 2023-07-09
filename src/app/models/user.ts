@@ -17,7 +17,8 @@ export interface IUserInfo {
   first_name: string;
   last_name: string;
   phone: string;
-  wallet_address: string;
+  registration_type: string;
+  cpf_cnpj: string;
   city_id: string;
   created_at: Date;
   updated_at: Date;

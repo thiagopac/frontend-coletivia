@@ -112,6 +112,28 @@
   <app-quick-links-inner></app-quick-links-inner>
 </div>
 
+<!--  -->
+<div class="d-flex align-items-center ms-1 ms-lg-3">
+  <a [routerLink]="'recharge/options'" class="btn btn-flex btn-warning px-8">
+    <div class="d-flex align-items-center">
+      <i class="fa-brands fa-pix fs-1 text-dark ms-n3"></i>
+      <span class="d-flex flex-column align-items-start ms-6 me-5">
+        <span class="fs- fw-bold text-dark">Adquirir créditos</span>
+        <span class="fs-9 fw-bold text-dark">Pague com PIX</span>
+      </span>
+    </div>
+  </a>
+
+  <ng-container *ngIf="false">
+    <span class="text-white fs-6">Crédito:</span>
+    <app-account-balance-component
+      class="text-white fs-4 fw-bold mx-3"
+    ></app-account-balance-component>
+  </ng-container>
+</div>
+
+<!--  -->
+
 <!-- begin::User -->
 <ng-container *ngIf="user$ | async as _user">
   <div

@@ -1,4 +1,21 @@
-:host {
-  height: 100%;
-  margin: 0;
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-family: Poppins, Helvetica, 'sans-serif' !important;
+}
+
+.error-code {
+  font-size: 20rem;
+  color: #343a40;
+  font-weight: lighter;
+}
+
+.error-message {
+  font-size: 2.5rem;
+  color: #343a40;
+  text-transform: uppercase;
+  font-weight: 400;
 }

@@ -1,0 +1,23 @@
+<div class="card carousel-card">
+  <div class="card-body">
+    <app-images-carousel
+      [createdAt]="instagramPost?.created_at"
+      [images]="images"
+    ></app-images-carousel>
+    <div class="instagram-buttons mt-5">
+      <i class="bi bi-heart"></i>
+      <i class="bi bi-chat"></i>
+      <i class="bi bi-send"></i>
+      <span class="bookmark-icon"><i class="bi bi-bookmark"></i></span>
+    </div>
+
+    <p
+      *ngIf="instagramPost?.aiWriting?.text"
+      class="fs-5 mt-5 text-gray-700 text-start"
+      [innerHTML]="replaceNewLinesWithBreaks(instagramPost?.aiWriting?.text)"
+    ></p>
+  </div>
+  <button class="btn btn-secondary m-3" (click)="downloadFiles()">
+    Baixar fotos e legenda
+  </button>
+</div>

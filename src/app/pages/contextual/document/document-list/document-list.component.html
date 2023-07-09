@@ -1,0 +1,62 @@
+<div class="wrapper">
+  <div class="card border-0 p-5">
+    <div class="card-header border-0">
+      <div class="card-title"></div>
+      <div class="card-toolbar">
+        <button
+          class="btn btn-bg-light btn-active-color-primary"
+          (click)="goTo('/contextual/document/upload')"
+        >
+          <i class="las la-file-upload fs-1"></i>
+          Enviar arquivo
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="card-px text-start" *ngIf="items$ | async as _items">
+        <p class="text-center fs-6" *ngIf="_items.length === 0">
+          Nenhum registro encontrado
+        </p>
+        <table
+          class="table table-row-bordered table table-row-dashed table-row-gray-30"
+        >
+          <tbody>
+            <tr *ngFor="let item of _items">
+              <td class="align-middle">
+                <div class="fw-bold fs-5 px-3">
+                  <span
+                    class="cursor-pointer"
+                    (click)="goTo('/contextual/document/resume', item.uuid)"
+                  >
+                    <i
+                      [ngClass]="{
+                        'bi bi-file-earmark-pdf-fill text-danger':
+                          item.extension === 'pdf',
+                        'bi bi-file-earmark-word-fill text-primary':
+                          item.extension === 'docx' || item.extension === 'doc'
+                      }"
+                      class="fs-1 me-2"
+                    ></i>
+                    {{ item.title }}
+                  </span>
+                </div>
+              </td>
+
+              <td class="text-end text-muted align-middle">
+                {{ item.created_at | date : 'dd/MM/yyyy hh:mm' }}
+              </td>
+              <td class="text-end align-middle">
+                <button
+                  class="btn btn-icon btn-danger mx-2 btn-sm"
+                  (click)="confirmDelete(item.uuid)"
+                >
+                  <i class="las la-trash fs-2"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
