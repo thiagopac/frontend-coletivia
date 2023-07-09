@@ -1,5 +1,5 @@
-<div class="container">
-  <div class="card my-8">
+<div class="wrapper">
+  <div class="card border-0 p-5">
     <div class="card-body">
       <div class="card-px text-center pt-15 pb-15">
         <h2 class="fs-2x fw-bold mb-0">
@@ -25,33 +25,6 @@
           <div
             class="form-group d-flex justify-content-center align-items-center my-10"
           >
-            <div class="custom-select-wrapper w-200px">
-              <select
-                *ngIf="models$ | async as _models"
-                class="form-select custom-select select-models select-size fs-4"
-                [(ngModel)]="selectedModel"
-              >
-                <option
-                  *ngFor="let model of _models; index as i"
-                  [value]="model.uuid"
-                  [selected]="i === 0 ? selectFirst(model.uuid) : false"
-                >
-                  {{ model.name }}
-                </option>
-              </select>
-              <div class="custom-select-arrow"></div>
-            </div>
-            <!-- <div class="custom-select-wrapper">
-              <select
-                class="form-control custom-select select-nvariations fs-4"
-                [(ngModel)]="nVariations"
-              >
-                <option *ngFor="let n of [1, 2, 3]">
-                  {{ n }}
-                </option>
-              </select>
-              <div class="custom-select-arrow"></div>
-            </div> -->
             <div class="input-group-append">
               <button
                 class="btn btn-success er fs-6 px-8 py-4 btn-transcript"

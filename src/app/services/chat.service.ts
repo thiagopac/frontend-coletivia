@@ -11,40 +11,40 @@ import { ChatMessagesResponse } from 'src/app/models/chat-messages-response';
 export class ChatService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  getChatListForType(type: string): Observable<any> {
+  listForType(type: string): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/chat/list/${type}`, {
       headers: this.authService.headerSigned(),
     });
   }
 
-  retrieveChat(chatUuid: string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/chat/${chatUuid}`, {
+  retrieve(uuid: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/chat/${uuid}`, {
       headers: this.authService.headerSigned(),
     });
   }
 
-  getChatWithMessages(chatUuid: string): Observable<ChatMessagesResponse> {
+  getChatWithMessages(uuid: string): Observable<ChatMessagesResponse> {
     return this.http.get<ChatMessagesResponse>(
-      `${environment.apiUrl}/chat/${chatUuid}/messages`,
+      `${environment.apiUrl}/chat/${uuid}/messages`,
       {
         headers: this.authService.headerSigned(),
       }
     );
   }
 
-  createChatFree(modelUuid: string): Observable<any> {
+  create(): Observable<any> {
     return this.http.post<any>(
       `${environment.apiUrl}/chat/create-chat-free`,
-      { model: modelUuid },
+      {},
       {
         headers: this.authService.headerSigned(),
       }
     );
   }
 
-  renameChat(chatUuid: string, title: string): Observable<any> {
+  rename(uuid: string, title: string): Observable<any> {
     return this.http.patch<any>(
-      `${environment.apiUrl}/chat/${chatUuid}/rename`,
+      `${environment.apiUrl}/chat/${uuid}/rename`,
       { title },
       {
         headers: this.authService.headerSigned(),
@@ -52,12 +52,9 @@ export class ChatService {
     );
   }
 
-  deleteChat(chatUuid: string): Observable<any> {
-    return this.http.delete<any>(
-      `${environment.apiUrl}/chat/${chatUuid}/delete`,
-      {
-        headers: this.authService.headerSigned(),
-      }
-    );
+  delete(uuid: string): Observable<any> {
+    return this.http.delete<any>(`${environment.apiUrl}/chat/${uuid}/delete`, {
+      headers: this.authService.headerSigned(),
+    });
   }
 }

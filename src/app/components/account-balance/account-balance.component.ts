@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-account-balance-component',
@@ -6,9 +8,11 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./account-balance.component.scss'],
 })
 export class AccountBalanceComponent implements OnInit {
-  @Input() fiatAssetValue: number;
+  balance$: Observable<any>;
 
-  constructor() {}
+  constructor(private userService: UserService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.balance$ = this.userService.getBalance();
+  }
 }

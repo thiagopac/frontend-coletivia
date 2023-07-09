@@ -1,0 +1,21 @@
+.card-body {
+  display: flex;
+  justify-content: center;
+}
+
+.input-group {
+  margin: 0 auto;
+}
+
+.btn-upload {
+  border-radius: 0 6px 6px 0 !important;
+}
+
+.custom-file-upload {
+  display: inline-block;
+  border: 1px solid #e4e6ef;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}

@@ -13,7 +13,7 @@ export class UserService {
 
   updateInfo(info: InfoType): Observable<InfoType> {
     return this.http.patch<InfoType>(
-      `${environment.apiUrl}/users/info/update`,
+      `${environment.apiUrl}/user/info/update`,
       info,
       {
         headers: this.authService.headerSigned(),
@@ -33,5 +33,11 @@ export class UserService {
         headers: this.authService.headerSigned(),
       }
     );
+  }
+
+  getBalance(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/user/balance/retrieve`, {
+      headers: this.authService.headerSigned(),
+    });
   }
 }

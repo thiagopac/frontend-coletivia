@@ -119,3 +119,41 @@ ng-select {
 .ng-select .ng-clear-wrapper {
   top: 2px !important;
 }
+
+[type='file'] {
+  width: 50%;
+  min-width: 14ch;
+}
+
+[type='file']::file-selector-button {
+  margin-inline-end: 0;
+  padding: 0.5rem 0.8rem;
+  margin-right: 4px;
+  background-color: #009ef6;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+[type='file']::file-selector-button:hover {
+  background-color: #0080c9;
+}
+
+.mat-step-header .mat-step-icon-state-number {
+  border-radius: 4px;
+  background-color: gray;
+}
+
+.mat-step-header .mat-step-icon.mat-step-icon-selected {
+  border-radius: 4px;
+  background-color: #0652dd;
+}
+
+.mat-step-header.cdk-keyboard-focused,
+.mat-step-header.cdk-program-focused,
+.mat-step-header:hover:not([aria-disabled]),
+.mat-step-header:hover[aria-disabled='false'] {
+  background-color: transparent;
+}

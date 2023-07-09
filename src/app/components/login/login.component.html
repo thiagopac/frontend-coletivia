@@ -12,7 +12,7 @@
   <!--end::Heading-->
 
   <!-- begin::Alert error-->
-  <ng-container *ngIf="hasError">
+  <ng-container *ngIf="showErrors && hasError">
     <div class="mb-lg-15 alert alert-danger">
       <div class="alert-text font-weight-bold">Credenciais incorretas</div>
     </div>
@@ -29,8 +29,8 @@
       formControlName="email"
       autocomplete="off"
       [ngClass]="{
-        'is-invalid': loginForm.controls['email'].invalid,
-        'is-valid': loginForm.controls['email'].valid
+        'is-invalid': showErrors && loginForm.controls['email'].invalid,
+        'is-valid': showErrors && loginForm.controls['email'].valid
       }"
     />
     <ng-container
@@ -91,8 +91,8 @@
       autocomplete="off"
       formControlName="password"
       [ngClass]="{
-        'is-invalid': loginForm.controls['password'].invalid,
-        'is-valid': loginForm.controls['password'].valid
+        'is-invalid': showErrors && loginForm.controls['password'].invalid,
+        'is-valid': showErrors && loginForm.controls['password'].valid
       }"
     />
     <ng-container
@@ -145,6 +145,7 @@
       type="submit"
       class="btn btn-lg btn-primary w-100 mb-5"
       [disabled]="loginForm.invalid"
+      (click)="showErrors = true"
     >
       <ng-container *ngIf="isLoading$ | async">
         <span class="indicator-progress" [style.display]="'block'">
@@ -169,9 +170,7 @@
   let-message="message"
   let-validation="validation"
 >
-  <ng-container
-    *ngIf="control.hasError(validation) && (control.dirty || control.touched)"
-  >
+  <ng-container *ngIf="showErrors && control.hasError(validation)">
     <div class="fv-plugins-message-container">
       <span role="alert">
         {{ message }}

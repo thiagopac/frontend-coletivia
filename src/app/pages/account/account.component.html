@@ -43,13 +43,6 @@
               </div>
             </div>
           </div>
-
-          <app-account-balance-component
-            *ngIf="balance$ | async as _balance"
-            [fiatAssetValue]="_balance.fiat"
-          >
-            >
-          </app-account-balance-component>
         </div>
       </div>
 
