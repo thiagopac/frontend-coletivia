@@ -7,7 +7,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
   styleUrls: ['./auth.component.scss'],
 })
 export class AuthComponent implements OnInit, OnDestroy {
-  today: Date = new Date();
+  currentDate: Date = new Date();
 
   constructor() {}
 

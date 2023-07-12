@@ -15,7 +15,7 @@
         <div class="row" *ngIf="items$ | async as _items">
           <div class="col" *ngFor="let item of _items">
             <label
-              class="btn btn-outline btn-outline-dashed btn-outline-default p-7 mb-10"
+              class="btn btn-outline btn-outline-dashed btn-outline-default w-100 p-7 mb-10"
               [ngClass]="{ active: item === selectedOption }"
               for="{{ item.id }}"
               (click)="selectValue(item)"
