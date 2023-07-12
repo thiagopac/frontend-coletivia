@@ -299,4 +299,24 @@
   >
     <span class="menu-title"> Visualizar post </span>
   </a>
+
+  <span class="menu-link py-3" [ngClass]="calculateMenuItemCssClass('/policy')">
+    <span class="menu-title">Políticas</span>
+
+    <a
+      class="menu-link"
+      routerLinkActive="active"
+      routerLink="/policy/politica-de-privacidade"
+    >
+      <span class="menu-title"> Política de Privacidade </span>
+    </a>
+
+    <a
+      class="menu-link"
+      routerLinkActive="active"
+      routerLink="/policy/termos-de-uso"
+    >
+      <span class="menu-title"> Termos de Uso </span>
+    </a>
+  </span>
 </div>

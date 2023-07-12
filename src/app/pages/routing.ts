@@ -39,6 +39,11 @@ const Routing: Routes = [
       import('./recharge/recharge.module').then((m) => m.RechargeModule),
   },
   {
+    path: 'policy',
+    loadChildren: () =>
+      import('./policy/policy.module').then((m) => m.PolicyModule),
+  },
+  {
     path: '',
     redirectTo: '/start',
     pathMatch: 'full',
