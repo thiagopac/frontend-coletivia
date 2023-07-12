@@ -17,7 +17,7 @@
           [crisp]="true"
           [minVersion]="1"
           [ecLevel]="'M'"
-          [size]="200"
+          [size]="250"
           [ratio]="undefined"
           [fill]="'#333'"
           [back]="'#fff'"
@@ -73,14 +73,14 @@
             class="badge fs-6"
             [ngClass]="{
               'badge-warning': recharge.status === 'pending',
-              'badge-success': recharge.status === 'received',
+              'badge-success': recharge.status === 'paid',
               'badge-danger': recharge.status === 'expired'
             }"
           >
             {{
               recharge.status === 'pending'
                 ? 'Pendente'
-                : recharge.status === 'received'
+                : recharge.status === 'paid'
                 ? 'Pago'
                 : 'Expirado'
             }}
