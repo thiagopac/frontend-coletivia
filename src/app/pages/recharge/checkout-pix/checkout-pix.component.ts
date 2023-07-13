@@ -1,18 +1,22 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RechargeService } from 'src/app/services/recharge.service';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { interval, Subject } from 'rxjs';
+import { takeUntil, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-checkout-pix',
   templateUrl: './checkout-pix.component.html',
   styleUrls: ['./checkout-pix.component.scss'],
 })
-export class CheckoutPixComponent implements OnInit {
+export class CheckoutPixComponent implements OnInit, OnDestroy {
   rechargeUuid: string;
   recharge?: any | undefined;
   clipboardUsed = false;
   leftTime: number;
+  pollingSubscription: any;
+  stopPolling$ = new Subject<void>();
 
   constructor(
     private rechargeService: RechargeService,
@@ -33,7 +37,33 @@ export class CheckoutPixComponent implements OnInit {
       this.recharge = res;
       this.calculateLeftTime();
       this.changeDetectorRef.detectChanges();
+      if (this.recharge.status !== 'paid' && this.leftTime > 0) {
+        this.startPolling();
+      }
     });
+  }
+
+  startPolling() {
+    this.pollingSubscription = interval(10000)
+      .pipe(
+        switchMap(() => this.rechargeService.retrieve(this.rechargeUuid)),
+        takeUntil(this.stopPolling$)
+      )
+      .subscribe((res) => {
+        this.recharge = res;
+        this.calculateLeftTime();
+        this.changeDetectorRef.detectChanges();
+        if (this.recharge.status === 'paid' || this.leftTime <= 0) {
+          this.stopPolling();
+        }
+      });
+  }
+
+  stopPolling() {
+    this.stopPolling$.next();
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
   }
 
   copyToClipboard() {
@@ -50,5 +80,9 @@ export class CheckoutPixComponent implements OnInit {
     );
 
     this.leftTime = 1800 - timeDiffInSeconds;
+  }
+
+  ngOnDestroy() {
+    this.stopPolling();
   }
 }
