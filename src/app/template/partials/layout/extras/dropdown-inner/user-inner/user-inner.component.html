@@ -22,12 +22,28 @@
   <div class="separator my-2"></div>
 
   <div class="menu-item px-5">
-    <a routerLink="/operation/statement" class="menu-link px-5">
-      Seus créditos:
+    <a class="menu-link px-5 cursor-text">
+      Meus créditos:
       <app-account-balance-component
-        class="text-dark fs-4 fw-bold mx-3"
+        class="text-dark fs-3 fw-bold mx-3 font-roboto"
       ></app-account-balance-component>
     </a>
+  </div>
+
+  <div class="menu-item px-5">
+    <a routerLink="/recharge/options" class="menu-link px-5">
+      Adquirir créditos
+    </a>
+  </div>
+
+  <div class="menu-item px-5">
+    <a routerLink="/operation/statement" class="menu-link px-5">
+      Extrato de uso
+    </a>
+  </div>
+
+  <div class="menu-item px-5">
+    <a routerLink="/recharge/list" class="menu-link px-5"> Meus pedidos </a>
   </div>
 
   <div class="separator my-2"></div>

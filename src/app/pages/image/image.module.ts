@@ -14,6 +14,7 @@ import {
   MatPaginatorModule,
 } from '@angular/material/paginator';
 import { CustomPaginatorIntlService } from 'src/app/services/custom-paginator-intl.service';
+import { WidgetsModule } from 'src/app/components/widgets/widgets.module';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { CustomPaginatorIntlService } from 'src/app/services/custom-paginator-in
     FormsModule,
     MatInputModule,
     MatPaginatorModule,
+    WidgetsModule,
   ],
   exports: [ImagesCarouselComponent, InstagramFeedItemComponent],
   providers: [
