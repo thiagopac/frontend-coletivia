@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-loading-wrapper',
@@ -7,6 +7,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 })
 export class LoadingWrapperComponent implements OnInit {
   loadingDots: string = '';
+  @Input() label?: string = 'Carregando';
   constructor(private changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {

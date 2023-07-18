@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { SocketIOService } from 'src/app/services/socket-io.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -10,9 +11,16 @@ import { UserService } from 'src/app/services/user.service';
 export class AccountBalanceComponent implements OnInit {
   balance$: Observable<any>;
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private socketIOService: SocketIOService
+  ) {}
 
   ngOnInit(): void {
     this.balance$ = this.userService.getBalance();
+
+    this.socketIOService.onBalanceRefresh().subscribe(() => {
+      this.balance$ = this.userService.getBalance();
+    });
   }
 }
