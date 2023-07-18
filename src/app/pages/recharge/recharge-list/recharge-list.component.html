@@ -1,0 +1,111 @@
+<div class="wrapper">
+  <div class="card border-0 p-5">
+    <div class="card-body">
+      <div class="card-px text-start" *ngIf="items$ | async as _items">
+        <p class="text-center fs-6 mt-5" *ngIf="_items.data.length === 0">
+          Nenhum registro encontrado
+        </p>
+        <table
+          class="table table-row-bordered table table-row-dashed table-row-gray-30"
+          *ngIf="_items.data.length > 0"
+        >
+          <thead>
+            <tr>
+              <th class="text-start px-3 fs-5 fw-boldest">Descrição</th>
+              <th class="text-end fs-5 fw-boldest">Situação</th>
+              <th class="text-end fs-5 fw-boldest">Data</th>
+              <th class="text-end fs-5 fw-boldest">Valor Pago</th>
+              <th class="text-end fs-5 fw-boldest">Valor Creditado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of _items.data">
+              <td class="d-flex justify-content-between align-middle">
+                <div
+                  class="fw-bold h-100 text-align-middle fs-5 px-3 align-self-center"
+                >
+                  {{ item.rechargeOption.label }}
+                </div>
+                <div
+                  class="justify-content-end"
+                  *ngIf="
+                    item.status === 'unpaid' &&
+                    isItemValidForPayment(item.created_at)
+                  "
+                >
+                  <a
+                    class="text-end btn btn-outline btn-outline-primary btn-sm"
+                    [routerLink]="['/recharge/checkout-pix', item.uuid]"
+                  >
+                    <i class="fa-brands fa-pix text-primary"></i>
+                    Pagar PIX</a
+                  >
+                </div>
+              </td>
+              <td class="text-end align-middle">
+                <span
+                  class="badge"
+                  [ngClass]="{
+                    'badge-success': item.status === 'paid',
+                    'badge-warning':
+                      item.status === 'unpaid' &&
+                      isItemValidForPayment(item.created_at),
+                    'badge-danger':
+                      item.status === 'unpaid' &&
+                      !isItemValidForPayment(item.created_at)
+                  }"
+                >
+                  {{
+                    item.status === 'paid'
+                      ? 'Pago'
+                      : item.status === 'unpaid' &&
+                        isItemValidForPayment(item.created_at)
+                      ? 'Aguardando pagamento'
+                      : 'Expirado'
+                  }}
+                </span>
+              </td>
+
+              <td class="text-end text-muted align-middle">
+                {{ item.created_at | date : 'dd/MM/yyyy HH:mm' }}
+              </td>
+              <td class="text-end align-middle">
+                <span
+                  [ngClass]="{
+                    'text-decoration-line-through': item.status === 'unpaid'
+                  }"
+                >
+                  R$
+                  {{
+                    item.rechargeOption.credited_value | decimalToCurrencyPipe
+                  }}
+                </span>
+              </td>
+              <td class="text-end align-middle">
+                <span
+                  [ngClass]="{
+                    'text-decoration-line-through': item.status === 'unpaid'
+                  }"
+                >
+                  R$
+                  {{
+                    item.rechargeOption.debited_value | decimalToCurrencyPipe
+                  }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="text-center">
+      <mat-paginator
+        [length]="totalItems"
+        [pageSize]="itemsPerPage"
+        [pageSizeOptions]="[10, 15, 20, 30]"
+        (page)="goToPage($event)"
+        showFirstLastButtons="true"
+      ></mat-paginator>
+    </div>
+  </div>
+</div>

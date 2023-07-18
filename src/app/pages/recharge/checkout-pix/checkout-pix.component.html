@@ -96,11 +96,18 @@
           <span
             class="badge fs-6"
             [ngClass]="{
-              'badge-warning': recharge.status === 'unpaid',
+              'badge-danger': recharge.status === 'unpaid' && leftTime <= 0,
+              'badge-warning': recharge.status === 'unpaid' && leftTime > 0,
               'badge-success': recharge.status === 'paid'
             }"
           >
-            {{ recharge.status === 'unpaid' ? 'Não pago' : 'Pago' }}
+            {{
+              recharge.status === 'unpaid' && leftTime <= 0
+                ? 'Pedido expirado'
+                : recharge.status === 'unpaid' && leftTime > 0
+                ? 'Aguardando pagamento'
+                : 'Pago'
+            }}
           </span>
         </div>
       </div>
