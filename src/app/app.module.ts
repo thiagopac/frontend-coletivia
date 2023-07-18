@@ -13,6 +13,8 @@ import { AuthService } from './services/auth';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { AdminAuthService } from 'src/app/services/admin-auth';
 import { MarkdownModule } from 'ngx-markdown';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { environment } from 'src/environments/environment';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -32,6 +34,11 @@ function appInitializerAdmin(adminAuthService: AdminAuthService) {
   };
 }
 
+const config: SocketIoConfig = {
+  url: environment.socketUrl,
+  options: { transports: ['websocket'] },
+};
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -45,6 +52,7 @@ function appInitializerAdmin(adminAuthService: AdminAuthService) {
     NgbModule,
     NgxSpinnerModule,
     MarkdownModule.forRoot(),
+    SocketIoModule.forRoot(config),
   ],
   providers: [
     {

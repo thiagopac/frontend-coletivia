@@ -58,7 +58,7 @@ export class ImageService {
       `${environment.apiUrl}/image/midjourney/create-image-free`,
       { prompt, translate },
       {
-        headers: this.authService.headerSigned(),
+        headers: this.authService.headerSigned(true),
       }
     );
   }

@@ -5,11 +5,13 @@
 export const environment = {
   production: true,
   appVersion: 'v1.0.0',
-  adminAuthDataKey: 'admin-auth-data-key-em-prod',
-  adminUserDataKey: 'admin-user-data-key-em-prod',
-  userDataKey: 'user-data-key-em-prod',
+  adminAuthDataKey: 'admin-auth-6cd1acfe5d67',
+  adminUserDataKey: 'admin-user-d4c4d6a1473f',
+  authDataKey: 'auth-f649fc9a5f55',
+  userDataKey: 'user-f649fc9a5f55',
   hostUrl: 'https://url-do-app-em-prod/',
   apiUrl: 'https://url-da-api-em-prod:3333/api',
+  socketUrl: 'https://url-da-api-em-prod',
 };
 
 /*

@@ -21,10 +21,11 @@ export class AlertMessageService {
     });
   }
 
-  showToast(message: string, icon: SweetAlertIcon) {
+  showToast(message: string, icon: SweetAlertIcon, text?: string) {
     this.toast.fire({
       icon: icon,
       title: message,
+      text: text,
     });
   }
 

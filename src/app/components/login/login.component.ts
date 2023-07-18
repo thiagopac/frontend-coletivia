@@ -9,6 +9,7 @@ import { first } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserType } from 'src/app/models/user';
+import { SocketIOService } from 'src/app/services/socket-io.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,6 @@ import { UserType } from 'src/app/models/user';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  //utilizar em caso de demonstrações públicas e pitches
   defaultAuth: any = {
     email: '',
     password: '',
@@ -35,7 +35,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private fb: UntypedFormBuilder,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private socketService: SocketIOService
   ) {
     this.isLoading$ = this.authService.isLoading$;
     // redirect to home if already logged in
@@ -89,6 +90,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       .pipe(first())
       .subscribe((user: UserType | undefined) => {
         if (user) {
+          this.socketService.login(user);
           this.router.navigate([this.returnUrl]);
         } else {
           this.hasError = true;
