@@ -45,4 +45,8 @@ export class SocketIOService {
   onShowToast() {
     return this.socket.fromEvent('ch_show_toast');
   }
+
+  onBalanceRefresh() {
+    return this.socket.fromEvent('ch_balance_refresh');
+  }
 }

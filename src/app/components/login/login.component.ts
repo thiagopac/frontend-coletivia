@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router,
-    private socketService: SocketIOService
+    private socketIOService: SocketIOService
   ) {
     this.isLoading$ = this.authService.isLoading$;
     // redirect to home if already logged in
@@ -47,15 +47,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initForm();
-
-    // console.log("isLoading$", this.isLoading$);
-
-    // get return url from route parameters or default to '/'
     this.returnUrl =
       this.route.snapshot.queryParams['returnUrl'.toString()] || '/';
   }
 
-  // convenience getter for easy access to form fields
   get f() {
     return this.loginForm.controls;
   }
@@ -90,7 +85,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       .pipe(first())
       .subscribe((user: UserType | undefined) => {
         if (user) {
-          this.socketService.login(user);
+          this.socketIOService.login(user);
           this.router.navigate([this.returnUrl]);
         } else {
           this.hasError = true;
