@@ -11,7 +11,7 @@ export class MidjourneyCreateComponent implements OnInit {
   prompt: string = '';
   isAccordionOpen = false;
   translate: boolean = true;
-  loading: boolean = true;
+  loading: boolean = false;
 
   exemplos: { prompt: string; descricaoIdeal: string }[] = [
     {
