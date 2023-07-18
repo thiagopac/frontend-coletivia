@@ -9,7 +9,10 @@
         </p>
       </div>
 
-      <app-loading-wrapper *ngIf="loading"></app-loading-wrapper>
+      <app-loading-wrapper
+        *ngIf="loading"
+        label="Gerando"
+      ></app-loading-wrapper>
 
       <ng-container *ngIf="!loading">
         <div class="input-group">
