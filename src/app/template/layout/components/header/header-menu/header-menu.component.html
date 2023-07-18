@@ -300,6 +300,33 @@
     <span class="menu-title"> Visualizar post </span>
   </a>
 
+  <span
+    class="menu-link py-3"
+    [ngClass]="calculateMenuItemCssClass('/recharge')"
+  >
+    <span class="menu-title">Créditos</span>
+
+    <a
+      class="menu-link"
+      routerLinkActive="active"
+      routerLink="/recharge/options"
+    >
+      <span class="menu-title"> Adquira créditos </span>
+    </a>
+
+    <a class="menu-link" routerLinkActive="active" routerLink="/recharge/list">
+      <span class="menu-title"> Meus pedidos </span>
+    </a>
+  </span>
+
+  <a
+    class="menu-link"
+    routerLinkActive="active"
+    routerLink="operation/statement"
+  >
+    <span class="menu-title"> Extrato de uso </span>
+  </a>
+
   <span class="menu-link py-3" [ngClass]="calculateMenuItemCssClass('/policy')">
     <span class="menu-title">Políticas</span>
 
