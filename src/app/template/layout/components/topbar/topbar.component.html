@@ -1,9 +1,5 @@
 <!-- Search toolbar -->
-<div
-  *ngIf="false"
-  class="d-flex align-items-center"
-  [ngClass]="toolbarButtonMarginClass"
->
+<div *ngIf="false" class="d-flex align-items-center">
   <div
     class="btn btn-icon btn-active-light-primary btn-custom btn-custom"
     [ngClass]="toolbarButtonHeightClass"
@@ -22,11 +18,7 @@
 </div>
 
 <!-- Activities -->
-<div
-  *ngIf="false"
-  class="d-flex align-items-center"
-  [ngClass]="toolbarButtonMarginClass"
->
+<div *ngIf="false" class="d-flex align-items-center">
   <!-- begin::Drawer toggle -->
   <div
     class="btn btn-icon btn-active-light-primary btn-custom"
@@ -42,35 +34,8 @@
   <!-- end::Drawer toggle -->
 </div>
 
-<!-- NOTIFICATIONS -->
-<div
-  *ngIf="false"
-  class="d-flex align-items-center"
-  [ngClass]="toolbarButtonMarginClass"
->
-  <div
-    class="btn btn-icon btn-active-light-primary btn-custom position-relative"
-    [ngClass]="toolbarButtonHeightClass"
-    data-kt-menu-trigger="click"
-    data-kt-menu-attach="parent"
-    data-kt-menu-placement="bottom-end"
-    data-kt-menu-flip="bottom"
-  >
-    <span
-      [inlineSVG]="'./assets/media/icons/duotune/general/gen022.svg'"
-      class="svg-icon"
-      [ngClass]="toolbarButtonIconSizeClass"
-    ></span>
-  </div>
-  <app-notifications-inner></app-notifications-inner>
-</div>
-
 <!-- CHAT -->
-<div
-  *ngIf="false"
-  class="d-flex align-items-center"
-  [ngClass]="toolbarButtonMarginClass"
->
+<div *ngIf="false" class="d-flex align-items-center">
   <!-- begin::Menu wrapper -->
   <div
     class="btn btn-icon btn-active-light-primary btn-custom position-relative"
@@ -90,11 +55,7 @@
 </div>
 
 <!-- Quick links -->
-<div
-  *ngIf="false"
-  class="d-flex align-items-center"
-  [ngClass]="toolbarButtonMarginClass"
->
+<div *ngIf="false" class="d-flex align-items-center">
   <div
     class="btn btn-icon btn-active-light-primary btn-custom"
     [ngClass]="toolbarButtonHeightClass"
@@ -113,7 +74,7 @@
 </div>
 
 <!--  -->
-<div class="d-flex align-items-center ms-1 ms-lg-3">
+<div class="d-flex align-items-center me-10">
   <a [routerLink]="'recharge/options'" class="btn btn-flex btn-warning px-8">
     <div class="d-flex align-items-center">
       <i class="fa-brands fa-pix fs-1 text-dark ms-n3"></i>
@@ -131,19 +92,36 @@
     ></app-account-balance-component>
   </ng-container>
 </div>
-
 <!--  -->
+
+<!-- NOTIFICATIONS -->
+<div class="d-flex align-items-center ms-3">
+  <div
+    class="btn btn-icon btn-active-light-primary btn-custom position-relative"
+    [ngClass]="toolbarButtonHeightClass"
+    data-kt-menu-trigger="click"
+    data-kt-menu-attach="parent"
+    data-kt-menu-placement="bottom-end"
+    data-kt-menu-flip="bottom"
+  >
+    <span
+      [inlineSVG]="'./assets/media/icons/duotune/general/gen007.svg'"
+      class="svg-icon"
+      [ngClass]="toolbarButtonIconSizeClass"
+    ></span>
+    <div class="badge badge-danger" *ngIf="unreadCount > 0">
+      {{ unreadCount }}
+    </div>
+  </div>
+
+  <app-notifications-inner></app-notifications-inner>
+</div>
 
 <!-- begin::User -->
 <ng-container *ngIf="user$ | async as _user">
-  <div
-    class="d-flex align-items-center"
-    [ngClass]="toolbarButtonMarginClass"
-    id="kt_header_user_menu_toggle"
-  >
+  <div class="d-flex align-items-center ms-3" id="kt_header_user_menu_toggle">
     <!-- begin::Toggle -->
     <div
-      class="btn pe-0"
       data-kt-menu-trigger="click"
       data-kt-menu-attach="parent"
       data-kt-menu-placement="bottom-end"

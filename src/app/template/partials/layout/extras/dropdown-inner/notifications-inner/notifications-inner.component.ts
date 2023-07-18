@@ -1,155 +1,117 @@
-import { Component, HostBinding, OnInit } from '@angular/core';
-import { LayoutService } from '../../../../../layout';
-
-export type NotificationsTabsType =
-  | 'kt_topbar_notifications_1'
-  | 'kt_topbar_notifications_2'
-  | 'kt_topbar_notifications_3';
+import {
+  ChangeDetectorRef,
+  Component,
+  HostBinding,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import { Router } from '@angular/router';
+import { Subject, Subscription, takeUntil } from 'rxjs';
+import { NotificationService } from 'src/app/services/notificiation.service';
 
 @Component({
   selector: 'app-notifications-inner',
   templateUrl: './notifications-inner.component.html',
 })
-export class NotificationsInnerComponent implements OnInit {
+export class NotificationsInnerComponent implements OnInit, OnDestroy {
   @HostBinding('class') class =
-    'menu menu-sub menu-sub-dropdown menu-column w-350px w-lg-375px';
+    'menu menu-sub menu-sub-dropdown menu-column w-400px w-lg-425px';
   @HostBinding('attr.data-kt-menu') dataKtMenu = 'true';
+  items: any[] = [];
+  unreadCount: number = 0;
+  subNotifications: Subscription;
+  private unsubscribe$ = new Subject<void>();
 
-  activeTabId: NotificationsTabsType = 'kt_topbar_notifications_2';
-  alerts: Array<AlertModel> = defaultAlerts;
-  logs: Array<LogModel> = defaultLogs;
-  constructor() {}
+  constructor(
+    private notificationService: NotificationService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private router: Router
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.listNotifications();
+    this.subscribeToUnreadCount();
+    this.subscribeToUpdateNotifications();
+  }
 
-  setActiveTabId(tabId: NotificationsTabsType) {
-    this.activeTabId = tabId;
+  listNotifications() {
+    this.notificationService.list('all').subscribe((res: any) => {
+      this.notificationService.updateUnreadCount(res.meta.unread_count);
+
+      this.items = res.data.map((item: { created_at: string }) => ({
+        ...item,
+        timeAgo: this.calculateTimeAgo(item.created_at),
+      }));
+      this.changeDetectorRef.detectChanges();
+    });
+  }
+
+  calculateTimeAgo(created_at: string): string {
+    const createdAtDate = new Date(created_at);
+    const currentDate = new Date();
+    const elapsedMilliseconds = currentDate.getTime() - createdAtDate.getTime();
+
+    const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
+    if (elapsedSeconds < 60) {
+      return elapsedSeconds === 1 ? '1 seg' : `${elapsedSeconds} segs`;
+    }
+
+    const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+    if (elapsedMinutes < 60) {
+      return elapsedMinutes === 1 ? '1 min' : `${elapsedMinutes} mins`;
+    }
+
+    const elapsedHours = Math.floor(elapsedMinutes / 60);
+    if (elapsedHours < 24) {
+      return elapsedHours === 1 ? '1 h' : `${elapsedHours} hs`;
+    }
+
+    const elapsedDays = Math.floor(elapsedHours / 24);
+    if (elapsedDays < 30) {
+      return `${elapsedDays} d`;
+    }
+
+    return '+30 d';
+  }
+
+  subscribeToUnreadCount(): void {
+    this.subNotifications = this.notificationService.unreadCount$.subscribe(
+      (count) => {
+        this.unreadCount = count;
+      }
+    );
+  }
+
+  subscribeToUpdateNotifications(): void {
+    this.notificationService.update$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.listNotifications();
+      });
+  }
+
+  goToItem(item: any) {
+    this.markAsRead(item.id);
+    this.router.navigate([item.data.redirectUrl]);
+  }
+
+  markAsRead(id: number) {
+    this.notificationService.markAsRead(id).subscribe((res: any) => {
+      this.listNotifications();
+      this.notificationService.updateUnreadCount(this.unreadCount - 1);
+    });
+  }
+
+  markAllAsRead() {
+    this.notificationService.markAllAsRead().subscribe((res: any) => {
+      this.listNotifications();
+      this.notificationService.updateUnreadCount(0);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+    this.subNotifications.unsubscribe();
   }
 }
-
-interface AlertModel {
-  title: string;
-  description: string;
-  time: string;
-  icon: string;
-  state: 'primary' | 'danger' | 'warning' | 'success' | 'info';
-}
-
-const defaultAlerts: Array<AlertModel> = [
-  {
-    title: 'Project Alice',
-    description: 'Phase 1 development',
-    time: '1 hr',
-    icon: 'icons/duotune/technology/teh008.svg',
-    state: 'primary',
-  },
-  {
-    title: 'HR Confidential',
-    description: 'Confidential staff documents',
-    time: '2 hrs',
-    icon: 'icons/duotune/general/gen044.svg',
-    state: 'danger',
-  },
-  {
-    title: 'Company HR',
-    description: 'Corporeate staff profiles',
-    time: '5 hrs',
-    icon: 'icons/duotune/finance/fin006.svg',
-    state: 'warning',
-  },
-  {
-    title: 'Project Redux',
-    description: 'New frontend admin theme',
-    time: '2 days',
-    icon: 'icons/duotune/files/fil023.svg',
-    state: 'success',
-  },
-  {
-    title: 'Project Breafing',
-    description: 'Product launch status update',
-    time: '21 Jan',
-    icon: 'icons/duotune/maps/map001.svg',
-    state: 'primary',
-  },
-  {
-    title: 'Banner Assets',
-    description: 'Collection of banner images',
-    time: '21 Jan',
-    icon: 'icons/duotune/general/gen006.svg',
-    state: 'info',
-  },
-  {
-    title: 'Icon Assets',
-    description: 'Collection of SVG icons',
-    time: '20 March',
-    icon: 'icons/duotune/art/art002.svg',
-    state: 'warning',
-  },
-];
-
-interface LogModel {
-  code: string;
-  state: 'success' | 'danger' | 'warning';
-  message: string;
-  time: string;
-}
-
-const defaultLogs: Array<LogModel> = [
-  { code: '200 OK', state: 'success', message: 'New order', time: 'Just now' },
-  { code: '500 ERR', state: 'danger', message: 'New customer', time: '2 hrs' },
-  {
-    code: '200 OK',
-    state: 'success',
-    message: 'Payment process',
-    time: '5 hrs',
-  },
-  {
-    code: '300 WRN',
-    state: 'warning',
-    message: 'Search query',
-    time: '2 days',
-  },
-  {
-    code: '200 OK',
-    state: 'success',
-    message: 'API connection',
-    time: '1 week',
-  },
-  {
-    code: '200 OK',
-    state: 'success',
-    message: 'Database restore',
-    time: 'Mar 5',
-  },
-  {
-    code: '300 WRN',
-    state: 'warning',
-    message: 'System update',
-    time: 'May 15',
-  },
-  {
-    code: '300 WRN',
-    state: 'warning',
-    message: 'Server OS update',
-    time: 'Apr 3',
-  },
-  {
-    code: '300 WRN',
-    state: 'warning',
-    message: 'API rollback',
-    time: 'Jun 30',
-  },
-  {
-    code: '500 ERR',
-    state: 'danger',
-    message: 'Refund process',
-    time: 'Jul 10',
-  },
-  {
-    code: '500 ERR',
-    state: 'danger',
-    message: 'Withdrawal process',
-    time: 'Sep 10',
-  },
-  { code: '500 ERR', state: 'danger', message: 'Mail tasks', time: 'Dec 10' },
-];

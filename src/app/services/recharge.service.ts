@@ -10,6 +10,14 @@ import { AuthService } from 'src/app/modules/auth';
 export class RechargeService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
+  list(page: number, perPage: number): Observable<any[]> {
+    const params = { page: page.toString(), perPage: perPage.toString() };
+    return this.http.get<any[]>(`${environment.apiUrl}/recharge/list`, {
+      headers: this.authService.headerSigned(),
+      params,
+    });
+  }
+
   listOptions(): Observable<any[]> {
     return this.http.get<any[]>(`${environment.apiUrl}/recharge/options`, {
       headers: this.authService.headerSigned(),

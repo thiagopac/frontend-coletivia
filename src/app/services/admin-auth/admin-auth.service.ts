@@ -16,8 +16,8 @@ export type AdminType = IAdmin | undefined;
 export class AdminAuthService implements OnDestroy {
   // private fields
   private unsubscribe: Subscription[] = [];
-  private adminAuthLocalStorageToken = `${this.environmentService.getVersion()}-${this.environmentService.getAdminAuthDataKey()}`;
-  private adminUserLocalStorageToken = `${this.environmentService.getVersion()}-${this.environmentService.getAdminUserDataKey()}`;
+  private adminAuthLocalStorage = `${this.environmentService.getVersion()}-${this.environmentService.getAdminAuthDataKey()}`;
+  private adminUserLocalStorage = `${this.environmentService.getVersion()}-${this.environmentService.getAdminUserDataKey()}`;
 
   // public fields
   currentAdminUser$: Observable<AdminType>;
@@ -44,9 +44,16 @@ export class AdminAuthService implements OnDestroy {
     this.isLoading$ = this.isLoadingSubject.asObservable();
   }
 
-  headerSigned(): HttpHeaders {
-    const auth = this.getAuthFromLocalStorage();
-    return new HttpHeaders({ Authorization: `Bearer ${auth?.token}` });
+  headerSigned(hideSpinner?: boolean): HttpHeaders {
+    if (hideSpinner) {
+      return new HttpHeaders({
+        Authorization: `Bearer ${this.getAuthFromLocalStorage()?.token}`,
+        hideSpinner: 'true',
+      });
+    }
+    return new HttpHeaders({
+      Authorization: `Bearer ${this.getAuthFromLocalStorage()?.token}`,
+    });
   }
 
   // public methods
@@ -54,7 +61,7 @@ export class AdminAuthService implements OnDestroy {
     this.isLoadingSubject.next(true);
     return this.adminAuthHttpService.login(email, password).pipe(
       map((auth: AuthModel) => {
-        const result = this.setAuthFromLocalStorage(auth);
+        const result = this.setAuthToLocalStorage(auth);
         return result;
       }),
       switchMap(() => this.getUserByToken()),
@@ -67,7 +74,7 @@ export class AdminAuthService implements OnDestroy {
   }
 
   logout() {
-    localStorage.removeItem(this.adminAuthLocalStorageToken);
+    localStorage.removeItem(this.adminAuthLocalStorage);
     this.router.navigate(['/admin-auth/login'], {
       queryParams: {},
     });
@@ -84,8 +91,8 @@ export class AdminAuthService implements OnDestroy {
     return this.adminAuthHttpService.getUserByToken(auth.token).pipe(
       map((user: AdminType) => {
         if (user) {
-          this.setAdminFromLocalStorage(user);
           this.currentAdminUserSubject.next(user);
+          this.setAdminToLocalStorage(user);
         } else {
           this.logout();
         }
@@ -112,25 +119,17 @@ export class AdminAuthService implements OnDestroy {
   }
 
   // private methods
-  private setAuthFromLocalStorage(auth: AuthModel): boolean {
-    // store auth token/type/epiresIn in local storage to keep user logged in between page refreshes
+  private setAuthToLocalStorage(auth: AuthModel): boolean {
     if (auth && auth.token) {
-      localStorage.setItem(
-        this.adminAuthLocalStorageToken,
-        JSON.stringify(auth)
-      );
+      localStorage.setItem(this.adminAuthLocalStorage, JSON.stringify(auth));
       return true;
     }
     return false;
   }
 
-  private setAdminFromLocalStorage(admin: AdminType): boolean {
-    // store auth token/type/epiresIn in local storage to keep user logged in between page refreshes
+  private setAdminToLocalStorage(admin: AdminType): boolean {
     if (admin) {
-      localStorage.setItem(
-        this.adminUserLocalStorageToken,
-        JSON.stringify(admin)
-      );
+      localStorage.setItem(this.adminUserLocalStorage, JSON.stringify(admin));
       return true;
     }
     return false;
@@ -138,7 +137,7 @@ export class AdminAuthService implements OnDestroy {
 
   getAuthFromLocalStorage(): AuthModel | undefined {
     try {
-      const lsValue = localStorage.getItem(this.adminAuthLocalStorageToken);
+      const lsValue = localStorage.getItem(this.adminAuthLocalStorage);
       if (!lsValue) {
         return undefined;
       }
@@ -153,7 +152,7 @@ export class AdminAuthService implements OnDestroy {
 
   getAdminFromLocalStorage(): AdminType | undefined {
     try {
-      const lsValue = localStorage.getItem(this.adminUserLocalStorageToken);
+      const lsValue = localStorage.getItem(this.adminUserLocalStorage);
       if (!lsValue) {
         return undefined;
       }

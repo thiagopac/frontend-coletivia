@@ -17,7 +17,10 @@ export class SpinnerInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    this.spinnerHandler.handleRequest('plus');
+    if (!request.headers.has('hideSpinner')) {
+      this.spinnerHandler.handleRequest('plus');
+    }
+
     return next.handle(request).pipe(finalize(this.finalize.bind(this)));
   }
 

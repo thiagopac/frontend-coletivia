@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ImageService } from 'src/app/services/image.service';
 import { Router } from '@angular/router';
 
@@ -11,6 +11,7 @@ export class MidjourneyCreateComponent implements OnInit {
   prompt: string = '';
   isAccordionOpen = false;
   translate: boolean = true;
+  loading: boolean = false;
 
   exemplos: { prompt: string; descricaoIdeal: string }[] = [
     {
@@ -73,9 +74,11 @@ export class MidjourneyCreateComponent implements OnInit {
   ngOnInit(): void {}
 
   generate(): void {
+    this.loading = true;
     this.imageService
       .createGenerationMidjourney(this.prompt, this.translate)
       .subscribe((res) => {
+        this.loading = false;
         this.router.navigate(['/image/midjourney/generation', res.uuid]);
       });
   }
