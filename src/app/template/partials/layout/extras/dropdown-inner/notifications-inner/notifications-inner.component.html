@@ -1,4 +1,4 @@
-<div class="d-flex flex-column bgi-no-repeat rounded-top bg-dark">
+<div class="d-flex flex-column rounded-top bg-dark">
   <h3 class="text-white fw-bold px-9 mt-6 mb-6 d-flex justify-content-between">
     <div>Notificações</div>
     <div class="fs-8 opacity-75 ps-3 align-self-center">
@@ -8,13 +8,21 @@
 </div>
 
 <div class="scroll-y mh-325px">
-  <div class="d-flex h-auto w-100">
+  <div class="d-flex h-auto w-100" *ngIf="items.length > 0">
     <div class="pe-2 border-bottom border-gray-300 py-2 w-100 text-end">
       <a (click)="markAllAsRead()" class="link cursor-pointer fs-7">
         Marcar todas lidas
       </a>
     </div>
   </div>
+
+  <div
+    *ngIf="items.length === 0"
+    class="d-flex justify-content-center align-items-center py-5"
+  >
+    <span class="text-gray-500">Nenhuma notificação</span>
+  </div>
+
   <div *ngFor="let item of items" class="d-flex flex-stack">
     <div
       class="d-flex px-8 py-5 border-bottom border-gray-300 cursor-pointer"
