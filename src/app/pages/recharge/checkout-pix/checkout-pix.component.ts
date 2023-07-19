@@ -2,7 +2,8 @@ import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RechargeService } from 'src/app/services/recharge.service';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Subject, Subscription } from 'rxjs';
+import { interval, Subject, Subscription } from 'rxjs';
+import { takeUntil, switchMap } from 'rxjs/operators';
 import { SocketIOService } from 'src/app/services/socket-io.service';
 
 @Component({
@@ -18,7 +19,6 @@ export class CheckoutPixComponent implements OnInit, OnDestroy {
   pollingSubscription: any;
   stopPolling$ = new Subject<void>();
   subCheckoutRefresh: Subscription;
-
   constructor(
     private rechargeService: RechargeService,
     private activatedRoute: ActivatedRoute,
@@ -36,9 +36,7 @@ export class CheckoutPixComponent implements OnInit, OnDestroy {
     this.subCheckoutRefresh = this.socketIOService
       .onCheckoutRefresh()
       .subscribe(() => {
-        setTimeout(() => {
-          this.retrieve();
-        }, 2000);
+        this.retrieve();
       });
   }
 
@@ -47,7 +45,33 @@ export class CheckoutPixComponent implements OnInit, OnDestroy {
       this.recharge = res;
       this.calculateLeftTime();
       this.changeDetectorRef.detectChanges();
+      if (this.recharge.status !== 'paid' && this.leftTime > 0) {
+        this.startPolling();
+      }
     });
+  }
+
+  startPolling() {
+    this.pollingSubscription = interval(10000)
+      .pipe(
+        switchMap(() => this.rechargeService.retrieve(this.rechargeUuid)),
+        takeUntil(this.stopPolling$)
+      )
+      .subscribe((res) => {
+        this.recharge = res;
+        this.calculateLeftTime();
+        this.changeDetectorRef.detectChanges();
+        if (this.recharge.status === 'paid' || this.leftTime <= 0) {
+          this.stopPolling();
+        }
+      });
+  }
+
+  stopPolling() {
+    this.stopPolling$.next();
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
   }
 
   copyToClipboard() {
@@ -67,6 +91,7 @@ export class CheckoutPixComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.stopPolling();
     this.subCheckoutRefresh.unsubscribe();
   }
 }
