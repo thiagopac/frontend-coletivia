@@ -49,4 +49,8 @@ export class SocketIOService {
   onBalanceRefresh() {
     return this.socket.fromEvent('ch_balance_refresh');
   }
+
+  onCheckoutRefresh() {
+    return this.socket.fromEvent('ch_checkout_refresh');
+  }
 }
