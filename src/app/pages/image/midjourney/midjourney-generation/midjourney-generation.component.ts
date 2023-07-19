@@ -27,6 +27,10 @@ export class MidjourneyGenerationComponent implements OnInit {
     });
   }
 
+  refreshEventReceived() {
+    this.loadGenerationResources(this.generationUuid!);
+  }
+
   loadGenerationResources(uuid: string) {
     this.imageService.retrieveGenerationMidjourney(uuid).subscribe((res) => {
       this.generation = res;

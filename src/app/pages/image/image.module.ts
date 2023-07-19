@@ -15,6 +15,7 @@ import {
 } from '@angular/material/paginator';
 import { CustomPaginatorIntlService } from 'src/app/services/custom-paginator-intl.service';
 import { WidgetsModule } from 'src/app/components/widgets/widgets.module';
+import { ImageOptionsGridComponent } from 'src/app/components/image-options-grid/image-options-grid.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { WidgetsModule } from 'src/app/components/widgets/widgets.module';
     MidjourneyGenerationComponent,
     ImagesCarouselComponent,
     InstagramFeedItemComponent,
+    ImageOptionsGridComponent,
   ],
   imports: [
     CommonModule,
@@ -51,7 +53,11 @@ import { WidgetsModule } from 'src/app/components/widgets/widgets.module';
     MatPaginatorModule,
     WidgetsModule,
   ],
-  exports: [ImagesCarouselComponent, InstagramFeedItemComponent],
+  exports: [
+    ImagesCarouselComponent,
+    InstagramFeedItemComponent,
+    ImageOptionsGridComponent,
+  ],
   providers: [
     { provide: MatPaginatorIntl, useClass: CustomPaginatorIntlService },
   ],
