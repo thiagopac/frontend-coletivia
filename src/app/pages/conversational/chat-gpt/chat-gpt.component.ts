@@ -175,7 +175,7 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
       complete: () => {
         console.log(this.messages.length);
 
-        if (this.messages.length === 2) {
+        if (this.messages.length <= 4) {
           this.retrieveSuggestedTitle();
         }
         this.genPendding = false;
