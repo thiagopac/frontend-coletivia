@@ -37,7 +37,7 @@ export class UserService {
 
   getBalance(): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/user/balance/retrieve`, {
-      headers: this.authService.headerSigned(),
+      headers: this.authService.headerSigned(true),
     });
   }
 }

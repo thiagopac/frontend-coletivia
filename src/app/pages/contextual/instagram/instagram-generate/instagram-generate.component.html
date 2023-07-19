@@ -9,7 +9,7 @@
         <mat-stepper
           class="mt-10"
           #stepper
-          [linear]="false"
+          [linear]="true"
           orientation="horizontal"
         >
           <mat-step [stepControl]="fgPage1">
@@ -301,6 +301,9 @@
                       class="btn btn-corner top-0 start-0 qd-1"
                       (click)="confirmUpscale(i, 1)"
                     >
+                      <div class="badge badge-white badge-circle me-5 fs-6">
+                        1
+                      </div>
                       <i class="fs-2 bi bi-badge-hd text-white"></i>
                       Gerar alta resolução
                     </button>
@@ -309,6 +312,9 @@
                       class="btn btn-corner top-0 end-0 qd-2"
                       (click)="confirmUpscale(i, 2)"
                     >
+                      <div class="badge badge-white badge-circle me-5 fs-6">
+                        2
+                      </div>
                       <i class="fs-2 bi bi-badge-hd text-white"></i>
                       Gerar alta resolução
                     </button>
@@ -317,6 +323,9 @@
                       class="btn btn-corner bottom-0 start-0 qd-3"
                       (click)="confirmUpscale(i, 3)"
                     >
+                      <div class="badge badge-white badge-circle me-5 fs-6">
+                        3
+                      </div>
                       <i class="fs-2 bi bi-badge-hd text-white"></i>
                       Gerar alta resolução
                     </button>
@@ -325,6 +334,9 @@
                       class="btn btn-corner bottom-0 end-0 qd-4"
                       (click)="confirmUpscale(i, 4)"
                     >
+                      <div class="badge badge-white badge-circle me-5 fs-6">
+                        4
+                      </div>
                       <i class="fs-2 bi bi-badge-hd text-white"></i>
                       Gerar alta resolução
                     </button>
@@ -336,7 +348,19 @@
                 Alta resolução
               </p>
               <p class="fs-6 text-muted revert text-uppercase">
-                Clique na imagem para visualizá-la
+                <span
+                  *ngIf="
+                    midjourneyImageGeneration?.upscales.upscales.length > 0
+                  "
+                  >Clique na imagem para visualizá-la</span
+                >
+                <span
+                  *ngIf="
+                    midjourneyImageGeneration?.upscales.upscales.length === 0
+                  "
+                  >Aqui serão mostrada as imagens que você gerou em
+                  <strong>Alta resolução</strong></span
+                >
               </p>
               <div class="row">
                 <div
