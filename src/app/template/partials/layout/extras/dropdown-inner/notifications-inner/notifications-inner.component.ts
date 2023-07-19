@@ -15,7 +15,7 @@ import { NotificationService } from 'src/app/services/notificiation.service';
 })
 export class NotificationsInnerComponent implements OnInit, OnDestroy {
   @HostBinding('class') class =
-    'menu menu-sub menu-sub-dropdown menu-column w-400px w-lg-425px';
+    'menu menu-sub menu-sub-dropdown menu-column w-100 w-lg-425px ';
   @HostBinding('attr.data-kt-menu') dataKtMenu = 'true';
   items: any[] = [];
   unreadCount: number = 0;
