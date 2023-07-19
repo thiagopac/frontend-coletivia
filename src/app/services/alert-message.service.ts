@@ -40,12 +40,14 @@ export class AlertMessageService {
 
   alertWithHandler(
     message: string,
-    icon: SweetAlertIcon = 'question',
-    handleConfirmation: Function
+    icon: 'success' | 'error' | 'warning' | 'info' | 'question' = 'question',
+    handleConfirmation: Function,
+    isHtml: boolean = false
   ) {
     Swal.fire({
-      text: message,
-      icon: 'error',
+      html: isHtml ? message : undefined,
+      text: isHtml ? undefined : message,
+      icon: icon,
       showCancelButton: true,
       cancelButtonText: 'Cancelar',
       confirmButtonText: 'Sim',

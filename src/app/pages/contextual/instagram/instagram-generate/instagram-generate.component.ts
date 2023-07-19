@@ -1,3 +1,4 @@
+import { AlertMessageService } from 'src/app/services/alert-message.service';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -43,7 +44,8 @@ export class InstagramGenerateComponent implements OnInit, AfterViewInit {
     private instagramService: InstagramService,
     private changeDetectorRef: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
-    private router: Router
+    private router: Router,
+    private alertMessageService: AlertMessageService
   ) {
     this.fgPage1 = this.formBuilder.group({
       prompt: ['', [Validators.required, Validators.minLength(50)]],
@@ -267,9 +269,11 @@ export class InstagramGenerateComponent implements OnInit, AfterViewInit {
   }
 
   confirmUpscale(option: number, index: number): void {
-    if (confirm(`Criar versão em alta resolução da opção ${index}?`)) {
-      this.upscale(option, index);
-    }
+    this.alertMessageService.alertWithHandler(
+      `Criar versão em alta resolução da opção ${index}?`,
+      'question',
+      () => this.upscale(option, index)
+    );
   }
 
   upscale(option: number, index: number): void {
