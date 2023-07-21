@@ -2,7 +2,6 @@ import { PipesModule } from '../../pipes/pipes.module';
 import { NgModule } from '@angular/core';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { InlineSVGModule } from 'ng-inline-svg-2';
-
 import { AccountRoutingModule } from './account-routing.module';
 import { AccountComponent } from './account.component';
 import { OverviewComponent } from './overview/overview.component';

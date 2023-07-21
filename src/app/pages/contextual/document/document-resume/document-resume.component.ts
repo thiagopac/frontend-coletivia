@@ -1,8 +1,11 @@
 import { FeatureService } from './../../../../services/feature.service';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AlertMessageService } from 'src/app/services/alert-message.service';
 import { DocumentAnalysisService } from 'src/app/services/document-analysis.service';
 import { DocumentService } from 'src/app/services/document.service';
+import { InsufficientBalanceService } from 'src/app/services/insufficient-balance.service';
 
 @Component({
   selector: 'app-document-resume',
@@ -14,6 +17,8 @@ export class DocumentResumeComponent implements OnInit {
   document?: any;
   features?: any[];
   analyses?: any[];
+  mostrarBloqueio: boolean = false;
+  subBloqueio: Subscription;
 
   constructor(
     private documentService: DocumentService,
@@ -21,7 +26,9 @@ export class DocumentResumeComponent implements OnInit {
     private featureService: FeatureService,
     private changeDetectorRef: ChangeDetectorRef,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private alertMessageService: AlertMessageService,
+    private insufficientBalanceService: InsufficientBalanceService
   ) {}
 
   ngOnInit(): void {
@@ -29,6 +36,12 @@ export class DocumentResumeComponent implements OnInit {
       this.documentUuid = params.get('uuid')!;
       this.loadDocumentResources(this.documentUuid);
     });
+
+    this.subBloqueio = this.insufficientBalanceService.bloqueio$
+      .asObservable()
+      .subscribe((bloqueio) => {
+        this.mostrarBloqueio = bloqueio;
+      });
   }
 
   loadDocumentResources(uuid: string) {
@@ -70,7 +83,18 @@ export class DocumentResumeComponent implements OnInit {
   }
 
   confirmAnalyze(feature: any): void {
-    if (confirm(`Analizar o documento utilizando "${feature.name}"?`)) {
+    this.alertMessageService.alertWithHandler(
+      `Analisar o documento utilizando <strong>${feature.name}</strong>?`,
+      'question',
+      () => this.analyze(feature.uuid),
+      true
+    );
+  }
+
+  analyze(feature: any) {
+    if (this.mostrarBloqueio) {
+      this.alertMessageService.insufficientBalanceAlert();
+    } else {
       this.documentAnalysisService
         .analyze(this.documentUuid, feature.uuid)
         .subscribe((res) => {
