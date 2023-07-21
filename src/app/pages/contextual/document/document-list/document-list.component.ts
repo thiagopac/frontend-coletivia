@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { AlertMessageService } from 'src/app/services/alert-message.service';
 import { DocumentService } from 'src/app/services/document.service';
 
 @Component({
@@ -13,7 +14,8 @@ export class DocumentListComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private documentService: DocumentService
+    private documentService: DocumentService,
+    private alertMessageService: AlertMessageService
   ) {}
 
   ngOnInit(): void {
@@ -31,9 +33,9 @@ export class DocumentListComponent implements OnInit {
   }
 
   confirmDelete(uuid: string): void {
-    if (confirm('Tem certeza?')) {
-      this.delete(uuid);
-    }
+    this.alertMessageService.alertWithHandler(`Tem certeza?`, 'question', () =>
+      this.delete(uuid)
+    );
   }
 
   delete(uuid: string): void {

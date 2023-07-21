@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { AlertMessageService } from 'src/app/services/alert-message.service';
 import { ChatService } from 'src/app/services/chat.service';
 
 @Component({
@@ -11,7 +12,11 @@ import { ChatService } from 'src/app/services/chat.service';
 export class ChatListComponent implements OnInit {
   items$: Observable<any[]>;
 
-  constructor(private router: Router, private chatService: ChatService) {}
+  constructor(
+    private router: Router,
+    private chatService: ChatService,
+    private alertMessageService: AlertMessageService
+  ) {}
 
   ngOnInit(): void {
     this.list();
@@ -27,9 +32,9 @@ export class ChatListComponent implements OnInit {
   }
 
   confirmDelete(uuid: string): void {
-    if (confirm('Tem certeza?')) {
-      this.deleteChat(uuid);
-    }
+    this.alertMessageService.alertWithHandler(`Tem certeza?`, 'question', () =>
+      this.deleteChat(uuid)
+    );
   }
 
   deleteChat(uuid: string): void {

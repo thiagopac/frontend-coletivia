@@ -7,9 +7,11 @@ import {
   Output,
 } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
 import { AlertMessageService } from 'src/app/services/alert-message.service';
 import { ImageService } from 'src/app/services/image.service';
 import { InstagramService } from 'src/app/services/instagram.service';
+import { InsufficientBalanceService } from 'src/app/services/insufficient-balance.service';
 
 @Component({
   selector: 'app-image-options-grid',
@@ -23,17 +25,25 @@ export class ImageOptionsGridComponent implements OnInit {
 
   maxHeight = '0px';
   public fullSizeImageUrl: SafeUrl | undefined;
+  mostrarBloqueio: boolean = false;
+  subBloqueio: Subscription;
 
   constructor(
     private alertMessageService: AlertMessageService,
     private instagramService: InstagramService,
     private imageService: ImageService,
-
     private changeDetectorRef: ChangeDetectorRef,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private insufficientBalanceService: InsufficientBalanceService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.subBloqueio = this.insufficientBalanceService.bloqueio$
+      .asObservable()
+      .subscribe((bloqueio) => {
+        this.mostrarBloqueio = bloqueio;
+      });
+  }
 
   confirmUpscale(option: number, index: number): void {
     this.alertMessageService.alertWithHandler(
@@ -47,35 +57,43 @@ export class ImageOptionsGridComponent implements OnInit {
   }
 
   upscale(option: number, index: number) {
-    this.imageService
-      .createUpscaleMidjourney(this.generation.uuid!, option, index)
-      .subscribe({
-        next: (res) => {
-          this.refreshEvent.emit();
-          this.changeDetectorRef.detectChanges();
-          const element = document.getElementById('hd-images');
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-          }
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
+    if (this.mostrarBloqueio) {
+      this.alertMessageService.insufficientBalanceAlert();
+    } else {
+      this.imageService
+        .createUpscaleMidjourney(this.generation.uuid!, option, index)
+        .subscribe({
+          next: (res) => {
+            this.refreshEvent.emit();
+            this.changeDetectorRef.detectChanges();
+            const element = document.getElementById('hd-images');
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
+    }
   }
 
   upscaleInstagram(option: number, index: number) {
-    this.instagramService
-      .upscaleImageInstagramPost(this.instagramPost.uuid!, option, index)
-      .subscribe({
-        next: (res) => {
-          this.refreshEvent.emit();
-          this.changeDetectorRef.detectChanges();
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
+    if (this.mostrarBloqueio) {
+      this.alertMessageService.insufficientBalanceAlert();
+    } else {
+      this.instagramService
+        .upscaleImageInstagramPost(this.instagramPost.uuid!, option, index)
+        .subscribe({
+          next: (res) => {
+            this.refreshEvent.emit();
+            this.changeDetectorRef.detectChanges();
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
+    }
   }
 
   showFullSizeImage(url: string) {

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import Swal, { SweetAlertIcon } from 'sweetalert2';
 
 @Injectable({
@@ -7,7 +8,7 @@ import Swal, { SweetAlertIcon } from 'sweetalert2';
 export class AlertMessageService {
   toast: any;
 
-  constructor() {
+  constructor(private router: Router) {
     this.toast = Swal.mixin({
       toast: true,
       position: 'top-end',
@@ -54,6 +55,26 @@ export class AlertMessageService {
       confirmButtonColor: '#31abcc',
     }).then((result) => {
       if (result.isConfirmed) handleConfirmation();
+    });
+  }
+
+  insufficientBalanceAlert(
+    title: string = 'Você não possui créditos',
+    message: string = 'Não é possível prosseguir com sua solicitação.<br /> Faça uma recarga para continuar.'
+  ) {
+    Swal.fire({
+      title: title,
+      html: `${message}`,
+      imageUrl: 'assets/media/illustrations/custom/sad-no-credit.jpg',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Ver opções de recarga',
+      confirmButtonColor: '#31abcc',
+      imageWidth: 400,
+      width: 800,
+      padding: '4rem',
+    }).then((result) => {
+      if (result.isConfirmed) this.router.navigate(['/recharge/options']);
     });
   }
 }

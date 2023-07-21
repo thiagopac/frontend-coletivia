@@ -1,3 +1,4 @@
+import { InsufficientBalanceService } from './insufficient-balance.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -9,7 +10,17 @@ import { InfoType, UserType } from 'src/app/models/user';
   providedIn: 'root',
 })
 export class UserService {
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private insufficientBalanceService: InsufficientBalanceService
+  ) {
+    this.getBalance().subscribe((res) => {
+      if (+res.current_balance <= 0) {
+        this.insufficientBalanceService.setBloqueio(true);
+      }
+    });
+  }
 
   updateInfo(info: InfoType): Observable<InfoType> {
     return this.http.patch<InfoType>(
