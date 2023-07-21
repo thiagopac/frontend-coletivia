@@ -66,3 +66,20 @@
   max-width: 90%;
   max-height: 90%;
 }
+
+/* Estilizando o contêiner da imagem e do texto */
+.image-container {
+  position: relative; /* Permite posicionar o elemento filho */
+}
+
+/* Estilizando o texto de progresso */
+.progress-text {
+  position: absolute; /* Posiciona o elemento em relação ao contêiner pai */
+  top: 50%; /* Posiciona o topo do texto no centro vertical */
+  left: 50%; /* Posiciona a esquerda do texto no centro horizontal */
+  transform: translate(-50%, -50%); /* Centraliza o texto corretamente */
+  font-size: 30px; /* Tamanho da fonte (ajuste conforme necessário) */
+  color: white; /* Cor do texto (branca) */
+  text-align: center; /* Centraliza o texto horizontalmente */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Adiciona sombra ao texto para melhorar a legibilidade */
+}
