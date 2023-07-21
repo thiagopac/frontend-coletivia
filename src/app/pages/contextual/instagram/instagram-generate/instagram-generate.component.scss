@@ -121,3 +121,7 @@ app-instagram-feed-item {
   align-items: center;
   height: 100%;
 }
+
+.mat-horizontal-stepper-header {
+  pointer-events: none !important;
+}

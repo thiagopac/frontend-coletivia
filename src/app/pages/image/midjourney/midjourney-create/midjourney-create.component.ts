@@ -1,18 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { SocketIOService } from 'src/app/services/socket-io.service';
+import { InsufficientBalanceService } from 'src/app/services/insufficient-balance.service';
+import { AlertMessageService } from 'src/app/services/alert-message.service';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ImageService } from 'src/app/services/image.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-midjourney-create',
   templateUrl: './midjourney-create.component.html',
   styleUrls: ['./midjourney-create.component.scss'],
 })
-export class MidjourneyCreateComponent implements OnInit {
-  prompt: string = '';
-  isAccordionOpen = false;
-  translate: boolean = true;
-  loading: boolean = false;
-
+export class MidjourneyCreateComponent implements OnInit, OnDestroy {
   exemplos: { prompt: string; descricaoIdeal: string }[] = [
     {
       prompt: 'Um elefante rosa dançando em cima de um balão azul.',
@@ -69,21 +68,60 @@ export class MidjourneyCreateComponent implements OnInit {
     },
   ];
 
-  constructor(private imageService: ImageService, private router: Router) {}
+  prompt: string = '';
+  isAccordionOpen = false;
+  translate: boolean = true;
+  loading: boolean = false;
+  mostrarBloqueio: boolean = false;
+  subBloqueio: Subscription;
+  progress: string = '0%';
+  imageUri: string | undefined = '';
 
-  ngOnInit(): void {}
+  constructor(
+    private imageService: ImageService,
+    private router: Router,
+    private alertMessageService: AlertMessageService,
+    private insufficientBalanceService: InsufficientBalanceService,
+    private socketIOService: SocketIOService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    this.subBloqueio = this.insufficientBalanceService.bloqueio$
+      .asObservable()
+      .subscribe((bloqueio) => {
+        this.mostrarBloqueio = bloqueio;
+      });
+
+    this.socketIOService
+      .onMidjourneyImageGenerationStatus()
+      .subscribe((res: any) => {
+        console.log('onMidjourneyImageGenerationStatus', res);
+        this.progress = res.progress;
+        this.imageUri = res.uri;
+        this.changeDetectorRef.detectChanges();
+      });
+  }
 
   generate(): void {
-    this.loading = true;
-    this.imageService
-      .createGenerationMidjourney(this.prompt, this.translate)
-      .subscribe((res) => {
-        this.loading = false;
-        this.router.navigate(['/image/midjourney/generation', res.uuid]);
-      });
+    if (this.mostrarBloqueio) {
+      this.alertMessageService.insufficientBalanceAlert();
+    } else {
+      this.loading = true;
+      this.imageService
+        .createGenerationMidjourney(this.prompt, this.translate)
+        .subscribe((res) => {
+          this.loading = false;
+          this.router.navigate(['/image/midjourney/generation', res.uuid]);
+        });
+    }
   }
 
   toggleAccordion(): void {
     this.isAccordionOpen = !this.isAccordionOpen;
+  }
+
+  ngOnDestroy(): void {
+    this.subBloqueio.unsubscribe();
   }
 }

@@ -45,7 +45,7 @@ export class AuthService implements OnDestroy {
   headerSigned(hideSpinner?: boolean): HttpHeaders {
     return new HttpHeaders({
       Authorization: `Bearer ${this.getAuthFromLocalStorage()?.token}`,
-      hideSpinner: `${hideSpinner === true ? 'true' : 'false'}}`,
+      hideSpinner: `${hideSpinner === true ? 'true' : 'false'}`,
     });
   }
 
