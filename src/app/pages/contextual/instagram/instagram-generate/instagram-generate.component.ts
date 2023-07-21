@@ -4,23 +4,29 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  OnDestroy,
   OnInit,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatStepper } from '@angular/material/stepper';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { catchError, switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import { InstagramService } from 'src/app/services/instagram.service';
+import { InsufficientBalanceService } from 'src/app/services/insufficient-balance.service';
 
 @Component({
   selector: 'app-instagram-generate',
   templateUrl: './instagram-generate.component.html',
   styleUrls: ['./instagram-generate.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
-export class InstagramGenerateComponent implements OnInit, AfterViewInit {
+export class InstagramGenerateComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   fgPage1: FormGroup;
   fgPage2: FormGroup;
   fgPage3: FormGroup;
@@ -29,6 +35,8 @@ export class InstagramGenerateComponent implements OnInit, AfterViewInit {
   midjourneyImageGeneration?: any;
   instagramPost: any;
   public fullSizeImageUrl: SafeUrl | undefined;
+  mostrarBloqueio: boolean = false;
+  subBloqueio: Subscription;
 
   @ViewChild(MatStepper) stepper: MatStepper;
   @ViewChild('postElement', { static: false }) postElement: Element;
@@ -45,7 +53,8 @@ export class InstagramGenerateComponent implements OnInit, AfterViewInit {
     private changeDetectorRef: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
     private router: Router,
-    private alertMessageService: AlertMessageService
+    private alertMessageService: AlertMessageService,
+    private insufficientBalanceService: InsufficientBalanceService
   ) {
     this.fgPage1 = this.formBuilder.group({
       prompt: ['', [Validators.required, Validators.minLength(50)]],
@@ -63,7 +72,13 @@ export class InstagramGenerateComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.subBloqueio = this.insufficientBalanceService.bloqueio$
+      .asObservable()
+      .subscribe((bloqueio) => {
+        this.mostrarBloqueio = bloqueio;
+      });
+  }
 
   ngAfterViewInit(): void {
     this.stepper._getIndicatorType = () => 'number';
@@ -119,31 +134,33 @@ export class InstagramGenerateComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.instagramService
-      .createInstagramPost()
-      .pipe(
-        switchMap((res: any) => {
-          this.generationUuid = res.uuid;
-          return this.instagramService.generateTextInstagramPost(
-            this.generationUuid,
-            this.fgPage1.controls.prompt.value!
-          );
-        }),
-        catchError((error) => {
-          this.handleError(
-            'Ocorreu um erro ao gerar o texto do post do Instagram:',
-            error
-          );
-          return of(null);
-        })
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          this.fgPage2.controls.text.setValue(res.aiWriting.text);
-          this.setTextareaHeight('textareaResult');
-          this.stepper.next();
-        }
-      });
+    this.performActionWithCredits(() => {
+      this.instagramService
+        .createInstagramPost()
+        .pipe(
+          switchMap((res: any) => {
+            this.generationUuid = res.uuid;
+            return this.instagramService.generateTextInstagramPost(
+              this.generationUuid,
+              this.fgPage1.controls.prompt.value!
+            );
+          }),
+          catchError((error) => {
+            this.handleError(
+              'Ocorreu um erro ao gerar o texto do post do Instagram:',
+              error
+            );
+            return of(null);
+          })
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.fgPage2.controls.text.setValue(res.aiWriting.text);
+            this.setTextareaHeight('textareaResult');
+            this.stepper.next();
+          }
+        });
+    });
   }
 
   sendPage2(): void {
@@ -152,27 +169,29 @@ export class InstagramGenerateComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.instagramService
-      .generateTextImagineInstagramPost(
-        this.generationUuid,
-        this.fgPage2.controls.text.value!
-      )
-      .pipe(
-        catchError((error) => {
-          this.handleError(
-            'Ocorreu um erro ao gerar o texto para descrição da imagem:',
-            error
-          );
-          return of(null);
-        })
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          this.fgPage3.controls.imagine.setValue(res.imagine);
-          this.setTextareaHeight('textareaImagine');
-          this.stepper.next();
-        }
-      });
+    this.performActionWithCredits(() => {
+      this.instagramService
+        .generateTextImagineInstagramPost(
+          this.generationUuid,
+          this.fgPage2.controls.text.value!
+        )
+        .pipe(
+          catchError((error) => {
+            this.handleError(
+              'Ocorreu um erro ao gerar o texto para descrição da imagem:',
+              error
+            );
+            return of(null);
+          })
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.fgPage3.controls.imagine.setValue(res.imagine);
+            this.setTextareaHeight('textareaImagine');
+            this.stepper.next();
+          }
+        });
+    });
   }
 
   sendPage3(): void {
@@ -181,29 +200,31 @@ export class InstagramGenerateComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.instagramService
-      .generateImageInstagramPost(
-        this.generationUuid,
-        this.fgPage3.controls.imagine.value!,
-        this.fgPage3.controls.translate.value!,
-        this.fgPage3.controls.postType.value!
-      )
-      .pipe(
-        catchError((error) => {
-          this.handleError(
-            'Ocorreu um erro ao gerar a imagem do post do Instagram:',
-            error
-          );
-          return of(null);
-        })
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          this.midjourneyImageGeneration = res.midjourneyImageGeneration;
-          this.retrieveInstagramPost();
-          this.stepper.next();
-        }
-      });
+    this.performActionWithCredits(() => {
+      this.instagramService
+        .generateImageInstagramPost(
+          this.generationUuid,
+          this.fgPage3.controls.imagine.value!,
+          this.fgPage3.controls.translate.value!,
+          this.fgPage3.controls.postType.value!
+        )
+        .pipe(
+          catchError((error) => {
+            this.handleError(
+              'Ocorreu um erro ao gerar a imagem do post do Instagram:',
+              error
+            );
+            return of(null);
+          })
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.midjourneyImageGeneration = res.midjourneyImageGeneration;
+            this.retrieveInstagramPost();
+            this.stepper.next();
+          }
+        });
+    });
   }
 
   sendPage4(): void {
@@ -226,26 +247,36 @@ export class InstagramGenerateComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.instagramService
-      .generateTextInstagramPost(
-        this.generationUuid,
-        this.fgPage1.controls.prompt.value!
-      )
-      .pipe(
-        catchError((error) => {
-          this.handleError(
-            'Ocorreu um erro ao gerar o texto do post do Instagram:',
-            error
-          );
-          return of(null);
-        })
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          this.fgPage2.controls.text.setValue(res.aiWriting.text);
-          this.setTextareaHeight('textareaResult');
-        }
-      });
+    this.performActionWithCredits(() => {
+      this.instagramService
+        .generateTextInstagramPost(
+          this.generationUuid,
+          this.fgPage1.controls.prompt.value!
+        )
+        .pipe(
+          catchError((error) => {
+            this.handleError(
+              'Ocorreu um erro ao gerar o texto do post do Instagram:',
+              error
+            );
+            return of(null);
+          })
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.fgPage2.controls.text.setValue(res.aiWriting.text);
+            this.setTextareaHeight('textareaResult');
+          }
+        });
+    });
+  }
+
+  performActionWithCredits(action: () => void): void {
+    if (this.mostrarBloqueio) {
+      this.alertMessageService.insufficientBalanceAlert();
+    } else {
+      action();
+    }
   }
 
   retrieveInstagramPost(): void {
@@ -277,25 +308,29 @@ export class InstagramGenerateComponent implements OnInit, AfterViewInit {
   }
 
   upscale(option: number, index: number): void {
-    this.instagramService
-      .upscaleImageInstagramPost(this.generationUuid!, option, index)
-      .pipe(
-        catchError((error) => {
-          console.error(error);
-          return of(null);
-        })
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          this.fgPage4.controls.upscale.setValue(true);
-          this.midjourneyImageGeneration = res.midjourneyImageGeneration;
-          this.changeDetectorRef.detectChanges();
-          const element = document.getElementById('hd-images');
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
+    if (this.mostrarBloqueio) {
+      this.alertMessageService.insufficientBalanceAlert();
+    } else {
+      this.instagramService
+        .upscaleImageInstagramPost(this.generationUuid!, option, index)
+        .pipe(
+          catchError((error) => {
+            console.error(error);
+            return of(null);
+          })
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.fgPage4.controls.upscale.setValue(true);
+            this.midjourneyImageGeneration = res.midjourneyImageGeneration;
+            this.changeDetectorRef.detectChanges();
+            const element = document.getElementById('hd-images');
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
           }
-        }
-      });
+        });
+    }
   }
 
   showFullSizeImage(url: string): void {
@@ -304,5 +339,9 @@ export class InstagramGenerateComponent implements OnInit, AfterViewInit {
 
   closeFullSizeImage(): void {
     this.fullSizeImageUrl = undefined;
+  }
+
+  ngOnDestroy(): void {
+    this.subBloqueio.unsubscribe();
   }
 }

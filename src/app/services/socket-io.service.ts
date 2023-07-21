@@ -53,4 +53,12 @@ export class SocketIOService {
   onCheckoutRefresh() {
     return this.socket.fromEvent('ch_checkout_refresh');
   }
+
+  onInsufficientBalanceAlert() {
+    return this.socket.fromEvent('ch_insufficient_balance_alert');
+  }
+
+  onMidjourneyImageGenerationStatus() {
+    return this.socket.fromEvent('ch_midjourney_image_generation_status');
+  }
 }

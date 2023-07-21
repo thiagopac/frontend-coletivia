@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { AlertMessageService } from 'src/app/services/alert-message.service';
 import { ImageService } from 'src/app/services/image.service';
 
 @Component({
@@ -17,7 +18,8 @@ export class MidjourneyGenerationComponent implements OnInit {
     private imageService: ImageService,
     private activatedRoute: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private alertMessageService: AlertMessageService
   ) {}
 
   ngOnInit(): void {
@@ -39,9 +41,12 @@ export class MidjourneyGenerationComponent implements OnInit {
   }
 
   confirmUpscale(option: number, index: number): void {
-    if (confirm(`Criar versão em alta resolução da opção ${index}?`)) {
-      this.upscale(option, index);
-    }
+    this.alertMessageService.alertWithHandler(
+      `Criar versão em alta resolução da <strong>Opção ${index}</strong>?`,
+      'question',
+      () => this.upscale(option, index),
+      true
+    );
   }
 
   upscale(option: number, index: number) {
