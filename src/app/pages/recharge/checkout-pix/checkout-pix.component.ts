@@ -36,7 +36,9 @@ export class CheckoutPixComponent implements OnInit, OnDestroy {
     this.subCheckoutRefresh = this.socketIOService
       .onCheckoutRefresh()
       .subscribe(() => {
-        this.retrieve();
+        setTimeout(() => {
+          this.retrieve();
+        }, 2000);
       });
   }
 
