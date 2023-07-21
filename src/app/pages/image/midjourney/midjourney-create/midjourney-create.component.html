@@ -14,6 +14,16 @@
         label="Gerando"
       ></app-loading-wrapper>
 
+      <div
+        class="d-flex justify-content-center mt-5"
+        *ngIf="loading && imageUri !== ''"
+      >
+        <div class="image-container">
+          <p class="progress-text">{{ progress }}</p>
+          <img [src]="imageUri" alt="Preview da imagem" />
+        </div>
+      </div>
+
       <ng-container *ngIf="!loading">
         <div class="input-group">
           <input
