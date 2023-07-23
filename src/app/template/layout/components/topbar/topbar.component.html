@@ -104,11 +104,11 @@
     data-kt-menu-placement="bottom-end"
     data-kt-menu-flip="bottom"
   >
-    <span
-      [inlineSVG]="'./assets/media/icons/duotune/general/gen007.svg'"
-      class="svg-icon"
+    <img
+      src="assets/media/icons/duotune/general/gen007.svg"
+      class="svg-icon icon-invert"
       [ngClass]="toolbarButtonIconSizeClass"
-    ></span>
+    />
     <div class="badge badge-danger" *ngIf="unreadCount > 0">
       {{ unreadCount }}
     </div>

@@ -1,7 +1,7 @@
 <div class="wrapper">
-  <div class="card border-0 p-5">
+  <div class="card border-0 py-5">
     <div class="card-body">
-      <div class="card-px pt-15 pb-15">
+      <div class="px-0 pt-15 pb-15">
         <h2 class="fs-2x fw-bold mb-0 text-center">
           Gere posts para Instagram
         </h2>
@@ -10,7 +10,7 @@
           class="mt-10"
           #stepper
           [linear]="true"
-          orientation="horizontal"
+          [orientation]="orientation"
         >
           <mat-step [stepControl]="fgPage1">
             <form [formGroup]="fgPage1">

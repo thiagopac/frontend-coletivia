@@ -1,14 +1,16 @@
-<div class="card carousel-card">
+<div class="card carousel-card w-md-50">
   <div class="card-body">
     <app-images-carousel
       [createdAt]="instagramPost?.created_at"
       [images]="images"
     ></app-images-carousel>
-    <div class="instagram-buttons mt-5">
-      <i class="bi bi-heart"></i>
-      <i class="bi bi-chat"></i>
-      <i class="bi bi-send"></i>
-      <span class="bookmark-icon"><i class="bi bi-bookmark"></i></span>
+    <div class="instagram-buttons d-flex align-items-center mt-5">
+      <i class="bi bi-heart me-3 fs-2hx"></i>
+      <i class="bi bi-chat me-3 fs-2hx"></i>
+      <i class="bi bi-send fs-2hx"></i>
+      <span class="bookmark-icon ms-auto"
+        ><i class="bi bi-bookmark fs-2hx"></i
+      ></span>
     </div>
 
     <p

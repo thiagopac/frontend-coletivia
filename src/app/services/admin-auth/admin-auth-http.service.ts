@@ -28,6 +28,7 @@ export class AdminAuthHTTPService {
   getUserByToken(token: string): Observable<IAdmin> {
     const httpHeaders = new HttpHeaders({
       Authorization: `Bearer ${token}`,
+      hideSpinner: 'true',
     });
     return this.http.get<IAdmin>(`${environment.apiUrl}/admin-auth/me`, {
       headers: httpHeaders,
