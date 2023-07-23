@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  HostListener,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -27,6 +28,7 @@ import { InsufficientBalanceService } from 'src/app/services/insufficient-balanc
 export class InstagramGenerateComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
+  orientation: 'horizontal' | 'vertical' = 'horizontal';
   fgPage1: FormGroup;
   fgPage2: FormGroup;
   fgPage3: FormGroup;
@@ -78,6 +80,19 @@ export class InstagramGenerateComponent
       .subscribe((bloqueio) => {
         this.mostrarBloqueio = bloqueio;
       });
+
+    this.checkScreenSize();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    // Atualize a orientação sempre que a janela for redimensionada
+    this.checkScreenSize();
+  }
+
+  private checkScreenSize() {
+    // Verifique o tamanho da tela e atualize a orientação de acordo
+    this.orientation = window.innerWidth <= 768 ? 'vertical' : 'horizontal';
   }
 
   ngAfterViewInit(): void {

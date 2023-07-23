@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { AuthService } from 'src/app/modules/auth';
-import { ChatMessagesResponse } from 'src/app/models/chat-messages-response';
 
 @Injectable({
   providedIn: 'root',

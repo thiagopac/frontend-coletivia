@@ -35,6 +35,7 @@ export class AuthHTTPService {
   getUserByToken(token: string): Observable<IUser> {
     const httpHeaders = new HttpHeaders({
       Authorization: `Bearer ${token}`,
+      hideSpinner: 'false',
     });
     return this.http.get<IUser>(`${environment.apiUrl}/auth/me`, {
       headers: httpHeaders,
