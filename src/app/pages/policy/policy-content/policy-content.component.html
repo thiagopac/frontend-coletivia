@@ -1,7 +1,7 @@
 <div class="wrapper" *ngIf="policy$ | async as _policy">
-  <div class="card border-0 p-5">
+  <div class="card border-0 py-5">
     <div class="card-body">
-      <div class="card-px pt-15 pb-15">
+      <div class="px-0 pt-15 pb-15">
         <div [innerHTML]="replaceNewLinesWithBreaks(_policy.content)"></div>
       </div>
     </div>
