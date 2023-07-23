@@ -22,4 +22,17 @@
   <button class="btn btn-secondary m-3" (click)="downloadFiles()">
     Baixar fotos e legenda
   </button>
+  <button class="btn btn-secondary m-3" (click)="copyToClipboard()">
+    Copiar texto da legenda
+  </button>
+
+  <div class="d-flex">
+    <button
+      *ngFor="let image of images; let i = index"
+      class="btn btn-primary m-2 w-100"
+      (click)="downloadImage(image, 'imagem' + (i + 1) + '.jpg')"
+    >
+      Baixar Imagem {{ i + 1 }}
+    </button>
+  </div>
 </div>
