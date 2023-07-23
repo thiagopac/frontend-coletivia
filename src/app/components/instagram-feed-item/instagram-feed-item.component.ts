@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import * as JSZip from 'jszip';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-instagram-feed-item',
@@ -10,7 +11,7 @@ export class InstagramFeedItemComponent implements OnInit, OnChanges {
   @Input() instagramPost?: any;
   images: string[] = [];
 
-  constructor() {}
+  constructor(private clipboard: Clipboard) {}
 
   ngOnInit(): void {}
 
@@ -70,5 +71,24 @@ export class InstagramFeedItemComponent implements OnInit, OnChanges {
 
   replaceNewLinesWithBreaks(text: string): string {
     return text.replace(/\n/g, '<br>');
+  }
+
+  copyToClipboard() {
+    const aiWritingText = this.instagramPost?.aiWriting?.text;
+    if (aiWritingText) {
+      this.clipboard.copy(aiWritingText);
+      alert('Texto copiado para o clipboard!');
+    }
+  }
+
+  downloadImage(imageUrl: string, imageName: string) {
+    fetch(imageUrl)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = imageName;
+        link.click();
+      });
   }
 }

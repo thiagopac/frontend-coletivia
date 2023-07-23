@@ -41,14 +41,17 @@
                 </div>
               </div>
 
-              <div class="mt-20 text-center">
+              <div class="d-flex d-sm-block mt-20 text-center">
                 <button
                   (click)="sendPage1()"
                   class="btn btn-primary fs-5 btn-upload h-50px w-150px"
                   [disabled]="fgPage1.invalid"
                 >
-                  <div class="ps-3">
-                    Avançar <i class="las la-arrow-right fs-2"></i>
+                  <div class="ps-0">
+                    Avançar
+                    <i
+                      class="d-none d-sm-inline-block las la-arrow-right fs-2"
+                    ></i>
                   </div>
                 </button>
               </div>
@@ -88,23 +91,28 @@
                 </div>
               </div>
 
-              <div class="mt-20 text-center">
+              <div class="d-flex d-sm-block mt-20 text-center">
                 <button
                   matStepperPrevious
                   class="btn btn-primary fs-5 btn-upload h-50px w-150px me-3"
                 >
-                  <div class="pe-3">
-                    <i class="las la-arrow-left fs-2"></i>
+                  <div class="pe-0">
+                    <i
+                      class="d-none d-sm-inline-block las la-arrow-left fs-2"
+                    ></i>
                     Voltar
                   </div>
                 </button>
                 <button
                   (click)="sendPage2()"
-                  class="btn btn-primary fs-5 btn-upload h-50px w-150px ms-3"
+                  class="btn btn-primary fs-5 btn-upload h-50px w-150px"
                   [disabled]="fgPage2.invalid"
                 >
-                  <div class="ps-3">
-                    Avançar <i class="las la-arrow-right fs-2"></i>
+                  <div class="ps-0">
+                    Avançar
+                    <i
+                      class="d-none d-sm-inline-block las la-arrow-right fs-2"
+                    ></i>
                   </div>
                 </button>
               </div>
@@ -237,13 +245,15 @@
                 </div>
               </div>
 
-              <div class="mt-20 text-center">
+              <div class="d-flex d-sm-block mt-20 text-center">
                 <button
                   matStepperPrevious
                   class="btn btn-primary fs-5 btn-upload h-50px w-150px me-3"
                 >
-                  <div class="pe-3">
-                    <i class="las la-arrow-left fs-2"></i>
+                  <div class="pe-0">
+                    <i
+                      class="d-none d-sm-inline-block las la-arrow-left fs-2"
+                    ></i>
                     Voltar
                   </div>
                 </button>
@@ -252,8 +262,11 @@
                   class="btn btn-primary fs-5 btn-upload h-50px w-150px ms-3"
                   [disabled]="fgPage3.invalid"
                 >
-                  <div class="ps-3">
-                    Avançar <i class="las la-arrow-right fs-2"></i>
+                  <div class="ps-0">
+                    Avançar
+                    <i
+                      class="d-none d-sm-inline-block las la-arrow-right fs-2"
+                    ></i>
                   </div>
                 </button>
               </div>
@@ -305,7 +318,9 @@
                         1
                       </div>
                       <i class="fs-2 bi bi-badge-hd text-white"></i>
-                      Gerar alta resolução
+                      <span class="d-none d-sm-inline-block">
+                        Gerar alta resolução</span
+                      >
                     </button>
 
                     <button
@@ -316,7 +331,9 @@
                         2
                       </div>
                       <i class="fs-2 bi bi-badge-hd text-white"></i>
-                      Gerar alta resolução
+                      <span class="d-none d-sm-inline-block">
+                        Gerar alta resolução</span
+                      >
                     </button>
 
                     <button
@@ -327,7 +344,9 @@
                         3
                       </div>
                       <i class="fs-2 bi bi-badge-hd text-white"></i>
-                      Gerar alta resolução
+                      <span class="d-none d-sm-inline-block">
+                        Gerar alta resolução</span
+                      >
                     </button>
 
                     <button
@@ -338,7 +357,9 @@
                         4
                       </div>
                       <i class="fs-2 bi bi-badge-hd text-white"></i>
-                      Gerar alta resolução
+                      <span class="d-none d-sm-inline-block">
+                        Gerar alta resolução</span
+                      >
                     </button>
                   </div>
                 </div>
@@ -390,13 +411,15 @@
                 <img [src]="fullSizeImageUrl" class="full-size-image" />
               </div>
 
-              <div class="mt-20 text-center">
+              <div class="d-flex d-sm-block mt-20 text-center">
                 <button
                   matStepperPrevious
                   class="btn btn-primary fs-5 btn-upload h-50px w-150px me-3"
                 >
-                  <div class="pe-3">
-                    <i class="las la-arrow-left fs-2"></i>
+                  <div class="pe-0">
+                    <i
+                      class="d-none d-sm-inline-block las la-arrow-left fs-2"
+                    ></i>
                     Voltar
                   </div>
                 </button>
@@ -405,8 +428,11 @@
                   [disabled]="fgPage4.invalid"
                   class="btn btn-primary fs-5 btn-upload h-50px w-150px ms-3"
                 >
-                  <div class="ps-3">
-                    Avançar <i class="las la-arrow-right fs-2"></i>
+                  <div class="ps-0">
+                    Avançar
+                    <i
+                      class="d-none d-sm-inline-block las la-arrow-right fs-2"
+                    ></i>
                   </div>
                 </button>
               </div>
@@ -424,13 +450,15 @@
               ></app-instagram-feed-item>
             </div>
 
-            <div class="mt-20 text-center">
+            <div class="d-flex d-sm-block mt-20 text-center">
               <button
                 matStepperPrevious
                 class="btn btn-primary fs-5 btn-upload h-50px w-150px me-3"
               >
-                <div class="pe-3">
-                  <i class="las la-arrow-left fs-2"></i>
+                <div class="pe-0">
+                  <i
+                    class="d-none d-sm-inline-block las la-arrow-left fs-2"
+                  ></i>
                   Voltar
                 </div>
               </button>

@@ -5,8 +5,8 @@
 // Desktop mode
 
 .header-fixed[data-kt-sticky-header='on'] .header-username {
-  color: $gray-700;
-  border-color: $gray-700;
+  color: white;
+  background-color: $primary !important;
 }
 
 @include media-breakpoint-up(lg) {
@@ -65,9 +65,10 @@
           display: inline-block;
         }
       }
-    }
 
-    .header-fixed[data-kt-sticky-header='on'] & {
+      img {
+        filter: invert(0) contrast(0.3);
+      }
       i {
         color: $gray-900 !important;
       }
@@ -156,6 +157,12 @@
 
       .logo-sticky {
         display: none;
+      }
+    }
+
+    .header-fixed[data-kt-sticky-header='on'] & {
+      img {
+        filter: invert(0) contrast(0.1);
       }
     }
 
