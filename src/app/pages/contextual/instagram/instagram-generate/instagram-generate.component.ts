@@ -86,12 +86,10 @@ export class InstagramGenerateComponent
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    // Atualize a orientação sempre que a janela for redimensionada
     this.checkScreenSize();
   }
 
   private checkScreenSize() {
-    // Verifique o tamanho da tela e atualize a orientação de acordo
     this.orientation = window.innerWidth <= 768 ? 'vertical' : 'horizontal';
   }
 
