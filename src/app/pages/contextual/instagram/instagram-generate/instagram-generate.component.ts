@@ -168,9 +168,11 @@ export class InstagramGenerateComponent
         )
         .subscribe((res: any) => {
           if (res) {
+            console.log(res);
             this.fgPage2.controls.text.setValue(res.aiWriting.text);
             this.setTextareaHeight('textareaResult');
             this.stepper.next();
+            this.changeDetectorRef.detectChanges();
           }
         });
     });
@@ -232,8 +234,11 @@ export class InstagramGenerateComponent
         )
         .subscribe((res: any) => {
           if (res) {
+            console.log(res);
+
             this.midjourneyImageGeneration = res.midjourneyImageGeneration;
             this.retrieveInstagramPost();
+            this.changeDetectorRef.detectChanges();
             this.stepper.next();
           }
         });

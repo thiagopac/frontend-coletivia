@@ -173,3 +173,7 @@ ng-select {
     filter: invert(1);
   }
 }
+
+.card-body {
+  overflow: scroll;
+}
