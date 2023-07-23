@@ -185,7 +185,7 @@ class DrawerComponent {
       const elementZIndex = getCSS(this.element, 'z-index');
       if (elementZIndex) {
         const overlayZindex = parseInt(elementZIndex) - 1;
-        ElementStyleUtil.set(this.overlayElement, 'z-index', overlayZindex); // update
+        ElementStyleUtil.set(this.overlayElement, 'z-index', 1); // update
       }
       document.body.append(this.overlayElement);
       const overlayClassOption = this._getOption('overlay-class');

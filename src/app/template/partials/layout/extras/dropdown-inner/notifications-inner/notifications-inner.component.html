@@ -33,17 +33,17 @@
         <div class="symbol symbol-35px me-4">
           <span
             class="symbol-label"
-            [ngClass]="'bg-light-' + item.data.context"
+            [ngClass]="'notification-icon ' + item.data.context"
           >
-            <span
-              [inlineSVG]="
-                './assets/media/icons/duotune/coletivia/' +
+            <img
+              [ngClass]="'svg-icon'"
+              [src]="
+                'assets/media/icons/duotune/coletivia/' +
                 item.data.icon +
                 '.svg'
               "
               class="svg-icon svg-icon-2x"
-              [ngClass]="'svg-icon-' + item.data.context"
-            ></span>
+            />
           </span>
         </div>
 
