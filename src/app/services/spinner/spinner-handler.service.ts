@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root',
 })
 export class SpinnerHandlerService {
-  public numberOfRequests: number = 0;
+  private numberOfRequests = 0;
   public showSpinner: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
     false
   );
@@ -15,6 +15,10 @@ export class SpinnerHandlerService {
       state === 'plus' ? this.numberOfRequests + 1 : this.numberOfRequests - 1;
     this.showSpinner.next(this.numberOfRequests > 0);
   };
+
+  getNumberOfRequests(): number {
+    return this.numberOfRequests;
+  }
 
   constructor() {}
 }

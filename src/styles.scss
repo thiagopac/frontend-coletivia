@@ -161,3 +161,15 @@ ng-select {
 .font-roboto {
   font-family: 'Roboto', sans-serif !important;
 }
+
+.icon-invert {
+  filter: brightness(0) invert(1);
+}
+
+.notification-icon.success {
+  background-color: $success !important;
+
+  img {
+    filter: invert(1);
+  }
+}

@@ -4,14 +4,15 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
+  HttpResponse,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { SpinnerHandlerService } from './spinner-handler.service';
 
 @Injectable()
 export class SpinnerInterceptor implements HttpInterceptor {
-  constructor(public spinnerHandler: SpinnerHandlerService) {}
+  constructor(private spinnerHandler: SpinnerHandlerService) {}
 
   intercept(
     request: HttpRequest<unknown>,
@@ -23,8 +24,20 @@ export class SpinnerInterceptor implements HttpInterceptor {
       this.spinnerHandler.handleRequest('plus');
     }
 
-    return next.handle(request).pipe(finalize(this.finalize.bind(this)));
+    return next.handle(request).pipe(
+      tap((event) => {
+        if (event instanceof HttpResponse) {
+          if (hideSpinner === 'false') {
+            this.spinnerHandler.handleRequest();
+          }
+        }
+      }),
+      catchError((error) => {
+        if (hideSpinner === 'false') {
+          this.spinnerHandler.handleRequest();
+        }
+        return throwError(() => error);
+      })
+    );
   }
-
-  finalize = (): void => this.spinnerHandler.handleRequest();
 }

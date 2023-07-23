@@ -38,7 +38,8 @@
   bottom: 0;
   right: 0;
   overflow: hidden;
-  z-index: get($drawer, z-index) - 1;
+  z-index: 1 !important;
+  // z-index: get($drawer, z-index) - 1;
   background-color: get($drawer, overlay-bg-color);
   animation: animation-drawer-fade-in get($drawer, overlay-animation-speed)
     ease-in-out 1;
