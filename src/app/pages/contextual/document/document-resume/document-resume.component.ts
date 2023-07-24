@@ -86,7 +86,7 @@ export class DocumentResumeComponent implements OnInit {
     this.alertMessageService.alertWithHandler(
       `Analisar o documento utilizando <strong>${feature.name}</strong>?`,
       'question',
-      () => this.analyze(feature.uuid),
+      () => this.analyze(feature),
       true
     );
   }
