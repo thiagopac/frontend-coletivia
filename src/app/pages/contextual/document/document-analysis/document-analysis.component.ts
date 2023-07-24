@@ -32,4 +32,12 @@ export class DocumentAnalysisComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     });
   }
+
+  replace(str: string) {
+    return str.replace('_', ' ');
+  }
+
+  replaceNewLinesWithBreaks(text: string): string {
+    return text.replace(/\n/g, '<br>');
+  }
 }
