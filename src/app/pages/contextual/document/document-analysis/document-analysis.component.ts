@@ -38,6 +38,18 @@ export class DocumentAnalysisComponent implements OnInit {
   }
 
   replaceNewLinesWithBreaks(text: string): string {
-    return text.replace(/\n/g, '<br>');
+    let formattedText = text.replace(/\n/g, '<br>');
+
+    const keywordIndex = formattedText.indexOf('Palavras-chave:');
+
+    if (keywordIndex !== -1) {
+      formattedText =
+        formattedText.substring(0, keywordIndex) +
+        '<p class="mt-5"><strong>' +
+        formattedText.substring(keywordIndex) +
+        '</strong><p>';
+    }
+
+    return formattedText;
   }
 }
