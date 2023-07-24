@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationCancel, NavigationEnd, Router } from '@angular/router';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { LayoutService } from '../../core/layout.service';
+import { DrawerComponent } from '../../../kt/components';
 @Component({
   selector: 'app-content',
   templateUrl: './content.component.html',
@@ -24,7 +25,7 @@ export class ContentComponent implements OnInit, OnDestroy {
   routingChanges() {
     const routerSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd || event instanceof NavigationCancel) {
-        // DrawerComponent.hideAll();
+        DrawerComponent.hideAll();
       }
     });
     this.unsubscribe.push(routerSubscription);
