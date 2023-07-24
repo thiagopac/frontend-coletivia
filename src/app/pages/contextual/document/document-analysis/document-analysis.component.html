@@ -64,9 +64,18 @@
           </div>
         </div>
 
-        <div class="fs-4 text-start" *ngFor="let fragment of analysisContent">
-          <p class="text-muted mt-10 mb-5">{{ fragment.stamp }}</p>
-          {{ fragment.analysis }}
+        <div
+          class="fs-4 text-start"
+          *ngFor="let fragment of analysisContent; let last = last"
+        >
+          <p class="text-gray-900 fw-boldest mt-10 mb-5">
+            {{ replace(fragment.stamp) }}
+          </p>
+          <span
+            [innerHTML]="replaceNewLinesWithBreaks(fragment.analysis)"
+          ></span>
+
+          <hr class="my-10" *ngIf="!last" />
         </div>
       </div>
     </div>
