@@ -5,7 +5,7 @@ import { map, catchError, switchMap, finalize } from 'rxjs/operators';
 import { UserType } from 'src/app/models/user';
 import { AuthModel, AuthRegisterModel } from 'src/app/models/auth';
 import { AuthHTTPService } from './auth-http.service';
-import { Router } from '@angular/router';
+import { Params, Router } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
@@ -53,6 +53,22 @@ export class AuthService implements OnDestroy {
   login(email: string, password: string): Observable<UserType> {
     this.isLoadingSubject.next(true);
     return this.authHttpService.login(email, password).pipe(
+      map((auth: AuthModel) => {
+        const result = this.setAuthToLocalStorage(auth);
+        return result;
+      }),
+      switchMap(() => this.getUserByToken()),
+      catchError((err) => {
+        console.error('err', err);
+        return of(undefined);
+      }),
+      finalize(() => this.isLoadingSubject.next(false))
+    );
+  }
+
+  socialLogin(queryParams: Params): Observable<UserType> {
+    this.isLoadingSubject.next(true);
+    return this.authHttpService.callback(queryParams).pipe(
       map((auth: AuthModel) => {
         const result = this.setAuthToLocalStorage(auth);
         return result;
