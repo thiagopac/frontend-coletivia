@@ -9,9 +9,9 @@ export const environment = {
   adminUserDataKey: 'admin-user-d4c4d6a1473f',
   authDataKey: 'auth-f649fc9a5f55',
   userDataKey: 'user-f649fc9a5f55',
-  hostUrl: 'https://url-do-app-em-prod/',
-  apiUrl: 'https://url-da-api-em-prod:3333/api',
-  socketUrl: 'https://url-da-api-em-prod',
+  hostUrl: 'https://coletivia.com.br',
+  apiUrl: 'https://backend.coletivia.com.br/api',
+  socketUrl: 'https://backend.coletivia.com.br',
 };
 
 /*
