@@ -1,5 +1,5 @@
 import { SpinnerInterceptor } from './services/spinner/spinner.interceptor';
-import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -36,7 +36,12 @@ function appInitializerAdmin(adminAuthService: AdminAuthService) {
 
 const config: SocketIoConfig = {
   url: environment.socketUrl,
-  options: { transports: ['websocket'] },
+  options: {
+    transports: ['websocket'],
+    reconnection: true,
+    reconnectionAttempts: 10,
+    reconnectionDelay: 10000,
+  },
 };
 
 @NgModule({

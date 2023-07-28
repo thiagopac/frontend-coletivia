@@ -45,7 +45,6 @@ export class DocumentUploadComponent implements OnInit {
         // Enviar o arquivo
         this.documentService.sendFile(documentUuid, file).subscribe(
           (res) => {
-            console.log('Arquivo enviado com sucesso:', res);
             this.router.navigate(['/contextual/document/resume', res.uuid]);
           },
           (error) => {
