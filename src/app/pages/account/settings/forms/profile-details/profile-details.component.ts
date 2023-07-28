@@ -1,3 +1,4 @@
+import { AuthHTTPService } from 'src/app/services/auth';
 import { UserService } from 'src/app/services/user.service';
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -9,6 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService, InfoType, UserType } from 'src/app/modules/auth';
 import { State } from 'src/app/models/state';
 import { City } from 'src/app/models/city';
+import Validator from 'src/app/validators/cpf-cnpj-email.validator';
 
 @Component({
   selector: 'app-profile-details',
@@ -25,16 +27,15 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
   states$: Observable<State[]>;
   cities$: Observable<City[]>;
 
-  public cpfCnpjMask = '000.000.000-00';
+  cpfCnpjMask = '000.000.000-00';
+  cpfCnpjPlaceholder = '';
 
   constructor(
-    private cdr: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef,
     private fb: FormBuilder,
     private locationService: LocationService,
     private config: NgSelectConfig,
     private alertMessageService: AlertMessageService,
-    private authService: AuthService,
-    private asyncPipe: AsyncPipe,
     private userService: UserService
   ) {
     const loadingSubscr = this.isLoading$
@@ -47,14 +48,22 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.user = this.asyncPipe.transform(
-      this.authService.currentUserSubject.asObservable()
-    )!;
-    this.states$ = this.locationService.getStates();
-    const state_id = this.user.info.city.state_id;
-    this.cities$ = this.locationService.getCitiesByState(state_id);
     this.buildFormGroup();
-    this.fg.patchValue({ state_id, ...this.user.info });
+
+    this.userService.me().subscribe((me) => {
+      this.user = me;
+      if (this.user.info) {
+        if (this.user.info.city) {
+          const state_id = this.user.info.city.state_id;
+          this.cities$ = this.locationService.getCitiesByState(state_id);
+          this.fg.patchValue({ state_id });
+        }
+
+        this.fg.patchValue({ ...this.user.info });
+      }
+    });
+
+    this.states$ = this.locationService.getStates();
   }
 
   buildFormGroup() {
@@ -76,6 +85,25 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
   }
 
   saveSettings() {
+    const cpfIsValid = Validator.cpfValidator(this.fg.get('cpf_cnpj')!.value);
+    const cnpjIsValid = Validator.cnpjValidator(this.fg.get('cpf_cnpj')!.value);
+    if (this.fg.get('registration_type')!.value === 'PF' && !cpfIsValid) {
+      this.alertMessageService.showToast(
+        'O CPF informado é inválido!',
+        'error'
+      );
+      return;
+    } else if (
+      this.fg.get('registration_type')!.value === 'PJ' &&
+      !cnpjIsValid
+    ) {
+      this.alertMessageService.showToast(
+        'O CNPJ informado é inválido!',
+        'error'
+      );
+      return;
+    }
+
     this.isLoading$.next(true);
     const filledInfo: InfoType = this.fg.value;
 
@@ -85,7 +113,7 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
         'success'
       );
       this.isLoading$.next(false);
-      this.cdr.detectChanges();
+      this.changeDetectorRef.detectChanges();
     });
 
     this.unsubscribe.push(this.sub);
@@ -95,8 +123,10 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
     const registrationType = this.fg.get('registration_type')!.value;
     if (registrationType === 'PF') {
       this.cpfCnpjMask = '000.000.000-00';
+      this.cpfCnpjPlaceholder = 'CPF';
     } else if (registrationType === 'PJ') {
       this.cpfCnpjMask = '00.000.000/0000.00';
+      this.cpfCnpjPlaceholder = 'CNPJ';
     }
   }
 

@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { AuthHTTPService } from './../../services/auth/auth-http.service';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import {
   UntypedFormBuilder,
   UntypedFormGroup,
@@ -27,19 +28,20 @@ export class LoginComponent implements OnInit, OnDestroy {
   returnUrl: string;
   isLoading$: Observable<boolean>;
   showErrors: boolean = false;
-
-  // private fields
-  private unsubscribe: Subscription[] = [];
+  descError: string = '';
+  unsubscribe: Subscription[] = [];
 
   constructor(
     private fb: UntypedFormBuilder,
     private authService: AuthService,
+    private authHTTPService: AuthHTTPService,
     private route: ActivatedRoute,
     private router: Router,
-    private socketIOService: SocketIOService
+    private socketIOService: SocketIOService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.isLoading$ = this.authService.isLoading$;
-    // redirect to home if already logged in
+
     if (this.authService.currentUserValue) {
       this.router.navigate(['/']);
     }
@@ -78,20 +80,44 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
+  loginWithGoogle(): void {
+    this.authHTTPService.redirect().subscribe((res: string) => {
+      window.location.href = res;
+    });
+  }
+
   submit() {
     this.hasError = false;
-    const loginSubscr = this.authService
-      .login(this.f.email.value, this.f.password.value)
-      .pipe(first())
-      .subscribe((user: UserType | undefined) => {
-        if (user) {
-          this.socketIOService.login(user);
-          this.router.navigate([this.returnUrl]);
-        } else {
+    this.authHTTPService
+      .userExists(this.f.email.value)
+      .subscribe((userExists) => {
+        if (userExists.exists === true && userExists.social_login === 0) {
+          const loginSubscr = this.authService
+            .login(this.f.email.value, this.f.password.value)
+            .pipe(first())
+            .subscribe((user: UserType | undefined) => {
+              if (user) {
+                this.socketIOService.login(user);
+                this.router.navigate([this.returnUrl]);
+              } else {
+                this.hasError = true;
+                this.descError = 'Usuário ou senha inválidos.';
+              }
+            });
+          this.unsubscribe.push(loginSubscr);
+        } else if (
+          userExists.exists === true &&
+          userExists.social_login === 1
+        ) {
           this.hasError = true;
+          this.descError = `Você já possui uma conta cadastrada com o e-mail informado. Faça login com sua conta <strong>${userExists.social_service}</strong>.`;
+        } else if (userExists.exists === false) {
+          this.hasError = true;
+          this.descError = `Você não possui uma conta cadastrada com o e-mail informado. Crie uma conta.`;
         }
+
+        this.changeDetectorRef.detectChanges();
       });
-    this.unsubscribe.push(loginSubscr);
   }
 
   ngOnDestroy() {
