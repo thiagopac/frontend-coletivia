@@ -123,11 +123,11 @@
             <input
               type="cpf_cnpj"
               class="form-control form-control-solid"
-              placeholder="Ex: 000.000.000-00"
+              [placeholder]="cpfCnpjPlaceholder"
               formControlName="cpf_cnpj"
               mat-input
               [mask]="cpfCnpjMask"
-              [showMaskTyped]="true"
+              [showMaskTyped]="false"
             />
             <mat-error
               *ngIf="

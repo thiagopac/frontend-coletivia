@@ -1,5 +1,5 @@
 import { SpinnerInterceptor } from './services/spinner/spinner.interceptor';
-import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -15,6 +15,7 @@ import { AdminAuthService } from 'src/app/services/admin-auth';
 import { MarkdownModule } from 'ngx-markdown';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
+import { GoogleCallbackComponent } from './components/google-callback/google-callback.component';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -36,11 +37,16 @@ function appInitializerAdmin(adminAuthService: AdminAuthService) {
 
 const config: SocketIoConfig = {
   url: environment.socketUrl,
-  options: { transports: ['websocket'] },
+  options: {
+    transports: ['websocket'],
+    reconnection: true,
+    reconnectionAttempts: 10,
+    reconnectionDelay: 10000,
+  },
 };
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, GoogleCallbackComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

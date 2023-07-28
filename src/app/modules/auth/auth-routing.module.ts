@@ -5,6 +5,7 @@ import { LoginComponent } from '../../components/login/login.component';
 import { RegistrationComponent } from '../../components/registration/registration.component';
 import { ForgotPasswordComponent } from '../../components/forgot-password/forgot-password.component';
 import { LogoutComponent } from '../../components/logout/logout.component';
+import { GoogleCallbackComponent } from 'src/app/components/google-callback/google-callback.component';
 
 const routes: Routes = [
   {
@@ -32,6 +33,10 @@ const routes: Routes = [
       {
         path: 'logout',
         component: LogoutComponent,
+      },
+      {
+        path: 'google/callback',
+        component: GoogleCallbackComponent,
       },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: '**', redirectTo: 'login', pathMatch: 'full' },

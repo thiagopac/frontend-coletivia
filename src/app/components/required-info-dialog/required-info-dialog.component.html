@@ -1,0 +1,46 @@
+<h2 mat-dialog-title>Complete seu cadastro</h2>
+<mat-dialog-content>
+  <div class="mb-4">
+    <p class="mb-10">
+      Para efetuar pagamentos, é necessário completar seu cadastro, informando o
+      tipo do documento e o número do CPF para pessoas físicas ou CNPJ para
+      pessoas jurídicas.
+    </p>
+    <label class="form-label fs-6 fw-bolder">Tipo de cadastro</label>
+    <select
+      [(ngModel)]="registrationType"
+      (change)="onRegistrationTypeChange($event)"
+      class="form-select mb-5"
+    >
+      <option value="PF">Pessoa Física</option>
+      <option value="PJ">Pessoa Jurídica</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label fs-6 fw-bolder">{{ cpfCnpjLabel }}</label>
+    <input
+      type="cpf_cnpj"
+      class="form-control form-control-solid"
+      placeholder="Ex: 000.000.000-00"
+      [(ngModel)]="cpfCnpj"
+      class="form-control"
+      mat-input
+      [mask]="cpfCnpjMask"
+      [showMaskTyped]="true"
+    />
+    <mat-error *ngIf="!cpfCnpj"> Campo obrigatório </mat-error>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions class="mt-4 d-flex justify-content-end">
+  <button class="btn btn-secondary me-3" (click)="onCancelClick()">
+    Cancelar
+  </button>
+  <button
+    color="primary"
+    [disabled]="!registrationType || !cpfCnpj"
+    class="btn btn-success"
+    (click)="onConfirmClick()"
+  >
+    Confirmar
+  </button>
+</mat-dialog-actions>

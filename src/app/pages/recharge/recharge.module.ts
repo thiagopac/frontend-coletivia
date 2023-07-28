@@ -14,6 +14,8 @@ import {
 } from '@angular/material/paginator';
 import { CustomPaginatorIntlService } from 'src/app/services/custom-paginator-intl.service';
 import { RechargeListComponent } from 'src/app/pages/recharge/recharge-list/recharge-list.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { NgxMaskModule } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,8 @@ import { RechargeListComponent } from 'src/app/pages/recharge/recharge-list/rech
     CountdownModule,
     InlineSVGModule,
     MatPaginatorModule,
+    MatDialogModule,
+    NgxMaskModule.forRoot(),
     RouterModule.forChild([
       {
         path: 'options',

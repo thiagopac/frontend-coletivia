@@ -1,3 +1,4 @@
+import { AuthHTTPService } from './../../services/auth/auth-http.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   UntypedFormBuilder,
@@ -27,19 +28,18 @@ export class LoginComponent implements OnInit, OnDestroy {
   returnUrl: string;
   isLoading$: Observable<boolean>;
   showErrors: boolean = false;
-
-  // private fields
-  private unsubscribe: Subscription[] = [];
+  unsubscribe: Subscription[] = [];
 
   constructor(
     private fb: UntypedFormBuilder,
     private authService: AuthService,
+    private authHTTPService: AuthHTTPService,
     private route: ActivatedRoute,
     private router: Router,
     private socketIOService: SocketIOService
   ) {
     this.isLoading$ = this.authService.isLoading$;
-    // redirect to home if already logged in
+
     if (this.authService.currentUserValue) {
       this.router.navigate(['/']);
     }
@@ -50,6 +50,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.returnUrl =
       this.route.snapshot.queryParams['returnUrl'.toString()] || '/';
   }
+
+  signInOrSignUpWithGoogle(): void {}
 
   get f() {
     return this.loginForm.controls;
@@ -75,6 +77,12 @@ export class LoginComponent implements OnInit, OnDestroy {
         ]),
       ],
       remember: [null],
+    });
+  }
+
+  loginWithGoogle(): void {
+    this.authHTTPService.redirect().subscribe((res: string) => {
+      window.location.href = res;
     });
   }
 
