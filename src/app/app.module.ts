@@ -15,7 +15,6 @@ import { AdminAuthService } from 'src/app/services/admin-auth';
 import { MarkdownModule } from 'ngx-markdown';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
-import { GoogleCallbackComponent } from './components/google-callback/google-callback.component';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -46,7 +45,7 @@ const config: SocketIoConfig = {
 };
 
 @NgModule({
-  declarations: [AppComponent, GoogleCallbackComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

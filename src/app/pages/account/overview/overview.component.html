@@ -25,22 +25,22 @@
       </div>
 
       <div class="row mb-7">
-        <label class="col-lg-4 fw-bold text-muted"> Telefone </label>
-
-        <div class="col-lg-8 d-flex align-items-center">
-          <span class="fw-bolder fs-6 me-2">{{ user?.info?.phone }}</span>
-
-          <!-- <span class="badge badge-success">Verificado</span> -->
-        </div>
-      </div>
-
-      <div class="row mb-7">
         <label class="col-lg-4 fw-bold text-muted">Documento</label>
 
         <div class="col-lg-8">
           <span class="fw-bolder fs-6 text-dark">{{
             user?.info?.cpf_cnpj | cpfCnpjPipe
           }}</span>
+        </div>
+      </div>
+
+      <div class="row mb-7">
+        <label class="col-lg-4 fw-bold text-muted"> Telefone </label>
+
+        <div class="col-lg-8 d-flex align-items-center">
+          <span class="fw-bolder fs-6 me-2">{{ user?.info?.phone }}</span>
+
+          <!-- <span class="badge badge-success">Verificado</span> -->
         </div>
       </div>
 

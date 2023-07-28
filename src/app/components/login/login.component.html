@@ -13,8 +13,8 @@
 
   <!-- begin::Alert error-->
   <ng-container *ngIf="showErrors && hasError">
-    <div class="mb-lg-15 alert alert-danger">
-      <div class="alert-text font-weight-bold">Credenciais incorretas</div>
+    <div class="mb-lg-15 alert alert-danger w-400px">
+      <div class="alert-text font-weight-bold" [innerHTML]="descError"></div>
     </div>
   </ng-container>
   <!-- end::Alert error-->

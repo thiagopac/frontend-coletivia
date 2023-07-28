@@ -1,3 +1,4 @@
+import { AuthHTTPService } from 'src/app/services/auth';
 import { UserService } from 'src/app/services/user.service';
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -35,8 +36,6 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
     private locationService: LocationService,
     private config: NgSelectConfig,
     private alertMessageService: AlertMessageService,
-    private authService: AuthService,
-    private asyncPipe: AsyncPipe,
     private userService: UserService
   ) {
     const loadingSubscr = this.isLoading$
@@ -49,14 +48,22 @@ export class ProfileDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.user = this.asyncPipe.transform(
-      this.authService.currentUserSubject.asObservable()
-    )!;
-    this.states$ = this.locationService.getStates();
-    const state_id = this.user.info.city.state_id;
-    this.cities$ = this.locationService.getCitiesByState(state_id);
     this.buildFormGroup();
-    this.fg.patchValue({ state_id, ...this.user.info });
+
+    this.userService.me().subscribe((me) => {
+      this.user = me;
+      if (this.user.info) {
+        if (this.user.info.city) {
+          const state_id = this.user.info.city.state_id;
+          this.cities$ = this.locationService.getCitiesByState(state_id);
+          this.fg.patchValue({ state_id });
+        }
+
+        this.fg.patchValue({ ...this.user.info });
+      }
+    });
+
+    this.states$ = this.locationService.getStates();
   }
 
   buildFormGroup() {

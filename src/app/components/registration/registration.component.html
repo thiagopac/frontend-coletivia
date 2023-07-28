@@ -16,12 +16,15 @@
     </div>
   </div>
 
-  <button type="button" class="btn btn-light-primary fw-bolder w-100 mb-10">
+  <button
+    type="button"
+    class="btn btn-light-primary fw-bolder w-100 mb-10"
+    (click)="signUpWithGoogle()"
+  >
     <img
       alt="Logo"
       src="./assets/media/svg/brand-logos/google-icon.svg"
       class="h-20px me-3"
-      (click)="signUpWithGoogle()"
     />Cadastrar com conta Google
   </button>
 
@@ -265,12 +268,12 @@
 
       <label class="form-check-label fw-bold text-gray-700 fs-6">
         Eu li e concordo com os
-        <a href="./termos-de-uso" target="_blank" class="ms-1 link-primary"
+        <a href="./auth/termos-de-uso" target="_blank" class="ms-1 link-primary"
           >Termos de uso</a
         >
         e
         <a
-          href="./politica-de-privacidade"
+          href="./auth/politica-de-privacidade"
           target="_blank"
           class="ms-1 link-primary"
           >Política de privacidade</a

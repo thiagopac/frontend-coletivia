@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { IUser } from 'src/app/models/user';
 import { environment } from '../../../environments/environment';
 import { AuthModel, AuthRegisterModel } from 'src/app/models/auth';
+import { Params } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -43,7 +44,9 @@ export class AuthHTTPService {
   }
 
   userExists(email: string): Observable<any> {
-    return this.http.post<any>(`${environment.apiUrl}/auth/user-exists`, email);
+    return this.http.post<any>(`${environment.apiUrl}/auth/user-exists`, {
+      email,
+    });
   }
 
   redirect(): Observable<string> {
@@ -60,5 +63,10 @@ export class AuthHTTPService {
           return decoder.decode(response);
         })
       );
+  }
+
+  callback(queryParams: Params): Observable<any> {
+    const params = new HttpParams({ fromObject: queryParams });
+    return this.http.get(`${environment.apiUrl}/google/callback`, { params });
   }
 }

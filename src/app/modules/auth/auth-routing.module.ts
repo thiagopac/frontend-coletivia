@@ -6,6 +6,7 @@ import { RegistrationComponent } from '../../components/registration/registratio
 import { ForgotPasswordComponent } from '../../components/forgot-password/forgot-password.component';
 import { LogoutComponent } from '../../components/logout/logout.component';
 import { GoogleCallbackComponent } from 'src/app/components/google-callback/google-callback.component';
+import { PolicyContentComponent } from 'src/app/pages/policy/policy-content/policy-content.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,14 @@ const routes: Routes = [
       {
         path: 'google/callback',
         component: GoogleCallbackComponent,
+      },
+      {
+        path: 'politica-de-privacidade',
+        component: PolicyContentComponent,
+      },
+      {
+        path: 'termos-de-uso',
+        component: PolicyContentComponent,
       },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
       { path: '**', redirectTo: 'login', pathMatch: 'full' },
