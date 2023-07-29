@@ -18,7 +18,6 @@ export class PolicyContentComponent implements OnInit {
 
   ngOnInit(): void {
     this.type = this.activatedRoute.snapshot.url[0].path;
-    console.log('type: ', this.type);
     this.policy$ = this.policyService.retrievePolicy(this.type);
   }
 

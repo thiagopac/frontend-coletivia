@@ -7,7 +7,6 @@ import { CheckoutPixComponent } from 'src/app/pages/recharge/checkout-pix/checko
 import { PipesModule } from 'src/app/pipes/pipes.module';
 import { NgxKjuaModule } from 'ngx-kjua';
 import { CountdownModule } from 'ngx-countdown';
-import { InlineSVGModule } from 'ng-inline-svg-2';
 import {
   MatPaginatorIntl,
   MatPaginatorModule,
@@ -30,7 +29,6 @@ import { NgxMaskModule } from 'ngx-mask';
     PipesModule,
     NgxKjuaModule,
     CountdownModule,
-    InlineSVGModule,
     MatPaginatorModule,
     MatDialogModule,
     NgxMaskModule.forRoot(),

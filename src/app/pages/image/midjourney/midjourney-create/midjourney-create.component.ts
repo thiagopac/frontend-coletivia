@@ -96,7 +96,6 @@ export class MidjourneyCreateComponent implements OnInit, OnDestroy {
     this.socketIOService
       .onMidjourneyImageGenerationStatus()
       .subscribe((res: any) => {
-        console.log('onMidjourneyImageGenerationStatus', res);
         this.progress = res.progress;
         this.imageUri = res.uri;
         this.changeDetectorRef.detectChanges();
