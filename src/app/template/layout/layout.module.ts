@@ -1,13 +1,7 @@
 import { PipesModule } from '../../pipes/pipes.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InlineSVGModule } from 'ng-inline-svg-2';
 import { RouterModule, Routes } from '@angular/router';
-import {
-  NgbDropdownModule,
-  NgbProgressbarModule,
-  NgbTooltipModule,
-} from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationModule } from '../../modules/i18n';
 import { LayoutComponent } from './layout.component';
@@ -48,14 +42,10 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     TranslationModule,
-    InlineSVGModule,
-    NgbDropdownModule,
-    NgbProgressbarModule,
     ExtrasModule,
     ModalsModule,
     DrawersModule,
     DropdownMenusModule,
-    NgbTooltipModule,
     TranslateModule,
     PipesModule,
     WidgetsModule,
