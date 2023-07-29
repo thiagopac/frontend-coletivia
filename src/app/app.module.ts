@@ -5,8 +5,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ClipboardModule } from 'ngx-clipboard';
 import { TranslateModule } from '@ngx-translate/core';
-import { InlineSVGModule } from 'ng-inline-svg-2';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthService } from './services/auth';
@@ -15,6 +13,7 @@ import { AdminAuthService } from 'src/app/services/admin-auth';
 import { MarkdownModule } from 'ngx-markdown';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from 'src/environments/environment';
+import { APP_BASE_HREF } from '@angular/common';
 
 function appInitializer(authService: AuthService) {
   return () => {
@@ -53,13 +52,15 @@ const config: SocketIoConfig = {
     HttpClientModule,
     ClipboardModule,
     AppRoutingModule,
-    InlineSVGModule.forRoot(),
-    NgbModule,
     NgxSpinnerModule,
     MarkdownModule.forRoot(),
     SocketIoModule.forRoot(config),
   ],
   providers: [
+    {
+      provide: APP_BASE_HREF,
+      useValue: '/',
+    },
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializer,
