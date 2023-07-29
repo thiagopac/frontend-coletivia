@@ -191,7 +191,7 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
           this.changeDetectorRef.detectChanges();
         },
         complete: () => {
-          console.log(this.messages.length);
+          // console.log(this.messages.length);
 
           if (this.messages.length <= 4) {
             this.retrieveSuggestedTitle();
@@ -237,7 +237,7 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
           this.changeDetectorRef.detectChanges();
         },
         complete: () => {
-          console.log(this.messages.length);
+          // console.log(this.messages.length);
 
           if (this.messages.length === 2) {
             this.retrieveSuggestedTitle();

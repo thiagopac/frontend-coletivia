@@ -7,10 +7,10 @@
     autocomplete="off"
   >
     <!--begin::Icon-->
-    <span
-      [inlineSVG]="'./assets/media/icons/duotune/general/gen021.svg'"
+    <img
+      src="assets/media/icons/duotune/general/gen021.svg"
       class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 position-absolute top-50 translate-middle-y ms-0"
-    ></span>
+    />
     <!--end::Icon-->
 
     <!--begin::Input-->
@@ -45,10 +45,10 @@
       [ngClass]="searching || keyword.length === 0 ? 'd-none' : ''"
       (click)="clearSearch()"
     >
-      <span
-        [inlineSVG]="'./assets/media/icons/duotune/arrows/arr061.svg'"
+      <img
+        src="assets/media/icons/duotune/arrows/arr061.svg"
         class="svg-icon svg-icon-2 svg-icon-lg-1 me-0"
-      ></span>
+      />
     </span>
     <!--end::Reset-->
 
@@ -65,10 +65,10 @@
         data-bs-toggle="tooltip"
         title="Show search preferences"
       >
-        <span
-          [inlineSVG]="'./assets/media/icons/duotune/coding/cod001.svg'"
+        <img
+          src="assets/media/icons/duotune/coding/cod001.svg"
           class="svg-icon svg-icon-1"
-        ></span>
+        />
       </div>
       <!--end::Preferences toggle-->
 
@@ -79,10 +79,10 @@
         data-bs-toggle="tooltip"
         title="Show more search options"
       >
-        <span
-          [inlineSVG]="'./assets/media/icons/duotune/arrows/arr072.svg'"
+        <img
+          src="assets/media/icons/duotune/arrows/arr072.svg"
           class="svg-icon svg-icon-2"
-        ></span>
+        />
       </div>
       <!--end::Advanced search toggle-->
     </div>
@@ -162,11 +162,11 @@
           <img *ngIf="item.image" src="{{ item.image }}" alt="" />
 
           <span class="symbol-label bg-light">
-            <span
+            <img
               *ngIf="item.icon"
-              [inlineSVG]="item.icon"
+              [src]="item.icon"
               class="svg-icon svg-icon-2 svg-icon-primary"
-            ></span>
+            />
           </span>
         </div>
         <!--end::Symbol-->
