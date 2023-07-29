@@ -31,7 +31,6 @@ import { ManagerUsersComponent } from 'src/app/modules/manager/components/manage
 import { ManagerAdminsComponent } from 'src/app/modules/manager/components/manager-admins/manager-admins.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDialogModule } from '@angular/material/dialog';
-import { InlineSVGModule } from 'ng-inline-svg-2';
 
 @NgModule({
   declarations: [
@@ -45,7 +44,6 @@ import { InlineSVGModule } from 'ng-inline-svg-2';
   ],
   imports: [
     CommonModule,
-    InlineSVGModule,
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
