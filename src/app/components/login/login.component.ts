@@ -110,10 +110,10 @@ export class LoginComponent implements OnInit, OnDestroy {
           userExists.social_login === 1
         ) {
           this.hasError = true;
-          this.descError = `Você já possui uma conta cadastrada com o e-mail informado. Faça login com sua conta <strong>${userExists.social_service}</strong>.`;
+          this.descError = `Você vinculou sua conta ${userExists.social_service} para efetuar login.<br />Clique no botão abaixo <strong>Entrar com conta ${userExists.social_service}</strong>.`;
         } else if (userExists.exists === false) {
           this.hasError = true;
-          this.descError = `Você não possui uma conta cadastrada com o e-mail informado. Crie uma conta.`;
+          this.descError = `Você não possui uma conta cadastrada com o e-mail informado. Crie uma conta clicando acima em <strong>Cadastre-se agora</strong>`;
         }
 
         this.changeDetectorRef.detectChanges();
