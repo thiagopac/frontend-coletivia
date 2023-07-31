@@ -7,6 +7,7 @@ import { ForgotPasswordComponent } from '../../components/forgot-password/forgot
 import { LogoutComponent } from '../../components/logout/logout.component';
 import { GoogleCallbackComponent } from 'src/app/components/google-callback/google-callback.component';
 import { PolicyContentComponent } from 'src/app/pages/policy/policy-content/policy-content.component';
+import { ResetPasswordComponent } from 'src/app/components/reset-password/reset-password.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,10 @@ const routes: Routes = [
       {
         path: 'forgot-password',
         component: ForgotPasswordComponent,
+      },
+      {
+        path: 'reset-password',
+        component: ResetPasswordComponent,
       },
       {
         path: 'logout',
