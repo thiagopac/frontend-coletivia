@@ -33,6 +33,21 @@ export class AuthHTTPService {
     );
   }
 
+  resetPassword(
+    email: string,
+    token: string,
+    newPassword: string
+  ): Observable<boolean> {
+    return this.http.post<boolean>(
+      `${environment.apiUrl}/auth/reset-password`,
+      {
+        email,
+        token,
+        newPassword,
+      }
+    );
+  }
+
   getUserByToken(token: string): Observable<IUser> {
     const httpHeaders = new HttpHeaders({
       Authorization: `Bearer ${token}`,
