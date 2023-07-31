@@ -11,6 +11,7 @@ import { AuthComponent } from './auth.component';
 import { TranslationModule } from '../i18n/translation.module';
 import { GoogleCallbackComponent } from 'src/app/components/google-callback/google-callback.component';
 import { WidgetsModule } from 'src/app/components/widgets/widgets.module';
+import { ResetPasswordComponent } from 'src/app/components/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { WidgetsModule } from 'src/app/components/widgets/widgets.module';
     LogoutComponent,
     AuthComponent,
     GoogleCallbackComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     CommonModule,
