@@ -134,6 +134,17 @@ export class AuthService implements OnDestroy {
       .pipe(finalize(() => this.isLoadingSubject.next(false)));
   }
 
+  resetPassword(
+    email: string,
+    token: string,
+    newPassword: string
+  ): Observable<boolean> {
+    this.isLoadingSubject.next(true);
+    return this.authHttpService
+      .resetPassword(email, token, newPassword)
+      .pipe(finalize(() => this.isLoadingSubject.next(false)));
+  }
+
   // private methods
   private setAuthToLocalStorage(auth: AuthModel): boolean {
     // store auth token/type/epiresIn in local storage to keep user logged in between page refreshes
