@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import {
   UntypedFormGroup,
   UntypedFormBuilder,
   Validators,
 } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
-import { AuthService } from 'src/app/services/auth';
+import { AuthHTTPService, AuthService } from 'src/app/services/auth';
 import { first } from 'rxjs/operators';
 
 enum ErrorStates {
@@ -24,12 +24,15 @@ export class ForgotPasswordComponent implements OnInit {
   errorState: ErrorStates = ErrorStates.NotSubmitted;
   errorStates = ErrorStates;
   isLoading$: Observable<boolean>;
+  descError: string = '';
 
   // private fields
   private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
   constructor(
     private fb: UntypedFormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private authHTTPService: AuthHTTPService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     this.isLoading$ = this.authService.isLoading$;
   }
@@ -59,12 +62,31 @@ export class ForgotPasswordComponent implements OnInit {
 
   submit() {
     this.errorState = ErrorStates.NotSubmitted;
-    const forgotPasswordSubscr = this.authService
-      .forgotPassword(this.f.email.value)
-      .pipe(first())
-      .subscribe((result: boolean) => {
-        this.errorState = result ? ErrorStates.NoError : ErrorStates.HasError;
+    this.descError = '';
+    this.authHTTPService
+      .userExists(this.f.email.value)
+      .subscribe((userExists) => {
+        if (userExists.exists === true && userExists.social_login === 0) {
+          const forgotPasswordSubscr = this.authService
+            .forgotPassword(this.f.email.value)
+            .pipe(first())
+            .subscribe((result: boolean) => {
+              this.errorState = result
+                ? ErrorStates.NoError
+                : ErrorStates.HasError;
+            });
+          this.unsubscribe.push(forgotPasswordSubscr);
+          this.changeDetectorRef.detectChanges();
+        } else if (
+          userExists.exists === true &&
+          userExists.social_login === 1
+        ) {
+          this.descError = `Você vinculou sua conta <strong>${userExists.social_service}</strong> para efetuar login.<br /> Não é possível alterar a senha para contas vinculadas a serviços. Faça login ultilizando sua conta ${userExists.social_service}.`;
+          this.changeDetectorRef.detectChanges();
+        } else if (userExists.exists === false) {
+          this.descError = `Nenhuma conta cadastrada com o e-mail informado`;
+          this.changeDetectorRef.detectChanges();
+        }
       });
-    this.unsubscribe.push(forgotPasswordSubscr);
   }
 }
