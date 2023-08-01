@@ -27,7 +27,7 @@ export class UserService {
     password_confirmation: string;
   }): Observable<UserType> {
     return this.http.patch<UserType>(
-      `${environment.apiUrl}/users/change-password`,
+      `${environment.apiUrl}/user/change-password`,
       passwords,
       {
         headers: this.authService.headerSigned(),

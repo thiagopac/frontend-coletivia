@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 
 enum ErrorStates {
@@ -20,6 +20,7 @@ export class ResetPasswordComponent implements OnInit {
   forgotPasswordForm: FormGroup;
   errorState: ErrorStates = ErrorStates.NotSubmitted;
   errorStates = ErrorStates;
+  exception: any;
   isLoading$: Observable<boolean>;
   isInvalidUrl = false;
 
@@ -29,7 +30,8 @@ export class ResetPasswordComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.isLoading$ = this.authService.isLoading$;
   }
@@ -46,10 +48,11 @@ export class ResetPasswordComponent implements OnInit {
 
   initForm() {
     this.forgotPasswordForm = this.fb.group({
+      email: ['', Validators.required],
       token: ['', Validators.required],
       password: [
         '',
-        Validators.compose([Validators.required, Validators.minLength(8)]),
+        Validators.compose([Validators.required, Validators.minLength(6)]),
       ],
       confirmPassword: ['', Validators.required],
     });
@@ -61,6 +64,7 @@ export class ResetPasswordComponent implements OnInit {
       const token = params['token'];
       if (email && token) {
         this.forgotPasswordForm.patchValue({
+          email: email,
           token: token,
         });
       } else {
@@ -79,14 +83,27 @@ export class ResetPasswordComponent implements OnInit {
 
     const resetPasswordSubscr = this.authService
       .resetPassword(
-        this.f.email.value, // No need for email here as it's already set from URL
+        this.f.email.value,
         this.f.token.value,
         this.f.password.value
       )
       .pipe(first())
-      .subscribe((result: boolean) => {
-        this.errorState = result ? ErrorStates.NoError : ErrorStates.HasError;
-      });
+      .subscribe(
+        (result: boolean) => {
+          this.errorState = result ? ErrorStates.NoError : ErrorStates.HasError;
+
+          if (result) {
+            this.forgotPasswordForm.reset();
+          } else {
+            this.router.navigate(['/auth/login']);
+          }
+        },
+        (error: any) => {
+          console.error('An error occurred:', error);
+          this.exception = error;
+          this.errorState = ErrorStates.HasError;
+        }
+      );
 
     this.unsubscribe.push(resetPasswordSubscr);
   }
