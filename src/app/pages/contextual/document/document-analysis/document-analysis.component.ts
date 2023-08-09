@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DocumentAnalysisService } from 'src/app/services/document-analysis.service';
 
@@ -7,10 +7,19 @@ import { DocumentAnalysisService } from 'src/app/services/document-analysis.serv
   templateUrl: './document-analysis.component.html',
   styleUrls: ['./document-analysis.component.scss'],
 })
-export class DocumentAnalysisComponent implements OnInit {
+export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   analysisUuid: string;
   analysis?: any;
   analysisContent?: any[];
+
+  speechSynthesis: SpeechSynthesis;
+  speaking: boolean = false;
+  paused: boolean = false;
+  currentMessage: SpeechSynthesisUtterance | null = null;
+  availableVoices: SpeechSynthesisVoice[] = [];
+  selectedVoice: SpeechSynthesisVoice | null = null;
+  availableRates: number[] = [0.5, 0.75, 1, 1.25, 1.5];
+  selectedRate: number = 1;
 
   constructor(
     private documentAnalysisService: DocumentAnalysisService,
@@ -23,6 +32,17 @@ export class DocumentAnalysisComponent implements OnInit {
       this.analysisUuid = params.get('uuid')!;
       this.loadDocumentAnalysis(this.analysisUuid);
     });
+
+    this.speechSynthesis = window.speechSynthesis;
+
+    if ('speechSynthesis' in window) {
+      this.selectedRate = 1;
+      this.speechSynthesis.onvoiceschanged = () => {
+        this.availableVoices = this.speechSynthesis.getVoices();
+        this.selectedVoice =
+          this.availableVoices.find((voice) => voice.lang === 'pt-BR') || null;
+      };
+    }
   }
 
   loadDocumentAnalysis(uuid: string) {
@@ -51,5 +71,70 @@ export class DocumentAnalysisComponent implements OnInit {
     }
 
     return formattedText;
+  }
+
+  toggleSpeech(text: string): void {
+    if ('speechSynthesis' in window) {
+      if (this.speaking && !this.paused) {
+        this.speechSynthesis.pause();
+        this.paused = true;
+      } else if (this.speaking && this.paused) {
+        this.speechSynthesis.resume();
+        this.paused = false;
+      } else {
+        const message = new SpeechSynthesisUtterance(text);
+        message.voice = this.selectedVoice;
+        message.rate = this.selectedRate;
+
+        this.speaking = true;
+        this.paused = false;
+        this.currentMessage = message;
+
+        message.onend = () => {
+          this.speaking = false;
+          this.paused = false;
+          this.currentMessage = null;
+        };
+
+        this.speechSynthesis.speak(message);
+      }
+    } else {
+      alert('A síntese de fala não é suportada neste navegador.');
+    }
+  }
+
+  stopSpeech(): void {
+    if ('speechSynthesis' in window && this.speaking) {
+      this.speechSynthesis.cancel();
+      this.speaking = false;
+      this.paused = false;
+      this.currentMessage = null;
+    }
+  }
+
+  updateVoice(): void {
+    if (this.selectedVoice && this.speaking) {
+      this.speechSynthesis.cancel();
+      this.speaking = false;
+      this.paused = false;
+      this.currentMessage = null;
+    }
+  }
+
+  updateRate(): void {
+    if (this.speaking) {
+      this.currentMessage!.rate = this.selectedRate;
+      this.speechSynthesis.cancel();
+      this.speaking = false;
+      this.paused = false;
+      this.speechSynthesis.speak(this.currentMessage!);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if ('speechSynthesis' in window) {
+      this.speechSynthesis.cancel();
+      this.speaking = false;
+    }
   }
 }
