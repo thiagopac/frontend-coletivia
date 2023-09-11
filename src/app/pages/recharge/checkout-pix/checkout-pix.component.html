@@ -12,22 +12,14 @@
         class="d-flex justify-content-center my-10"
         *ngIf="leftTime > 0 && recharge.status === 'unpaid'"
       >
-        <ngx-kjua
+        <qr-code
           *ngIf="recharge"
-          [text]="recharge?.qr_code"
-          [renderAsync]="true"
-          [render]="'image'"
-          [crisp]="true"
-          [minVersion]="1"
-          [ecLevel]="'M'"
+          [value]="recharge?.qr_code"
+          [errorCorrectionLevel]="'M'"
           [size]="250"
-          [ratio]="undefined"
-          [fill]="'#333'"
-          [back]="'#fff'"
-          [rounded]="50"
-          [quiet]="0"
-          [mode]="'plain'"
-        ></ngx-kjua>
+          [darkColor]="'#333'"
+          [lightColor]="'#fff'"
+        ></qr-code>
       </div>
 
       <div

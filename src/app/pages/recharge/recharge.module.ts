@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CheckoutPixComponent } from 'src/app/pages/recharge/checkout-pix/checkout-pix.component';
 import { PipesModule } from 'src/app/pipes/pipes.module';
-import { NgxKjuaModule } from 'ngx-kjua';
+import { QrCodeModule } from 'ng-qrcode';
 import { CountdownModule } from 'ngx-countdown';
 import {
   MatPaginatorIntl,
@@ -27,7 +27,7 @@ import { NgxMaskModule } from 'ngx-mask';
     ReactiveFormsModule,
     FormsModule,
     PipesModule,
-    NgxKjuaModule,
+    QrCodeModule,
     CountdownModule,
     MatPaginatorModule,
     MatDialogModule,
