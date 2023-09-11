@@ -60,18 +60,32 @@
           </div>
           <div class="col-lg-4">
             <div class="fw-bold text-muted text-uppercase mb-2">
-              Análises disponíveis
+              Funcionalidades disponíveis
             </div>
             <button
               *ngFor="let feature of features"
               class="btn btn-light-primary w-100 my-2"
               (click)="action(feature)"
             >
-              {{ feature.name }}
-              <span class="text-end d-nonea"
-                >[{{ feature.analyses.length }}]</span
-              >
+              <span class="fw-bold">{{ feature.name }}</span>
             </button>
+
+            <div class="fw-bold text-muted text-uppercase mt-10 mb-2">
+              Análises efetuadas
+            </div>
+            <button
+              *ngFor="let analysis of analyses"
+              class="btn btn-link w-100 my-2"
+              (click)="gotoAnalysis(analysis)"
+            >
+              {{ analysis.feature.name }}
+              <div class="fs-8 text-muted">
+                em {{ analysis.updated_at | date : 'dd/MM/yyyy HH:mm' }}
+              </div>
+            </button>
+            <p class="text-muted" *ngIf="analyses?.length === 0">
+              Este documento ainda não possui análises
+            </p>
           </div>
         </div>
       </div>

@@ -16,6 +16,15 @@ export class DocumentAnalysisService {
     });
   }
 
+  listForDocument(uuid: string): Observable<any> {
+    return this.http.get<any>(
+      `${environment.apiUrl}/document/analysis/list-for-document/${uuid}`,
+      {
+        headers: this.authService.headerSigned(),
+      }
+    );
+  }
+
   listForType(type: string): Observable<any> {
     return this.http.get<any>(
       `${environment.apiUrl}/document/analysis/list/${type}`,
