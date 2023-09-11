@@ -20,7 +20,7 @@ export class FeatureService {
     return this.http.get<any[]>(
       `${environment.apiUrl}/feature/list-for-document/${uuid}`,
       {
-        headers: this.authService.headerSigned(),
+        headers: this.authService.headerSigned(true),
       }
     );
   }

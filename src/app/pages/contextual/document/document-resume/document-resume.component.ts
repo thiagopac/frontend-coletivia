@@ -48,23 +48,32 @@ export class DocumentResumeComponent implements OnInit {
     this.documentService.retrieve(uuid).subscribe((res) => {
       this.document = res;
       this.loadAvailableFeatures();
+      this.loadDocumentAnalyses();
     });
   }
 
   loadAvailableFeatures() {
-    this.featureService
-      .listFeatoresForDocument(this.documentUuid)
-      .subscribe((res) => {
-        this.features = res;
-        this.loadDocumentAnalyses();
-      });
+    // this.featureService
+    //   .listFeatoresForDocument(this.documentUuid)
+    //   .subscribe((res) => {
+    //     this.features = res;
+    //     this.changeDetectorRef.detectChanges();
+    //   });
+
+    this.featureService.list().subscribe((res) => {
+      this.features = res;
+      this.changeDetectorRef.detectChanges();
+    });
   }
 
   loadDocumentAnalyses() {
-    this.documentAnalysisService.list().subscribe((res) => {
-      this.analyses = res;
-      this.changeDetectorRef.detectChanges();
-    });
+    this.documentAnalysisService
+      .listForDocument(this.documentUuid)
+      .subscribe((res) => {
+        this.analyses = res;
+        console.log('res: ', res);
+        this.changeDetectorRef.detectChanges();
+      });
   }
 
   AnalysisUsesFeature(uuid: string): any | undefined {
@@ -72,14 +81,11 @@ export class DocumentResumeComponent implements OnInit {
   }
 
   action(feature: any) {
-    if (feature.analyses.length > 0) {
-      this.router.navigate([
-        '/contextual/document/analysis/',
-        feature.analyses[0].uuid,
-      ]);
-    } else {
-      this.confirmAnalyze(feature);
-    }
+    this.confirmAnalyze(feature);
+  }
+
+  gotoAnalysis(analysis: any) {
+    this.router.navigate(['/contextual/document/analysis/', analysis.uuid]);
   }
 
   confirmAnalyze(feature: any): void {
