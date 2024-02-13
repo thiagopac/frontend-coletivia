@@ -1,5 +1,5 @@
 <div class="wrapper">
-  <div class="card border-0 p-5">
+  <div class="card border-0 py-5">
     <div class="card-header border-0">
       <label class="form-label mt-20 ms-10">
         <div class="fs-3 fw-bolder">
@@ -11,11 +11,11 @@
       </label>
     </div>
     <div class="card-body">
-      <div class="card-px text-start">
+      <div class="px-0 text-start">
         <div class="row" *ngIf="items$ | async as _items">
           <div class="col" *ngFor="let item of _items">
             <label
-              class="btn btn-outline btn-outline-dashed btn-outline-default p-7 mb-10"
+              class="btn btn-outline btn-outline-dashed btn-outline-default w-100 p-7 mb-10"
               [ngClass]="{ active: item === selectedOption }"
               for="{{ item.id }}"
               (click)="selectValue(item)"

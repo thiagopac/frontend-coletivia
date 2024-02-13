@@ -20,7 +20,7 @@ export interface FeatureProfile {
 export class AvailableFeaturesComponent implements OnInit {
   chatGPT: Feature = {
     name: 'ChatGPT',
-    icon: './assets/media/svg/coletivia/chatgpt.svg',
+    icon: 'assets/media/svg/coletivia/chatgpt.svg',
     profiles: [
       {
         name: 'GPT-3.5',
@@ -35,7 +35,7 @@ export class AvailableFeaturesComponent implements OnInit {
 
   whisper: Feature = {
     name: 'Whisper',
-    icon: './assets/media/svg/coletivia/whisper.svg',
+    icon: 'assets/media/svg/coletivia/whisper.svg',
     profiles: [
       {
         name: 'Whisper 1',
@@ -46,7 +46,7 @@ export class AvailableFeaturesComponent implements OnInit {
 
   dallE: Feature = {
     name: 'DALL·E',
-    icon: './assets/media/svg/coletivia/dall-e.svg',
+    icon: 'assets/media/svg/coletivia/dall-e.svg',
     profiles: [
       {
         name: 'DALL·E 2',
@@ -57,7 +57,7 @@ export class AvailableFeaturesComponent implements OnInit {
 
   midjourney: Feature = {
     name: 'Midjourney',
-    icon: './assets/media/svg/coletivia/midjourney.svg',
+    icon: 'assets/media/svg/coletivia/midjourney.svg',
     profiles: [
       {
         name: 'Midjourney',

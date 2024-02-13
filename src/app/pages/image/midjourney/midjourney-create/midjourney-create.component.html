@@ -1,13 +1,30 @@
 <div class="wrapper">
-  <div class="card border-0 p-5">
+  <div class="card border-0 py-5">
     <div class="card-body">
-      <div class="card-px text-center pt-15 pb-15">
+      <div class="px-0 text-center pt-15">
         <h2 class="fs-2x fw-bold mb-0">Gere imagens com Midjourney</h2>
 
         <p class="text-gray-400 fs-4 fw-semibold py-7">
           Escreva uma descrição detalhada da imagem que deseja gerar
         </p>
+      </div>
 
+      <app-loading-wrapper
+        *ngIf="loading"
+        label="Gerando"
+      ></app-loading-wrapper>
+
+      <div
+        class="d-flex justify-content-center mt-5"
+        *ngIf="loading && imageUri !== ''"
+      >
+        <div class="image-container">
+          <p class="progress-text">{{ progress }}</p>
+          <img [src]="imageUri" alt="Preview da imagem" />
+        </div>
+      </div>
+
+      <ng-container *ngIf="!loading">
         <div class="input-group">
           <input
             type="text"
@@ -43,37 +60,37 @@
             </label>
           </div>
         </div>
-      </div>
 
-      <div class="panel panel-default w-100 px-10">
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            <a
-              class="accordion-toggle fs-6 fw-bold d-flex"
-              role="button"
-              (click)="toggleAccordion()"
-            >
-              <i class="bi bi-info-circle fs-4 me-2"></i>
-              Precisa de ajuda para criar uma boa descrição?
-            </a>
-          </h4>
-        </div>
-        <div class="mt-10" [ngClass]="{ collapse: !isAccordionOpen }">
-          <div class="panel-body">
-            <ul class="list-group mt-6">
-              <li class="list-group-item" *ngFor="let exemplo of exemplos">
-                <h5 class="mt-3 fst-italic text-gray-700">
-                  {{ exemplo.prompt }}
-                </h5>
-                <p class="mt-5">
-                  <span class="fw-bolder">Exemplo de descrição: </span
-                  >{{ exemplo.descricaoIdeal }}
-                </p>
-              </li>
-            </ul>
+        <div class="panel panel-default w-100 mt-20">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a
+                class="accordion-toggle fs-6 fw-bold d-flex"
+                role="button"
+                (click)="toggleAccordion()"
+              >
+                <i class="bi bi-info-circle fs-4 me-2"></i>
+                Precisa de ajuda para criar uma boa descrição?
+              </a>
+            </h4>
+          </div>
+          <div class="mt-10" [ngClass]="{ collapse: !isAccordionOpen }">
+            <div class="panel-body">
+              <ul class="list-group mt-6">
+                <li class="list-group-item" *ngFor="let exemplo of exemplos">
+                  <h5 class="mt-3 fst-italic text-gray-700">
+                    {{ exemplo.prompt }}
+                  </h5>
+                  <p class="mt-5">
+                    <span class="fw-bolder">Exemplo de descrição: </span
+                    >{{ exemplo.descricaoIdeal }}
+                  </p>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
+      </ng-container>
     </div>
   </div>
 </div>

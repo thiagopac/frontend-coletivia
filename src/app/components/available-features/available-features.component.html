@@ -22,11 +22,7 @@
           [ngClass]="{ active: selectedFeature.name === featureItem.name }"
         >
           <div class="nav-icon">
-            <div
-              alt=""
-              [inlineSVG]="featureItem.icon"
-              class="svg-icon svg-icon-3x mb-2"
-            ></div>
+            <img [src]="featureItem.icon" class="svg-icon svg-icon-3x mb-2" />
           </div>
           <span class="nav-text text-gray-700 fw-bold fs-7s">{{
             featureItem.name

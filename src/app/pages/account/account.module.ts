@@ -1,8 +1,6 @@
 import { PipesModule } from '../../pipes/pipes.module';
 import { NgModule } from '@angular/core';
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { InlineSVGModule } from 'ng-inline-svg-2';
-
 import { AccountRoutingModule } from './account-routing.module';
 import { AccountComponent } from './account.component';
 import { OverviewComponent } from './overview/overview.component';
@@ -19,6 +17,8 @@ import { NgxMaskModule } from 'ngx-mask';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { RequiredInfoDialogComponent } from 'src/app/components/required-info-dialog/required-info-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -31,11 +31,11 @@ import { MatInputModule } from '@angular/material/input';
     EmailPreferencesComponent,
     NotificationsComponent,
     SignInMethodComponent,
+    RequiredInfoDialogComponent,
   ],
   imports: [
     CommonModule,
     AccountRoutingModule,
-    InlineSVGModule,
     DropdownMenusModule,
     PipesModule,
     NgSelectModule,
@@ -44,7 +44,9 @@ import { MatInputModule } from '@angular/material/input';
     FormsModule,
     ReactiveFormsModule,
     MatInputModule,
+    MatDialogModule,
   ],
   providers: [AsyncPipe],
+  exports: [RequiredInfoDialogComponent],
 })
 export class AccountModule {}

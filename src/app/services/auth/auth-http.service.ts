@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { IUser } from 'src/app/models/user';
 import { environment } from '../../../environments/environment';
 import { AuthModel, AuthRegisterModel } from 'src/app/models/auth';
+import { Params } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -32,12 +33,55 @@ export class AuthHTTPService {
     );
   }
 
+  resetPassword(
+    email: string,
+    token: string,
+    newPassword: string
+  ): Observable<boolean> {
+    return this.http.post<boolean>(
+      `${environment.apiUrl}/auth/reset-password`,
+      {
+        email,
+        token,
+        newPassword,
+      }
+    );
+  }
+
   getUserByToken(token: string): Observable<IUser> {
     const httpHeaders = new HttpHeaders({
       Authorization: `Bearer ${token}`,
+      hideSpinner: 'false',
     });
     return this.http.get<IUser>(`${environment.apiUrl}/auth/me`, {
       headers: httpHeaders,
     });
+  }
+
+  userExists(email: string): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/auth/user-exists`, {
+      email,
+    });
+  }
+
+  redirect(): Observable<string> {
+    const requestOptions = {
+      headers: new HttpHeaders(),
+      responseType: 'arraybuffer' as const,
+    };
+
+    return this.http
+      .get(`${environment.apiUrl}/google/redirect`, requestOptions)
+      .pipe(
+        map((response: ArrayBuffer) => {
+          const decoder = new TextDecoder('utf-8');
+          return decoder.decode(response);
+        })
+      );
+  }
+
+  callback(queryParams: Params): Observable<any> {
+    const params = new HttpParams({ fromObject: queryParams });
+    return this.http.get(`${environment.apiUrl}/google/callback`, { params });
   }
 }

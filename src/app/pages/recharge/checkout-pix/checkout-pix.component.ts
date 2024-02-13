@@ -1,24 +1,30 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RechargeService } from 'src/app/services/recharge.service';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { interval, Subject, Subscription } from 'rxjs';
+import { takeUntil, switchMap } from 'rxjs/operators';
+import { SocketIOService } from 'src/app/services/socket-io.service';
 
 @Component({
   selector: 'app-checkout-pix',
   templateUrl: './checkout-pix.component.html',
   styleUrls: ['./checkout-pix.component.scss'],
 })
-export class CheckoutPixComponent implements OnInit {
+export class CheckoutPixComponent implements OnInit, OnDestroy {
   rechargeUuid: string;
   recharge?: any | undefined;
   clipboardUsed = false;
   leftTime: number;
-
+  pollingSubscription: any;
+  stopPolling$ = new Subject<void>();
+  subCheckoutRefresh: Subscription;
   constructor(
     private rechargeService: RechargeService,
     private activatedRoute: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
-    private clipboard: Clipboard
+    private clipboard: Clipboard,
+    private socketIOService: SocketIOService
   ) {}
 
   ngOnInit(): void {
@@ -26,6 +32,14 @@ export class CheckoutPixComponent implements OnInit {
       this.rechargeUuid = params.get('uuid')!;
       this.retrieve();
     });
+
+    this.subCheckoutRefresh = this.socketIOService
+      .onCheckoutRefresh()
+      .subscribe(() => {
+        setTimeout(() => {
+          this.retrieve();
+        }, 2000);
+      });
   }
 
   retrieve() {
@@ -33,7 +47,33 @@ export class CheckoutPixComponent implements OnInit {
       this.recharge = res;
       this.calculateLeftTime();
       this.changeDetectorRef.detectChanges();
+      if (this.recharge.status !== 'paid' && this.leftTime > 0) {
+        this.startPolling();
+      }
     });
+  }
+
+  startPolling() {
+    this.pollingSubscription = interval(10000)
+      .pipe(
+        switchMap(() => this.rechargeService.retrieve(this.rechargeUuid)),
+        takeUntil(this.stopPolling$)
+      )
+      .subscribe((res) => {
+        this.recharge = res;
+        this.calculateLeftTime();
+        this.changeDetectorRef.detectChanges();
+        if (this.recharge.status === 'paid' || this.leftTime <= 0) {
+          this.stopPolling();
+        }
+      });
+  }
+
+  stopPolling() {
+    this.stopPolling$.next();
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
   }
 
   copyToClipboard() {
@@ -50,5 +90,10 @@ export class CheckoutPixComponent implements OnInit {
     );
 
     this.leftTime = 1800 - timeDiffInSeconds;
+  }
+
+  ngOnDestroy() {
+    this.stopPolling();
+    this.subCheckoutRefresh.unsubscribe();
   }
 }

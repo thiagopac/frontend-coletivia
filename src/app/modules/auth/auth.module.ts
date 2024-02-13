@@ -9,6 +9,9 @@ import { ForgotPasswordComponent } from '../../components/forgot-password/forgot
 import { LogoutComponent } from '../../components/logout/logout.component';
 import { AuthComponent } from './auth.component';
 import { TranslationModule } from '../i18n/translation.module';
+import { GoogleCallbackComponent } from 'src/app/components/google-callback/google-callback.component';
+import { WidgetsModule } from 'src/app/components/widgets/widgets.module';
+import { ResetPasswordComponent } from 'src/app/components/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +20,8 @@ import { TranslationModule } from '../i18n/translation.module';
     ForgotPasswordComponent,
     LogoutComponent,
     AuthComponent,
+    GoogleCallbackComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     CommonModule,
@@ -25,6 +30,7 @@ import { TranslationModule } from '../i18n/translation.module';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    WidgetsModule,
   ],
 })
 export class AuthModule {}

@@ -5,7 +5,9 @@
     routerLink="/start"
     [ngClass]="calculateMenuItemCssClass('/start')"
   >
-    <i class="bi bi-house text-active-dark text-white fs-3 me-2"></i>
+    <i
+      class="bi bi-house d-none d-md-block text-active-dark text-white fs-3 me-2"
+    ></i>
     <span class="menu-title">Início</span>
     <span class="menu-arrow d-lg-none"></span>
   </span>
@@ -150,11 +152,12 @@
     <span class="menu-title">Perfis de contexto</span>
     <span class="menu-arrow d-lg-none"></span>
   </span>
+
   <div
     class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-rounded-0 py-lg-4"
     data-kt-menu-dismiss="true"
   >
-    <div class="menu-item">
+    <!-- <div class="menu-item">
       <div class="menu-content pb-2">
         <span class="menu-section text-muted text-uppercase fs-7 fw-bold"
           >Conversões de texto</span
@@ -186,7 +189,7 @@
         </span>
         <span class="menu-title"> Jurídico para informal </span>
       </a>
-    </div>
+    </div> -->
 
     <div class="menu-item">
       <div class="menu-content pb-2">
@@ -299,4 +302,51 @@
   >
     <span class="menu-title"> Visualizar post </span>
   </a>
+
+  <span
+    class="menu-link py-3"
+    [ngClass]="calculateMenuItemCssClass('/recharge')"
+  >
+    <span class="menu-title">Créditos</span>
+
+    <a
+      class="menu-link"
+      routerLinkActive="active"
+      routerLink="/recharge/options"
+    >
+      <span class="menu-title"> Adquira créditos </span>
+    </a>
+
+    <a class="menu-link" routerLinkActive="active" routerLink="/recharge/list">
+      <span class="menu-title"> Meus pedidos </span>
+    </a>
+  </span>
+
+  <a
+    class="menu-link"
+    routerLinkActive="active"
+    routerLink="operation/statement"
+  >
+    <span class="menu-title"> Extrato de uso </span>
+  </a>
+
+  <span class="menu-link py-3" [ngClass]="calculateMenuItemCssClass('/policy')">
+    <span class="menu-title">Políticas</span>
+
+    <a
+      class="menu-link"
+      routerLinkActive="active"
+      routerLink="/policy/politica-de-privacidade"
+    >
+      <span class="menu-title"> Política de Privacidade </span>
+    </a>
+
+    <a
+      class="menu-link"
+      routerLinkActive="active"
+      routerLink="/policy/termos-de-uso"
+    >
+      <span class="menu-title"> Termos de Uso </span>
+    </a>
+  </span>
 </div>

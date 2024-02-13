@@ -5,20 +5,33 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CheckoutPixComponent } from 'src/app/pages/recharge/checkout-pix/checkout-pix.component';
 import { PipesModule } from 'src/app/pipes/pipes.module';
-import { NgxKjuaModule } from 'ngx-kjua';
+import { QrCodeModule } from 'ng-qrcode';
 import { CountdownModule } from 'ngx-countdown';
-import { InlineSVGModule } from 'ng-inline-svg-2';
+import {
+  MatPaginatorIntl,
+  MatPaginatorModule,
+} from '@angular/material/paginator';
+import { CustomPaginatorIntlService } from 'src/app/services/custom-paginator-intl.service';
+import { RechargeListComponent } from 'src/app/pages/recharge/recharge-list/recharge-list.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { NgxMaskModule } from 'ngx-mask';
 
 @NgModule({
-  declarations: [RechargeOptionsComponent, CheckoutPixComponent],
+  declarations: [
+    RechargeOptionsComponent,
+    CheckoutPixComponent,
+    RechargeListComponent,
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
     PipesModule,
-    NgxKjuaModule,
+    QrCodeModule,
     CountdownModule,
-    InlineSVGModule,
+    MatPaginatorModule,
+    MatDialogModule,
+    NgxMaskModule.forRoot(),
     RouterModule.forChild([
       {
         path: 'options',
@@ -28,7 +41,14 @@ import { InlineSVGModule } from 'ng-inline-svg-2';
         path: 'checkout-pix/:uuid',
         component: CheckoutPixComponent,
       },
+      {
+        path: 'list',
+        component: RechargeListComponent,
+      },
     ]),
+  ],
+  providers: [
+    { provide: MatPaginatorIntl, useClass: CustomPaginatorIntlService },
   ],
 })
 export class RechargeModule {}

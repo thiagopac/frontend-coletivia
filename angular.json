@@ -24,7 +24,6 @@
             "outputPath": "dist/frontend-coletivia",
             "allowedCommonJsDependencies": [
               "object-path",
-              "apexcharts",
               "clipboard.js",
               "prismjs"
             ],

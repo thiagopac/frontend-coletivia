@@ -1,5 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs';
+import { InsufficientBalanceService } from 'src/app/services/insufficient-balance.service';
+import { SocketIOService } from 'src/app/services/socket-io.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -8,11 +10,32 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./account-balance.component.scss'],
 })
 export class AccountBalanceComponent implements OnInit {
-  balance$: Observable<any>;
+  balance: any;
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private socketIOService: SocketIOService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private insufficientBalanceService: InsufficientBalanceService
+  ) {}
 
   ngOnInit(): void {
-    this.balance$ = this.userService.getBalance();
+    this.getBalance();
+
+    this.socketIOService.onBalanceRefresh().subscribe(() => {
+      this.getBalance();
+    });
+  }
+
+  getBalance() {
+    this.userService.getBalance().subscribe((res) => {
+      this.balance = res;
+
+      if (+res.current_balance <= 0) {
+        this.insufficientBalanceService.setBloqueio(true);
+      }
+
+      this.changeDetectorRef.detectChanges();
+    });
   }
 }

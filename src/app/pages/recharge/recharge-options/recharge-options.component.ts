@@ -1,7 +1,12 @@
+import { AlertMessageService } from 'src/app/services/alert-message.service';
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { RequiredInfoDialogComponent } from 'src/app/components/required-info-dialog/required-info-dialog.component';
+import { InfoType } from 'src/app/models/user';
 import { RechargeService } from 'src/app/services/recharge.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-recharge-options',
@@ -13,7 +18,10 @@ export class RechargeOptionsComponent implements OnInit {
   selectedOption: any;
   constructor(
     private rechargeService: RechargeService,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog,
+    private userService: UserService,
+    private alertMessageService: AlertMessageService
   ) {}
 
   ngOnInit(): void {
@@ -29,8 +37,43 @@ export class RechargeOptionsComponent implements OnInit {
   }
 
   checkout() {
-    this.rechargeService.checkout(this.selectedOption.uuid).subscribe((res) => {
-      this.router.navigate(['/recharge/checkout-pix', res.uuid]);
+    this.userService.me().subscribe((res) => {
+      if (!res.info.cpf_cnpj || !res.info.registration_type) {
+        this.alertMessageService.showToast(
+          'Você precisa completar o seu cadastro para continuar',
+          'warning'
+        );
+        this.openDialog();
+      } else {
+        this.rechargeService
+          .checkout(this.selectedOption.uuid)
+          .subscribe((res) => {
+            this.router.navigate(['/recharge/checkout-pix', res.uuid]);
+          });
+      }
+    });
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(RequiredInfoDialogComponent, {
+      width: '500px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!result) {
+        return;
+      }
+      this.userService
+        .updateInfo({
+          registration_type: result.registrationType,
+          cpf_cnpj: result.cpfCnpj,
+        } as InfoType)
+        .subscribe(() => {
+          this.alertMessageService.showToast(
+            'Seus dados foram atualizados com sucesso!',
+            'success'
+          );
+        });
     });
   }
 }

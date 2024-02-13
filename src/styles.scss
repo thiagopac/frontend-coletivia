@@ -157,3 +157,27 @@ ng-select {
 .mat-step-header:hover[aria-disabled='false'] {
   background-color: transparent;
 }
+
+.font-roboto {
+  font-family: 'Roboto', sans-serif !important;
+}
+
+.icon-invert {
+  filter: brightness(0) invert(1);
+}
+
+.notification-icon.success {
+  background-color: $success !important;
+
+  img {
+    filter: invert(1);
+  }
+}
+
+.card {
+  overflow: hidden;
+}
+
+.card-body {
+  overflow: scroll;
+}

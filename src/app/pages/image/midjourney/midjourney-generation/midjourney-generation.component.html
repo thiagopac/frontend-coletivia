@@ -1,69 +1,27 @@
 <div class="wrapper">
-  <div class="card border-0 p-5">
+  <div class="card border-0 py-5">
     <div class="card-body">
       <p class="fs-3 text-dark text-uppercase mt-5 fw-bolder">Descrição</p>
       <p class="fs-5 mb-10 text-gray-700">{{ generation?.prompt }}</p>
 
-      <p class="fs-3 text-dark mt-15 text-uppercase fw-bolder">
-        Opções geradas
-      </p>
-      <p class="fs-6 text-muted revert text-uppercase">
-        Clique no botão <strong>GERAR ALTA RESOLUÇÃO</strong> para criar uma
-        versão individual em alta resolução da imagem que desejar
-      </p>
-
-      <div class="row">
-        <div class="col-md-12 mb-4">
-          <div
-            class="card position-relative my-15"
-            *ngFor="let image of generation?.images.images; let i = index"
-          >
-            <img
-              class="card-img cursor-pointer"
-              [src]="image.uri"
-              alt="Imagem"
-              (click)="showFullSizeImage(image.uri)"
-            />
-            <button
-              class="btn btn-corner top-0 start-0 qd-1"
-              (click)="confirmUpscale(i, 1)"
-            >
-              <i class="fs-2 bi bi-badge-hd text-white"></i>
-              Gerar alta resolução
-            </button>
-
-            <button
-              class="btn btn-corner top-0 end-0 qd-2"
-              (click)="confirmUpscale(i, 2)"
-            >
-              <i class="fs-2 bi bi-badge-hd text-white"></i>
-              Gerar alta resolução
-            </button>
-
-            <button
-              class="btn btn-corner bottom-0 start-0 qd-3"
-              (click)="confirmUpscale(i, 3)"
-            >
-              <i class="fs-2 bi bi-badge-hd text-white"></i>
-              Gerar alta resolução
-            </button>
-
-            <button
-              class="btn btn-corner bottom-0 end-0 qd-4"
-              (click)="confirmUpscale(i, 4)"
-            >
-              <i class="fs-2 bi bi-badge-hd text-white"></i>
-              Gerar alta resolução
-            </button>
-          </div>
-        </div>
-      </div>
+      <app-image-options-grid
+        class="h-0"
+        *ngIf="generation"
+        [generation]="generation"
+        (refreshEvent)="refreshEventReceived()"
+      ></app-image-options-grid>
 
       <p class="mt-15 fs-3 text-dark text-uppercase fw-bolder">
         Alta resolução
       </p>
       <p class="fs-6 text-muted revert text-uppercase">
-        Clique na imagem para visualizá-la
+        <span *ngIf="generation?.upscales.upscales.length > 0"
+          >Clique na imagem para visualizá-la</span
+        >
+        <span *ngIf="generation?.upscales.upscales.length === 0"
+          >Aqui serão mostrada as imagens que você gerou em
+          <strong>Alta resolução</strong></span
+        >
       </p>
       <div class="row">
         <div

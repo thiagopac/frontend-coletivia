@@ -40,12 +40,11 @@ export class DocumentUploadComponent implements OnInit {
     this.documentService.create(this.selectedModel, file.type).subscribe(
       (response) => {
         const documentUuid = response.uuid;
-        console.log('Documento criado:', documentUuid);
+        // console.log('Documento criado:', documentUuid);
 
         // Enviar o arquivo
         this.documentService.sendFile(documentUuid, file).subscribe(
           (res) => {
-            console.log('Arquivo enviado com sucesso:', res);
             this.router.navigate(['/contextual/document/resume', res.uuid]);
           },
           (error) => {

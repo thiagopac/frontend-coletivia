@@ -94,7 +94,7 @@ export class ConversationalService {
 
     return this.http
       .post<any>(`${environment.apiUrl}/chat/send-messages-single`, body, {
-        headers: this.authService.headerSigned(),
+        headers: this.authService.headerSigned(true),
       })
       .pipe(
         throttleTime(1000),

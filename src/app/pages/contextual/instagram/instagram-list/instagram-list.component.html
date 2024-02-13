@@ -1,5 +1,5 @@
 <div class="wrapper">
-  <div class="card border-0 p-5">
+  <div class="card border-0 py-5">
     <div class="card-header border-0">
       <div class="card-title"></div>
       <div class="card-toolbar">
@@ -12,8 +12,8 @@
       </div>
     </div>
     <div class="card-body">
-      <div class="card-px text-start">
-        <p class="text-center fs-6" *ngIf="(items$ | async)?.length === 0">
+      <div class="px-0 text-start">
+        <p class="text-center fs-6" *ngIf="(items$ | async)?.data.length === 0">
           Nenhum registro encontrado
         </p>
 

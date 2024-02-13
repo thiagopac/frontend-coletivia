@@ -19,7 +19,7 @@ export class ChatService {
 
   retrieve(uuid: string): Observable<any> {
     return this.http.get<any>(`${environment.apiUrl}/chat/${uuid}`, {
-      headers: this.authService.headerSigned(),
+      headers: this.authService.headerSigned(true),
     });
   }
 
