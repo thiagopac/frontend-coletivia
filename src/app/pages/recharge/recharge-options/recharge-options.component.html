@@ -1,0 +1,98 @@
+<div class="wrapper">
+  <div class="card border-0 py-5">
+    <div class="card-header border-0">
+      <label class="form-label mt-20 ms-10">
+        <div class="fs-3 fw-bolder">
+          Faça recarga de crédito instantaneamente através do PIX!
+        </div>
+        <div class="fs-5 mt-5 fw-light">
+          Escolha o valor que deseja recarregar:
+        </div>
+      </label>
+    </div>
+    <div class="card-body">
+      <div class="px-0 text-start">
+        <div class="row" *ngIf="items$ | async as _items">
+          <div class="col" *ngFor="let item of _items">
+            <label
+              class="btn btn-outline btn-outline-dashed btn-outline-default w-100 p-7 mb-10"
+              [ngClass]="{ active: item === selectedOption }"
+              for="{{ item.id }}"
+              (click)="selectValue(item)"
+            >
+              <div class="d-flex w-100 justify-content-center mb-5">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="pixValue"
+                  [value]="item"
+                  [(ngModel)]="selectedOption"
+                  (click)="selectValue(item)"
+                />
+              </div>
+              <div class="d-flex align-items-center">
+                <div class="d-block fw-bold text-start">
+                  <div class="d-flex align-items-center">
+                    <img
+                      class="w-40px h-40px"
+                      src="./assets/media/custom/pix.png"
+                      width="40"
+                    />
+                    <div class="ms-5">
+                      <div class="fs-3 fw-bolder text-gray-900 my-2">
+                        {{ item.label }}
+                      </div>
+
+                      <span class="fs-sm-6 text-gray-600 d-flex"
+                        >Recarga de</span
+                      >
+
+                      <div class="d-flex align-items-center">
+                        <span
+                          class="fs-4 fw-semibold text-gray-400 me-1 align-self-start"
+                          >R$</span
+                        >
+
+                        <span
+                          class="fs-3hx fw-bold text-dark me-2 lh-1 ls-n2"
+                          >{{
+                            (item.debited_value | decimalToCurrencyPipe).split(
+                              ','
+                            )[0]
+                          }}</span
+                        >
+
+                        <sub class="fs-1 text-dark fw-bolder ms-n1"
+                          >,{{
+                            (item.debited_value | decimalToCurrencyPipe).split(
+                              ','
+                            )[1]
+                          }}</sub
+                        >
+                      </div>
+
+                      <span class="text-gray-400 fw-bold fs-7">
+                        {{ item.observations }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer border-0 d-flex justify-content-end py-6 px-9">
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="!selectedOption"
+        (click)="checkout()"
+      >
+        Seguir para pagamento
+        <i class="bi bi-arrow-right fs-3"></i>
+      </button>
+    </div>
+  </div>
+</div>

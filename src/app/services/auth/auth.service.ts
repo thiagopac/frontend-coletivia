@@ -5,7 +5,7 @@ import { map, catchError, switchMap, finalize } from 'rxjs/operators';
 import { UserType } from 'src/app/models/user';
 import { AuthModel, AuthRegisterModel } from 'src/app/models/auth';
 import { AuthHTTPService } from './auth-http.service';
-import { Router } from '@angular/router';
+import { Params, Router } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
@@ -14,7 +14,8 @@ import { HttpHeaders } from '@angular/common/http';
 export class AuthService implements OnDestroy {
   // private fields
   private unsubscribe: Subscription[] = [];
-  private authLocalStorageToken = `${this.environmentService.getVersion()}-${this.environmentService.getUserDataKey()}`;
+  private authLocalStorage = `${this.environmentService.getVersion()}-${this.environmentService.getAuthDataKey()}`;
+  private userLocalStorage = `${this.environmentService.getVersion()}-${this.environmentService.getUserDataKey()}`;
 
   // public fields
   currentUser$: Observable<UserType>;
@@ -41,9 +42,11 @@ export class AuthService implements OnDestroy {
     this.isLoading$ = this.isLoadingSubject.asObservable();
   }
 
-  headerSigned(): HttpHeaders {
-    const auth = this.getAuthFromLocalStorage();
-    return new HttpHeaders({ Authorization: `Bearer ${auth?.token}` });
+  headerSigned(hideSpinner?: boolean): HttpHeaders {
+    return new HttpHeaders({
+      Authorization: `Bearer ${this.getAuthFromLocalStorage()?.token}`,
+      hideSpinner: `${hideSpinner === true ? 'true' : 'false'}`,
+    });
   }
 
   // public methods
@@ -51,7 +54,23 @@ export class AuthService implements OnDestroy {
     this.isLoadingSubject.next(true);
     return this.authHttpService.login(email, password).pipe(
       map((auth: AuthModel) => {
-        const result = this.setAuthFromLocalStorage(auth);
+        const result = this.setAuthToLocalStorage(auth);
+        return result;
+      }),
+      switchMap(() => this.getUserByToken()),
+      catchError((err) => {
+        console.error('err', err);
+        return of(undefined);
+      }),
+      finalize(() => this.isLoadingSubject.next(false))
+    );
+  }
+
+  socialLogin(queryParams: Params): Observable<UserType> {
+    this.isLoadingSubject.next(true);
+    return this.authHttpService.callback(queryParams).pipe(
+      map((auth: AuthModel) => {
+        const result = this.setAuthToLocalStorage(auth);
         return result;
       }),
       switchMap(() => this.getUserByToken()),
@@ -64,7 +83,8 @@ export class AuthService implements OnDestroy {
   }
 
   logout() {
-    localStorage.removeItem(this.authLocalStorageToken);
+    localStorage.removeItem(this.authLocalStorage);
+    localStorage.removeItem(this.userLocalStorage);
     this.router.navigate(['/auth/login'], {
       queryParams: {},
     });
@@ -72,7 +92,6 @@ export class AuthService implements OnDestroy {
 
   getUserByToken(): Observable<UserType> {
     const auth = this.getAuthFromLocalStorage();
-
     if (!auth || !auth.token) {
       return of(undefined);
     }
@@ -82,6 +101,7 @@ export class AuthService implements OnDestroy {
       map((user: UserType) => {
         if (user) {
           this.currentUserSubject.next(user);
+          this.setUserToLocalStorage(user);
         } else {
           this.logout();
         }
@@ -114,11 +134,31 @@ export class AuthService implements OnDestroy {
       .pipe(finalize(() => this.isLoadingSubject.next(false)));
   }
 
+  resetPassword(
+    email: string,
+    token: string,
+    newPassword: string
+  ): Observable<boolean> {
+    this.isLoadingSubject.next(true);
+    return this.authHttpService
+      .resetPassword(email, token, newPassword)
+      .pipe(finalize(() => this.isLoadingSubject.next(false)));
+  }
+
   // private methods
-  private setAuthFromLocalStorage(auth: AuthModel): boolean {
+  private setAuthToLocalStorage(auth: AuthModel): boolean {
     // store auth token/type/epiresIn in local storage to keep user logged in between page refreshes
     if (auth && auth.token) {
-      localStorage.setItem(this.authLocalStorageToken, JSON.stringify(auth));
+      localStorage.setItem(this.authLocalStorage, JSON.stringify(auth));
+      return true;
+    }
+    return false;
+  }
+
+  private setUserToLocalStorage(user: UserType): boolean {
+    // store auth token/type/epiresIn in local storage to keep user logged in between page refreshes
+    if (user && user.uuid) {
+      localStorage.setItem(this.userLocalStorage, JSON.stringify(user));
       return true;
     }
     return false;
@@ -126,13 +166,28 @@ export class AuthService implements OnDestroy {
 
   getAuthFromLocalStorage(): AuthModel | undefined {
     try {
-      const lsValue = localStorage.getItem(this.authLocalStorageToken);
+      const lsValue = localStorage.getItem(this.authLocalStorage);
       if (!lsValue) {
         return undefined;
       }
 
       const authData = JSON.parse(lsValue);
       return authData;
+    } catch (error) {
+      console.error(error);
+      return undefined;
+    }
+  }
+
+  getUserFromLocalStorage(): UserType | undefined {
+    try {
+      const lsValue = localStorage.getItem(this.userLocalStorage);
+      if (!lsValue) {
+        return undefined;
+      }
+
+      const userData = JSON.parse(lsValue);
+      return userData;
     } catch (error) {
       console.error(error);
       return undefined;

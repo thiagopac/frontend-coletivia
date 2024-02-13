@@ -8,7 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { ChatMessage } from 'src/app/models/chat-response';
 import { ChatService } from 'src/app/services/chat.service';
 import { ConversationalService } from 'src/app/services/conversational.service';
@@ -19,7 +19,8 @@ import {
   animate,
   transition,
 } from '@angular/animations';
-import { MarkdownService } from 'ngx-markdown';
+import { AlertMessageService } from 'src/app/services/alert-message.service';
+import { InsufficientBalanceService } from 'src/app/services/insufficient-balance.service';
 
 @Component({
   selector: 'app-chat-gpt',
@@ -39,6 +40,8 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('placeholder', { read: ElementRef })
   placeholder: ElementRef<HTMLDivElement>;
   @ViewChild('messageContainer') messageContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('messageWrapper', { read: ElementRef })
+  messageWrapper!: ElementRef<HTMLDivElement>;
 
   //chat
   chatUuid: string;
@@ -61,13 +64,18 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
 
   chatList: any[] = [];
   estadoAnimacao: boolean = false;
+  showContinueButton: boolean = false;
+
+  mostrarBloqueio: boolean = false;
+  subBloqueio: Subscription;
 
   constructor(
     private conversationalService: ConversationalService,
     private chatService: ChatService,
     private changeDetectorRef: ChangeDetectorRef,
     private activatedRoute: ActivatedRoute,
-    private markdownService: MarkdownService
+    private alertMessageService: AlertMessageService,
+    private insufficientBalanceService: InsufficientBalanceService
   ) {}
 
   ngOnInit(): void {
@@ -76,7 +84,11 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
       this.loadChatResources(this.chatUuid);
     });
 
-    // this.markdownService
+    this.subBloqueio = this.insufficientBalanceService.bloqueio$
+      .asObservable()
+      .subscribe((bloqueio) => {
+        this.mostrarBloqueio = bloqueio;
+      });
   }
 
   loadChatResources(chatUuid: string) {
@@ -86,7 +98,7 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
       this.changeDetectorRef.detectChanges();
     });
 
-    this.chatService.getChatList().subscribe((res) => {
+    this.chatService.listForType('free-chat').subscribe((res) => {
       this.chatList = res;
     });
   }
@@ -137,63 +149,112 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   chat(prompt: string) {
-    this.conversationalService.chat(this.chatUuid, prompt).subscribe({
-      next: (res: any) => {
-        this.genStart = false;
-        this.genPendding = false;
-        const msg = res.choices[0].message ?? {
-          role: 'assistant',
-          content: 'err',
-        };
-      },
-      error: (errMsg: string) => {
-        console.log('errMsg: ', errMsg);
-        this.genStart = false;
-        this.genPendding = false;
-        this.haveError = true;
-        this.errMessage = errMsg;
-      },
-    });
+    if (this.mostrarBloqueio) {
+      this.alertMessageService.insufficientBalanceAlert();
+    } else {
+      this.conversationalService.chatMessage(this.chatUuid, prompt).subscribe({
+        next: (res: any) => {
+          this.genStart = false;
+          this.genPendding = false;
+          const msg = res.choices[0].message ?? {
+            role: 'assistant',
+            content: 'err',
+          };
+        },
+        error: (errMsg: string) => {
+          console.log('errMsg: ', errMsg);
+          this.genStart = false;
+          this.genPendding = false;
+          this.haveError = true;
+          this.errMessage = errMsg;
+        },
+      });
+    }
   }
 
   chatStream(prompt: string) {
-    this.conversationalService.chatStream(this.chatUuid, prompt).subscribe({
-      next: (text: any) => {
-        const message = this.messages;
-        const lastMsg = message[message.length - 1];
-        if (lastMsg.role === 'user') {
-          this.genStart = false;
-          message.push({ role: 'assistant', content: text });
-        } else {
-          lastMsg.content += text;
-        }
-        this.changeDetectorRef.detectChanges();
-        this.scrollToBottom();
-      },
-      complete: () => {
-        console.log(this.messages.length);
+    if (this.mostrarBloqueio) {
+      this.alertMessageService.insufficientBalanceAlert();
+    } else {
+      this.scrollToBottom();
+      this.conversationalService.chatStream(this.chatUuid, prompt).subscribe({
+        next: (obs: any) => {
+          if (obs.finishReason === 'length') this.showContinueButton = true;
+          const message = this.messages;
+          const lastMsg = message[message.length - 1];
+          if (lastMsg.role === 'user') {
+            this.genStart = false;
+            message.push({ role: 'assistant', content: obs.content });
+          } else {
+            lastMsg.content += obs.content;
+          }
+          this.changeDetectorRef.detectChanges();
+        },
+        complete: () => {
+          // console.log(this.messages.length);
 
-        if (this.messages.length === 2) {
-          this.retrieveSuggestedTitle();
-        }
-        this.genPendding = false;
-      },
-      error: (errMsg: any) => {
-        console.log('errMsg: ', errMsg);
-        this.genStart = false;
-        this.genPendding = false;
-        this.haveError = true;
-        this.errMessage = errMsg;
-        this.changeDetectorRef.detectChanges();
-      },
-    });
+          if (this.messages.length <= 4) {
+            this.retrieveSuggestedTitle();
+          }
+          this.genPendding = false;
+          this.changeDetectorRef.detectChanges();
+        },
+        error: (errMsg: any) => {
+          console.log('errMsg: ', errMsg);
+          this.genStart = false;
+          this.genPendding = false;
+          this.haveError = true;
+          this.errMessage = errMsg;
+          this.changeDetectorRef.detectChanges();
+        },
+      });
+    }
   }
 
   retrieveSuggestedTitle() {
-    this.chatService.retrieveChat(this.chatUuid).subscribe((res) => {
+    this.chatService.retrieve(this.chatUuid).subscribe((res) => {
       this.chatTitle = res.title;
       this.animateRenamedChat();
     });
+  }
+
+  continue() {
+    if (this.mostrarBloqueio) {
+      this.alertMessageService.insufficientBalanceAlert();
+    } else {
+      this.scrollToBottom();
+      this.conversationalService.continue(this.chatUuid).subscribe({
+        next: (obs: any) => {
+          if (obs.finishReason === 'length') this.showContinueButton = true;
+          const message = this.messages;
+          const lastMsg = message[message.length - 1];
+          if (lastMsg.role === 'user') {
+            this.genStart = false;
+            message.push({ role: 'assistant', content: obs.content });
+          } else {
+            lastMsg.content += obs.content;
+          }
+          this.changeDetectorRef.detectChanges();
+        },
+        complete: () => {
+          // console.log(this.messages.length);
+
+          if (this.messages.length === 2) {
+            this.retrieveSuggestedTitle();
+          }
+          this.genPendding = false;
+          this.changeDetectorRef.detectChanges();
+        },
+        error: (errMsg: any) => {
+          console.log('errMsg: ', errMsg);
+          this.genStart = false;
+          this.genPendding = false;
+          this.haveError = true;
+          this.errMessage = errMsg;
+          this.changeDetectorRef.detectChanges();
+        },
+      });
+    }
   }
 
   stop() {
@@ -205,15 +266,19 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
 
   reGenerate() {
     // regenerate não pode ser usado ainda pois o backend só calcula o valor de tokens gastos em stream após o fim do recebimento. Para usar regenerate, é necessário que o backend calcule o valor de tokens gastos a cada mensagem recebida.
-    this.haveError = false;
-    if (this.messages[this.messages.length - 1].role === 'assistant') {
-      this.messages.pop();
+    if (this.mostrarBloqueio) {
+      this.alertMessageService.insufficientBalanceAlert();
+    } else {
+      this.haveError = false;
+      if (this.messages[this.messages.length - 1].role === 'assistant') {
+        this.messages.pop();
+      }
+      this.genStart = true;
+      this.genPendding = true;
+      this.conversationalService.isStream
+        ? this.chatStream(this.chatInputPersistent)
+        : this.chat(this.chatInputPersistent);
     }
-    this.genStart = true;
-    this.genPendding = true;
-    this.conversationalService.isStream
-      ? this.chatStream(this.chatInputPersistent)
-      : this.chat(this.chatInputPersistent);
   }
 
   mouseout() {
@@ -236,7 +301,7 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
     input.classList.add('d-none');
     title.classList.remove('d-none');
 
-    this.chatService.renameChat(this.chatUuid, value).subscribe((res) => {});
+    this.chatService.rename(this.chatUuid, value).subscribe((res) => {});
     this.animateRenamedChat();
   }
 
@@ -244,12 +309,19 @@ export class ChatGptComponent implements OnInit, OnDestroy, AfterViewInit {
     this.hoverIndex = index;
   }
 
+  // scrollToBottom() {
+  //   if (this.messageContainer) {
+  //     this.messageContainer.nativeElement.scrollIntoView({
+  //       behavior: 'auto',
+  //       block: 'end',
+  //     });
+  //   }
+  // }
+
   scrollToBottom() {
-    if (this.messageContainer) {
-      this.messageContainer.nativeElement.scrollIntoView({
-        behavior: 'auto',
-        block: 'end',
-      });
+    if (this.messageWrapper) {
+      const containerElement = this.messageWrapper.nativeElement;
+      containerElement.scrollIntoView();
     }
   }
 

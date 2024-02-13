@@ -1,0 +1,32 @@
+<div class="wrapper">
+  <div class="card border-0 py-5">
+    <div class="card-header border-0">
+      <div class="card-title"></div>
+      <div class="card-toolbar">
+        <button
+          class="btn btn-bg-light btn-active-color-primary"
+          (click)="toggleContent()"
+        >
+          <i class="las la-image fs-1"></i>
+          Ver opções de imagens geradas
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+      <app-image-options-grid
+        class="h-0"
+        [ngClass]="getContentStyles()"
+        *ngIf="instagramPost"
+        [instagramPost]="instagramPost"
+        [generation]="instagramPost?.midjourneyImageGeneration"
+        (refreshEvent)="refreshEventReceived()"
+      ></app-image-options-grid>
+
+      <div class="mt-10 text-center justify-content-center d-flex">
+        <app-instagram-feed-item
+          [instagramPost]="instagramPost"
+        ></app-instagram-feed-item>
+      </div>
+    </div>
+  </div>
+</div>

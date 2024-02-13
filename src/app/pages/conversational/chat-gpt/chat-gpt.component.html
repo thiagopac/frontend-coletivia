@@ -1,5 +1,5 @@
-<div class="container" #messageContainer>
-  <div class="card mt-8">
+<ng-container #messageContainer>
+  <div class="card">
     <div class="card-header">
       <div class="card-title">
         <div
@@ -26,7 +26,7 @@
           data-kt-menu-trigger="click"
           data-kt-menu-placement="bottom-end"
           data-kt-menu-flip="top-end"
-          class="btn btn-sm btn-bg-light btn-active-color-primary show menu-dropdown"
+          class="btn btn-bg-light btn-active-color-primary menu-dropdown"
         >
           <i class="las la-comments fs-2"></i>
           Minhas conversas
@@ -76,12 +76,28 @@
         <!-- Footer -->
         <div class="chat-footer">
           <div class="footer-bar d-flex">
+            <!-- <div
+              class="d-flex w-100 position-absolute justify-content-center action-buttons-wrapper"
+            >
+              <button
+                class="btn btn-success"
+                (click)="continue()"
+                *ngIf="
+                  !genPendding &&
+                  messages.length !== 0 &&
+                  chatInputPersistent !== undefined
+                "
+              >
+                <i class="bi bi-arrow-return-right fs-2"></i>
+                Continuar
+              </button>
+            </div> -->
+
             <textarea
               #textarea
               class="chat-textarea"
               name="chat"
               [(ngModel)]="chatInput"
-              dTextarea
               (input)="setTextareaHeight()"
               (keydown)="preventEnter($event)"
               (keyup)="enter($event)"
@@ -99,6 +115,18 @@
           </div>
         </div>
         <div #placeholder class="footer-placeholder">
+          <!-- <button
+            *ngIf="
+              !genPendding &&
+              messages.length !== 0 &&
+              chatInputPersistent !== undefined &&
+              showContinueButton === true
+            "
+            (click)="continue()"
+          >
+            Continuar
+          </button> -->
+
           <!-- <button *ngIf="genPendding" (click)="stop()">Parar</button> -->
 
           <!-- <button
@@ -112,7 +140,8 @@
             Recarregar
           </button> -->
         </div>
+        <div #messageWrapper></div>
       </div>
     </div>
   </div>
-</div>
+</ng-container>

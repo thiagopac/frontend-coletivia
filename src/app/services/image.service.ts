@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { AuthService } from 'src/app/modules/auth';
-import { ChatMessagesResponse } from 'src/app/models/chat-messages-response';
 
 @Injectable({
   providedIn: 'root',
@@ -11,29 +10,85 @@ import { ChatMessagesResponse } from 'src/app/models/chat-messages-response';
 export class ImageService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  getImageGenerationList(): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/image/list`, {
+  listGenerationsDalle(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/image/dalle/list`, {
       headers: this.authService.headerSigned(),
     });
   }
 
-  createImageGeneration(
+  createGenerationDalle(
     prompt: string,
     size: string,
-    variations: number
+    variations: number,
+    translate: boolean
   ): Observable<any> {
     return this.http.post<any>(
-      `${environment.apiUrl}/image/create-image-free`,
-      { prompt, size, variations },
+      `${environment.apiUrl}/image/dalle/create-image-free`,
+      { prompt, size, variations, translate },
       {
         headers: this.authService.headerSigned(),
       }
     );
   }
 
-  deleteImageGeneration(imageGenerationUuid: string): Observable<any> {
+  deleteGenerationDalle(imageGenerationUuid: string): Observable<any> {
     return this.http.delete<any>(
-      `${environment.apiUrl}/image/${imageGenerationUuid}/delete`,
+      `${environment.apiUrl}/image/dalle/${imageGenerationUuid}/delete`,
+      {
+        headers: this.authService.headerSigned(),
+      }
+    );
+  }
+
+  listGenerationsMidjourney(page: number, perPage: number): Observable<any> {
+    const headers = this.authService.headerSigned();
+    const params = { page: page.toString(), perPage: perPage.toString() };
+
+    return this.http.get<any>(`${environment.apiUrl}/image/midjourney/list`, {
+      headers,
+      params,
+    });
+  }
+
+  createGenerationMidjourney(
+    prompt: string,
+    translate: boolean
+  ): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}/image/midjourney/create-image-free`,
+      { prompt, translate },
+      {
+        headers: this.authService.headerSigned(true),
+      }
+    );
+  }
+
+  createUpscaleMidjourney(
+    uuid: string,
+    option: number,
+    index: number
+  ): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}/image/midjourney/create-upscale`,
+      { generation: uuid, option, index },
+      {
+        headers: this.authService.headerSigned(),
+      }
+    );
+  }
+
+  deleteGenerationMidjourney(imageGenerationUuid: string): Observable<any> {
+    return this.http.delete<any>(
+      `${environment.apiUrl}/image/midjourney/${imageGenerationUuid}/delete`,
+      {
+        headers: this.authService.headerSigned(),
+      }
+    );
+  }
+
+  retrieveGenerationMidjourney(uuid: string): Observable<any> {
+    return this.http.get<any>(
+      `${environment.apiUrl}/image/midjourney/retrieve/${uuid}`,
       {
         headers: this.authService.headerSigned(),
       }

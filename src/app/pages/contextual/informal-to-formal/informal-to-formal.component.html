@@ -1,0 +1,46 @@
+<div class="wrapper">
+  <div class="card border-0 py-5">
+    <div class="card-body">
+      <div class="px-0 text-center pt-15 pb-15">
+        <h2 class="fs-2x fw-bold mb-0">
+          Transcreva textos de caráter informal para formal
+        </h2>
+
+        <p class="text-gray-400 fs-4 fw-semibold py-7">
+          Escreva ou cole o texto que deseja transcrever no campo abaixo,
+          selecione o modelo de inteligência artificial desejado e clique no
+          botão para transcrevê-lo.
+        </p>
+
+        <div>
+          <textarea
+            #textarea
+            class="transcript-textarea form-control"
+            name="chat"
+            [(ngModel)]="transcriptInput"
+            (input)="setTextareaHeight()"
+            [disabled]="false"
+          ></textarea>
+
+          <div
+            class="form-group d-flex justify-content-center align-items-center my-10"
+          >
+            <div class="input-group-append">
+              <button
+                class="btn btn-success er fs-6 px-8 py-4 btn-transcript"
+                [disabled]="transcriptInput.length === 0"
+                (click)="transcript()"
+              >
+                Transcrever
+              </button>
+            </div>
+          </div>
+
+          <div class="transcripted-text form-control">
+            {{ transcriptOutput }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

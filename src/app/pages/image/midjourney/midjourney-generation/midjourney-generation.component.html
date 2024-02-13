@@ -1,0 +1,58 @@
+<div class="wrapper">
+  <div class="card border-0 py-5">
+    <div class="card-body">
+      <p class="fs-3 text-dark text-uppercase mt-5 fw-bolder">Descrição</p>
+      <p class="fs-5 mb-10 text-gray-700">{{ generation?.prompt }}</p>
+
+      <app-image-options-grid
+        class="h-0"
+        *ngIf="generation"
+        [generation]="generation"
+        (refreshEvent)="refreshEventReceived()"
+      ></app-image-options-grid>
+
+      <p class="mt-15 fs-3 text-dark text-uppercase fw-bolder">
+        Alta resolução
+      </p>
+      <p class="fs-6 text-muted revert text-uppercase">
+        <span *ngIf="generation?.upscales.upscales.length > 0"
+          >Clique na imagem para visualizá-la</span
+        >
+        <span *ngIf="generation?.upscales.upscales.length === 0"
+          >Aqui serão mostrada as imagens que você gerou em
+          <strong>Alta resolução</strong></span
+        >
+      </p>
+      <div class="row">
+        <div
+          class="col-md-6 mb-4"
+          id="hd-images"
+          *ngFor="let upscale of generation?.upscales.upscales; let i = index"
+        >
+          <div class="card position-relative">
+            <img
+              class="card-img cursor-pointer"
+              [src]="upscale.uri"
+              alt="Imagem"
+              (click)="showFullSizeImage(upscale.uri)"
+            />
+            <button
+              class="btn btn-corner bottom-0 end-0 qd-4"
+              (click)="downloadImage(upscale.uri, i + 1)"
+            >
+              <i class="fs-1 bi bi-cloud-arrow-down text-white"></i>
+              Baixar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      *ngIf="fullSizeImageUrl"
+      class="full-size-container"
+      (click)="closeFullSizeImage()"
+    >
+      <img [src]="fullSizeImageUrl" class="full-size-image" />
+    </div>
+  </div>
+</div>

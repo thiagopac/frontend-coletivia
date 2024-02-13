@@ -1,11 +1,10 @@
-import { ConversationalModule } from './conversational/conversational.module';
 import { Routes } from '@angular/router';
 
 const Routing: Routes = [
   {
     path: 'start',
     loadChildren: () =>
-      import('./features.module').then((m) => m.FeaturesModule),
+      import('./features/features.module').then((m) => m.FeaturesModule),
   },
   {
     path: 'conversational',
@@ -20,9 +19,29 @@ const Routing: Routes = [
       import('./image/image.module').then((m) => m.ImageModule),
   },
   {
+    path: 'contextual',
+    loadChildren: () =>
+      import('./contextual/contextual.module').then((m) => m.ContextualModule),
+  },
+  {
     path: 'account',
     loadChildren: () =>
       import('./account/account.module').then((m) => m.AccountModule),
+  },
+  {
+    path: 'operation',
+    loadChildren: () =>
+      import('./operation/operation.module').then((m) => m.OperationModule),
+  },
+  {
+    path: 'recharge',
+    loadChildren: () =>
+      import('./recharge/recharge.module').then((m) => m.RechargeModule),
+  },
+  {
+    path: 'policy',
+    loadChildren: () =>
+      import('./policy/policy.module').then((m) => m.PolicyModule),
   },
   {
     path: '',

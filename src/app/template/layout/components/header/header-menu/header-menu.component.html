@@ -1,19 +1,19 @@
-<div
-  class="menu-item menu-lg-down-accordion me-lg-1"
-  data-kt-menu-trigger="click"
-  data-kt-menu-placement="bottom-start"
->
+<div class="menu-item me-lg-1">
   <span
     class="menu-link py-3"
     routerLinkActive="active"
     routerLink="/start"
     [ngClass]="calculateMenuItemCssClass('/start')"
   >
-    <i class="bi bi-house text-active-dark text-white fs-3 me-2"></i>
+    <i
+      class="bi bi-house d-none d-md-block text-active-dark text-white fs-3 me-2"
+    ></i>
     <span class="menu-title">Início</span>
     <span class="menu-arrow d-lg-none"></span>
   </span>
 </div>
+
+<!-- ####################################################################################### -->
 
 <div
   class="menu-item menu-lg-down-accordion me-lg-1"
@@ -67,6 +67,8 @@
   </div>
 </div>
 
+<!-- ####################################################################################### -->
+
 <div
   class="menu-item menu-lg-down-accordion me-lg-1"
   data-kt-menu-trigger="click"
@@ -83,7 +85,7 @@
     <div class="menu-item">
       <div class="menu-content pb-2">
         <span class="menu-section text-muted text-uppercase fs-7 fw-bold"
-          >DALL·E</span
+          >Midjourney</span
         >
       </div>
     </div>
@@ -92,16 +94,51 @@
       <a
         class="menu-link py-3"
         routerLinkActive="active"
-        routerLink="/image/new-request"
+        routerLink="/image/midjourney/create"
       >
         <span class="menu-icon">
-          <i class="las la-file-image fs-1"></i>
+          <i class="las la-image fs-1"></i>
         </span>
-        <span class="menu-title"> Gerar imagem </span>
+        <span class="menu-title"> Criar com Midjourney</span>
+      </a>
+    </div>
+    <div class="menu-item me-lg-1">
+      <a
+        class="menu-link py-3"
+        routerLinkActive="active"
+        routerLink="/image/midjourney/gallery"
+      >
+        <span class="menu-icon">
+          <i class="las la-images fs-1"></i>
+        </span>
+        <span class="menu-title"> Galeria Midjourney</span>
+      </a>
+    </div>
+
+    <div class="menu-item" *ngIf="false">
+      <div class="menu-content pb-2">
+        <span class="menu-section text-muted text-uppercase fs-7 fw-bold"
+          >DALL·E</span
+        >
+      </div>
+    </div>
+
+    <div class="menu-item me-lg-1" *ngIf="false">
+      <a
+        class="menu-link py-3"
+        routerLinkActive="active"
+        routerLink="/image/dalle/create"
+      >
+        <span class="menu-icon">
+          <i class="las la-image fs-1"></i>
+        </span>
+        <span class="menu-title"> Criar com DALL·E</span>
       </a>
     </div>
   </div>
 </div>
+
+<!-- ####################################################################################### -->
 
 <div
   class="menu-item menu-lg-down-accordion me-lg-1"
@@ -110,16 +147,17 @@
 >
   <span
     class="menu-link py-3"
-    [ngClass]="calculateMenuItemCssClass('/context')"
+    [ngClass]="calculateMenuItemCssClass('/contextual')"
   >
     <span class="menu-title">Perfis de contexto</span>
     <span class="menu-arrow d-lg-none"></span>
   </span>
+
   <div
     class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-rounded-0 py-lg-4"
     data-kt-menu-dismiss="true"
   >
-    <div class="menu-item">
+    <!-- <div class="menu-item">
       <div class="menu-content pb-2">
         <span class="menu-section text-muted text-uppercase fs-7 fw-bold"
           >Conversões de texto</span
@@ -131,7 +169,7 @@
       <a
         class="menu-link py-3"
         routerLinkActive="active"
-        routerLink="/context/informal-to-formal"
+        routerLink="/contextual/informal-to-formal"
       >
         <span class="menu-icon">
           <i class="las la-envelope-open-text fs-1"></i>
@@ -144,13 +182,171 @@
       <a
         class="menu-link py-3"
         routerLinkActive="active"
-        routerLink="/context/legal-to-informal"
+        routerLink="/contextual/legal-to-informal"
       >
         <span class="menu-icon">
           <i class="lab la-black-tie fs-1"></i>
         </span>
         <span class="menu-title"> Jurídico para informal </span>
       </a>
+    </div> -->
+
+    <div class="menu-item">
+      <div class="menu-content pb-2">
+        <span class="menu-section text-muted text-uppercase fs-7 fw-bold"
+          >Análise de arquivos</span
+        >
+      </div>
+    </div>
+
+    <div class="menu-item me-lg-1">
+      <a
+        class="menu-link py-3"
+        routerLinkActive="active"
+        routerLink="/contextual/document/upload"
+      >
+        <span class="menu-icon">
+          <i class="las la-file-upload fs-1"></i>
+        </span>
+        <span class="menu-title"> Enviar arquivo </span>
+      </a>
+    </div>
+
+    <div class="menu-item me-lg-1">
+      <a
+        class="menu-link py-3"
+        routerLinkActive="active"
+        routerLink="/contextual/document/list"
+      >
+        <span class="menu-icon">
+          <i class="las la-folder-open fs-1"></i>
+        </span>
+        <span class="menu-title"> Meus arquivos </span>
+      </a>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-content pb-2">
+        <span class="menu-section text-muted text-uppercase fs-7 fw-bold"
+          >Instagram</span
+        >
+      </div>
+    </div>
+
+    <div class="menu-item me-lg-1">
+      <a
+        class="menu-link py-3"
+        routerLinkActive="active"
+        routerLink="/contextual/instagram/generate"
+      >
+        <span class="menu-icon">
+          <i class="lab la-instagram fs-1"></i>
+        </span>
+        <span class="menu-title"> Gerar post de Instagram </span>
+      </a>
+    </div>
+
+    <div class="menu-item me-lg-1">
+      <a
+        class="menu-link py-3"
+        routerLinkActive="active"
+        routerLink="/contextual/instagram/list"
+      >
+        <span class="menu-icon">
+          <i class="las la-window-restore fs-1"></i>
+        </span>
+        <span class="menu-title"> Meus posts gerados</span>
+      </a>
     </div>
   </div>
+</div>
+
+<!-- ####################################################################################### -->
+
+<div class="d-none">
+  <a
+    class="menu-link"
+    routerLinkActive="active"
+    routerLink="/conversational/chat-gpt"
+  >
+    <span class="menu-title"> Minhas conversas - Chat GPT </span>
+  </a>
+  <a
+    class="menu-link"
+    routerLinkActive="active"
+    routerLink="/contextual/document/resume"
+  >
+    <span class="menu-title"> Dados do arquivo </span>
+  </a>
+
+  <a
+    class="menu-link"
+    routerLinkActive="active"
+    routerLink="/contextual/document/analysis"
+  >
+    <span class="menu-title"> Análise de documento </span>
+  </a>
+
+  <a
+    class="menu-link"
+    routerLinkActive="active"
+    routerLink="/image/midjourney/generation"
+  >
+    <span class="menu-title"> Imagem gerada </span>
+  </a>
+
+  <a
+    class="menu-link"
+    routerLinkActive="active"
+    routerLink="/contextual/instagram/view"
+  >
+    <span class="menu-title"> Visualizar post </span>
+  </a>
+
+  <span
+    class="menu-link py-3"
+    [ngClass]="calculateMenuItemCssClass('/recharge')"
+  >
+    <span class="menu-title">Créditos</span>
+
+    <a
+      class="menu-link"
+      routerLinkActive="active"
+      routerLink="/recharge/options"
+    >
+      <span class="menu-title"> Adquira créditos </span>
+    </a>
+
+    <a class="menu-link" routerLinkActive="active" routerLink="/recharge/list">
+      <span class="menu-title"> Meus pedidos </span>
+    </a>
+  </span>
+
+  <a
+    class="menu-link"
+    routerLinkActive="active"
+    routerLink="operation/statement"
+  >
+    <span class="menu-title"> Extrato de uso </span>
+  </a>
+
+  <span class="menu-link py-3" [ngClass]="calculateMenuItemCssClass('/policy')">
+    <span class="menu-title">Políticas</span>
+
+    <a
+      class="menu-link"
+      routerLinkActive="active"
+      routerLink="/policy/politica-de-privacidade"
+    >
+      <span class="menu-title"> Política de Privacidade </span>
+    </a>
+
+    <a
+      class="menu-link"
+      routerLinkActive="active"
+      routerLink="/policy/termos-de-uso"
+    >
+      <span class="menu-title"> Termos de Uso </span>
+    </a>
+  </span>
 </div>

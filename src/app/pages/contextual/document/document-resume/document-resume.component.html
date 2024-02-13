@@ -1,0 +1,94 @@
+  <div class="wrapper">
+    <div class="card border-0 py-5">
+      <div class="card-body">
+        <div class="px-0 text-center pt-15 pb-15">
+          <div class="row">
+            <div class="col-lg-3">
+              <img
+                *ngIf="document?.extension === 'pdf'"
+                class="w-200px"
+                src="./assets/media/extensions/pdf.png"
+                alt="img"
+              />
+              <img
+                *ngIf="
+                  document?.extension === 'doc' || document?.extension === 'docx'
+                "
+                class="w-200px"
+                src="./assets/media/extensions/word.png"
+                alt="img"
+              />
+              <img
+                *ngIf="
+                  document?.extension === 'xls' || document?.extension === 'xlsx'
+                "
+                class="w-200px"
+                src="./assets/media/extensions/excel.png"
+                alt="img"
+              />
+            </div>
+            <div class="col-lg-5">
+              <div class="d-flex text-start flex-column mb-5">
+                <div class="fw-bold text-muted text-uppercase">Arquivo</div>
+                <div class="fw-bold fs-5">{{ document?.title }}</div>
+              </div>
+
+              <div class="d-flex text-start flex-column mb-5">
+                <div class="fw-bold text-muted text-uppercase">Data do envio</div>
+                <div class="fw-bold fs-5">
+                  {{ document?.created_at | date : 'dd/MM/yyyy HH:mm' }}
+                </div>
+              </div>
+
+              <div class="d-flex text-start flex-column mb-5">
+                <div class="fw-bold text-muted text-uppercase">
+                  Palavras no documento
+                </div>
+                <div class="fw-bold fs-5">
+                  {{ document?.content['wordCount'] | number }}
+                </div>
+              </div>
+
+              <div class="d-flex text-start flex-column mb-5">
+                <div class="fw-bold text-muted text-uppercase">
+                  Caracteres no documento
+                </div>
+                <div class="fw-bold fs-5">
+                  {{ document?.content['charCount'] | number }}
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="fw-bold text-muted text-uppercase mb-2">
+                Funcionalidades disponíveis
+              </div>
+              <button
+                *ngFor="let feature of features"
+                class="btn btn-light-primary w-100 my-2"
+                (click)="action(feature)"
+              >
+                <span class="fw-bold">{{ feature.name }}</span>
+              </button>
+
+              <div class="fw-bold text-muted text-uppercase mt-10 mb-2">
+                Análises efetuadas
+              </div>
+              <button
+                *ngFor="let analysis of analyses"
+                class="btn btn-link w-100 my-2"
+                (click)="gotoAnalysis(analysis)"
+              >
+                {{ analysis.feature.name }}
+                <div class="fs-8 text-muted">
+                  em {{ analysis.updated_at | date : 'dd/MM/yyyy HH:mm' }}
+                </div>
+              </button>
+              <p class="text-muted" *ngIf="analyses?.length === 0">
+                Este documento ainda não possui análises
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

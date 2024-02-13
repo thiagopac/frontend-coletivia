@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth';
+import { AuthHTTPService, AuthService } from 'src/app/services/auth';
 import { ConfirmPasswordValidator } from './confirm-password.validator';
 import { first } from 'rxjs/operators';
 import { UserType } from '../../modules/auth';
@@ -28,10 +28,10 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   constructor(
     private fb: UntypedFormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private authHTTPService: AuthHTTPService
   ) {
     this.isLoading$ = this.authService.isLoading$;
-    // redirect to home if already logged in
     if (this.authService.currentUserValue) {
       this.router.navigate(['/']);
     }
@@ -96,6 +96,12 @@ export class RegistrationComponent implements OnInit, OnDestroy {
         validator: ConfirmPasswordValidator.MatchPassword,
       }
     );
+  }
+
+  signUpWithGoogle(): void {
+    this.authHTTPService.redirect().subscribe((res: string) => {
+      window.location.href = res;
+    });
   }
 
   submit() {

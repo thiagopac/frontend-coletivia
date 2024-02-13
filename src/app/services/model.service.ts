@@ -10,14 +10,14 @@ import { AuthService } from 'src/app/modules/auth';
 export class ModelService {
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  getChatModelList(): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/ai-model/list`, {
+  list(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/ai-model/list`, {
       headers: this.authService.headerSigned(),
     });
   }
 
-  getChatModelListForType(type: string): Observable<any> {
-    return this.http.get<any>(`${environment.apiUrl}/ai-model/list/${type}`, {
+  listForType(type: string): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/ai-model/list/${type}`, {
       headers: this.authService.headerSigned(),
     });
   }

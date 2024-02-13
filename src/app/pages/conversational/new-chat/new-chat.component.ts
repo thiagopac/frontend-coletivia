@@ -1,38 +1,46 @@
 import { ChatService } from 'src/app/services/chat.service';
-import { Component, OnInit } from '@angular/core';
-import { ModelService } from 'src/app/services/model.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AlertMessageService } from 'src/app/services/alert-message.service';
+import { InsufficientBalanceService } from 'src/app/services/insufficient-balance.service';
 
 @Component({
   selector: 'app-new-chat',
   templateUrl: './new-chat.component.html',
   styleUrls: ['./new-chat.component.scss'],
 })
-export class NewChatComponent implements OnInit {
-  models: any[] = [];
+export class NewChatComponent implements OnInit, OnDestroy {
   selectedModel: any = undefined;
+  mostrarBloqueio: boolean = false;
+  subBloqueio: Subscription;
 
   constructor(
-    private modelService: ModelService,
     private chatService: ChatService,
-    private router: Router
+    private router: Router,
+    private alertMessageService: AlertMessageService,
+    private insufficientBalanceService: InsufficientBalanceService
   ) {}
 
   ngOnInit(): void {
-    this.modelService.getChatModelListForType('text').subscribe((res) => {
-      this.models = res;
-    });
+    this.subBloqueio = this.insufficientBalanceService.bloqueio$
+      .asObservable()
+      .subscribe((bloqueio) => {
+        this.mostrarBloqueio = bloqueio;
+      });
   }
 
   createChat(): void {
-    // this.router.navigate([
-    //   '/conversational/chat-gpt',
-    //   'c1dc051b-ebb3-4c4d-a86f-201de2b69836',
-    // ]);
-    this.chatService.createChatFree(this.selectedModel).subscribe((res) => {
-      console.log(res);
-      //route to /chat-gpt and uuid of returned chat
-      this.router.navigate(['/conversational/chat-gpt', res.uuid]);
-    });
+    if (this.mostrarBloqueio) {
+      this.alertMessageService.insufficientBalanceAlert();
+    } else {
+      this.chatService.create().subscribe((res) => {
+        this.router.navigate(['/conversational/chat-gpt', res.uuid]);
+      });
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subBloqueio.unsubscribe();
   }
 }

@@ -142,7 +142,7 @@
     }
 
     .chat-textarea {
-      width: calc(100% - 110px);
+      width: 100%;
     }
   }
 }
@@ -186,6 +186,10 @@
 .variable-binding {
   display: block;
   float: right;
+}
+
+.action-buttons-wrapper {
+  top: -50px;
 }
 
 ::ng-deep .markdown-clipboard-button {

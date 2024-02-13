@@ -1,0 +1,42 @@
+<div class="d-flex justify-content-between">
+  <div class="fs-5 text-muted my-1">
+    {{ images.length }} {{ images.length === 1 ? 'imagem' : 'imagens' }}
+  </div>
+  <div class="fs-5 text-muted my-1">
+    {{ createdAt | date : 'dd/MM/yyyy HH:mm' }}
+  </div>
+</div>
+
+<div class="carousel-container">
+  <div class="zoom-icon" *ngIf="images.length > 0">
+    <i
+      class="bi bi-zoom-in"
+      (click)="showFullSizeImage(images[currentIndex])"
+    ></i>
+  </div>
+  <div class="arrow left" (click)="previousImage()" *ngIf="images.length > 1">
+    <span>&lt;</span>
+  </div>
+  <img
+    [src]="images[currentIndex] || '/assets/media/misc/sem-imagem.png'"
+    class="carousel-image"
+    (click)="images.length > 0 ? showFullSizeImage(images[currentIndex]) : ''"
+  />
+  <div class="arrow right" (click)="nextImage()" *ngIf="images.length > 1">
+    <span>&gt;</span>
+  </div>
+  <div class="carousel-dots">
+    <span
+      *ngFor="let image of images; let i = index"
+      [class.active]="i === currentIndex"
+      (click)="goToImage(i)"
+    ></span>
+  </div>
+</div>
+<div
+  *ngIf="fullSizeImageUrl"
+  class="full-size-container"
+  (click)="closeFullSizeImage()"
+>
+  <img [src]="fullSizeImageUrl" class="full-size-image" />
+</div>

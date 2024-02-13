@@ -1,13 +1,7 @@
 import { PipesModule } from '../../pipes/pipes.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { InlineSVGModule } from 'ng-inline-svg-2';
 import { RouterModule, Routes } from '@angular/router';
-import {
-  NgbDropdownModule,
-  NgbProgressbarModule,
-  NgbTooltipModule,
-} from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationModule } from '../../modules/i18n';
 import { LayoutComponent } from './layout.component';
@@ -22,6 +16,7 @@ import { TopbarComponent } from './components/topbar/topbar.component';
 import { PageTitleComponent } from './components/header/page-title/page-title.component';
 import { HeaderMenuComponent } from './components/header/header-menu/header-menu.component';
 import { DrawersModule, DropdownMenusModule, ModalsModule } from '../partials';
+import { WidgetsModule } from 'src/app/components/widgets/widgets.module';
 
 const routes: Routes = [
   {
@@ -47,16 +42,13 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     TranslationModule,
-    InlineSVGModule,
-    NgbDropdownModule,
-    NgbProgressbarModule,
     ExtrasModule,
     ModalsModule,
     DrawersModule,
     DropdownMenusModule,
-    NgbTooltipModule,
     TranslateModule,
     PipesModule,
+    WidgetsModule,
   ],
   exports: [RouterModule],
 })

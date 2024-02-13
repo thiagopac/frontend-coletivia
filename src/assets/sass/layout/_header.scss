@@ -5,8 +5,8 @@
 // Desktop mode
 
 .header-fixed[data-kt-sticky-header='on'] .header-username {
-  color: $gray-700;
-  border-color: $gray-700;
+  color: white;
+  background-color: $primary !important;
 }
 
 @include media-breakpoint-up(lg) {
@@ -65,11 +65,19 @@
           display: inline-block;
         }
       }
-    }
 
-    .header-fixed[data-kt-sticky-header='on'] & {
+      img {
+        filter: invert(0) contrast(0.3);
+      }
+
+      .notification-icon {
+        img {
+          filter: invert(1) contrast(1);
+        }
+      }
+
       i {
-        color: #5e6278 !important;
+        color: $gray-900 !important;
       }
     }
 
@@ -156,6 +164,12 @@
 
       .logo-sticky {
         display: none;
+      }
+    }
+
+    .header-fixed[data-kt-sticky-header='on'] & {
+      img {
+        filter: invert(0) contrast(0.1);
       }
     }
 

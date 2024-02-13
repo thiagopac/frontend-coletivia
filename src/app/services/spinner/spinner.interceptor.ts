@@ -4,22 +4,40 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
+  HttpResponse,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { SpinnerHandlerService } from './spinner-handler.service';
 
 @Injectable()
 export class SpinnerInterceptor implements HttpInterceptor {
-  constructor(public spinnerHandler: SpinnerHandlerService) {}
+  constructor(private spinnerHandler: SpinnerHandlerService) {}
 
   intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    this.spinnerHandler.handleRequest('plus');
-    return next.handle(request).pipe(finalize(this.finalize.bind(this)));
-  }
+    const hideSpinner = request.headers.get('hideSpinner');
 
-  finalize = (): void => this.spinnerHandler.handleRequest();
+    if (hideSpinner === 'false') {
+      this.spinnerHandler.handleRequest('plus');
+    }
+
+    return next.handle(request).pipe(
+      tap((event) => {
+        if (event instanceof HttpResponse) {
+          if (hideSpinner === 'false') {
+            this.spinnerHandler.handleRequest();
+          }
+        }
+      }),
+      catchError((error) => {
+        if (hideSpinner === 'false') {
+          this.spinnerHandler.handleRequest();
+        }
+        return throwError(() => error);
+      })
+    );
+  }
 }

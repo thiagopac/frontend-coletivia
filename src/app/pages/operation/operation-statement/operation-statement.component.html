@@ -1,0 +1,69 @@
+<div class="wrapper">
+  <div class="card border-0 py-5">
+    <div class="card-body">
+      <div class="px-0 text-start" *ngIf="items$ | async as _items">
+        <p class="text-center fs-6 mt-5" *ngIf="_items.data.length === 0">
+          Nenhum registro encontrado
+        </p>
+        <table
+          class="table table-row-bordered table table-row-dashed table-row-gray-30"
+          *ngIf="_items.data.length > 0"
+        >
+          <thead>
+            <tr>
+              <th class="text-start px-3 fs-5 fw-boldest">Descrição</th>
+              <th class="text-end fs-5 fw-boldest">Data</th>
+              <th class="text-end fs-5 fw-boldest">Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of _items.data">
+              <td class="align-middle">
+                <div class="fw-bold text-hover-primary fs-5 px-3">
+                  <span *ngIf="false">
+                    {{ item.subject_type }}
+                  </span>
+                  <span>
+                    {{
+                      item.type === 'spending'
+                        ? 'Valor gasto'
+                        : 'Valor recarregado'
+                    }}
+                  </span>
+                </div>
+              </td>
+              <td class="text-end text-muted align-middle">
+                {{ item.created_at | date : 'dd/MM/yyyy' }}
+              </td>
+              <td class="text-end align-middle">
+                <span class="text-danger" *ngIf="item.type === 'spending'"
+                  >-</span
+                >
+                <span class="text-success" *ngIf="item.type === 'recharge'"
+                  >+</span
+                >
+                <span
+                  [ngClass]="{
+                    'text-danger': item.type === 'spending',
+                    'text-success': item.type === 'recharge'
+                  }"
+                >
+                  R$ {{ item.value | decimalToCurrencyPipe }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="text-center">
+      <mat-paginator
+        [length]="totalItems"
+        [pageSize]="itemsPerPage"
+        [pageSizeOptions]="[10, 15, 20, 30]"
+        (page)="goToPage($event)"
+        showFirstLastButtons="true"
+      ></mat-paginator>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,59 @@
+<div class="wrapper">
+  <div class="card border-0 py-5">
+    <div class="card-header border-0">
+      <div class="card-title"></div>
+      <div class="card-toolbar">
+        <button
+          class="btn btn-bg-light btn-active-color-primary"
+          (click)="goTo('/contextual/instagram/generate')"
+        >
+          <i class="la la-instagram fs-1"></i> Gerar post de Instagram
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="px-0 text-start">
+        <p class="text-center fs-6" *ngIf="(items$ | async)?.data.length === 0">
+          Nenhum registro encontrado
+        </p>
+
+        <div class="card-grid">
+          <div
+            class="card cursor-pointer"
+            *ngFor="let item of (items$ | async)?.data"
+          >
+            <div
+              class="card-wrapper"
+              (click)="goTo('contextual/instagram/view', item.uuid)"
+            >
+              <img
+                class="card-img-top"
+                [src]="
+                  item?.midjourneyImageGeneration?.upscales?.upscales[0]?.uri ||
+                  '/assets/media/misc/sem-imagem.png'
+                "
+                alt="Imagem"
+              />
+              <div class="card-body">
+                <p class="card-text">
+                  {{ item?.aiWriting?.text | slice : 0 : 100
+                  }}{{ item?.aiWriting?.text?.length > 100 ? '...' : '' }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center">
+        <mat-paginator
+          [length]="totalItems"
+          [pageSize]="itemsPerPage"
+          [pageSizeOptions]="[6, 12, 24, 48]"
+          (page)="goToPage($event)"
+          showFirstLastButtons="true"
+        ></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

@@ -32,24 +32,15 @@
                 <a
                   class="d-flex align-items-center text-gray-400 text-hover-primary mb-2"
                 >
-                  <span
-                    [inlineSVG]="
-                      './assets/media/icons/duotune/communication/com011.svg'
-                    "
-                    class="svg-icon svg-icon-4 me-1"
-                  ></span>
+                  <img
+                    src="assets/media/icons/duotune/communication/com011.svg"
+                    class="svg-icon svg-icon-4 me-1 opacity-50"
+                  />
                   {{ user.email }}
                 </a>
               </div>
             </div>
           </div>
-
-          <app-account-balance-component
-            *ngIf="balance$ | async as _balance"
-            [fiatAssetValue]="_balance.fiat"
-          >
-            >
-          </app-account-balance-component>
         </div>
       </div>
 

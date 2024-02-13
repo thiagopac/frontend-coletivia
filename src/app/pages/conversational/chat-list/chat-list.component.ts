@@ -1,6 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { AlertMessageService } from 'src/app/services/alert-message.service';
 import { ChatService } from 'src/app/services/chat.service';
 
 @Component({
@@ -9,37 +10,36 @@ import { ChatService } from 'src/app/services/chat.service';
   styleUrls: ['./chat-list.component.scss'],
 })
 export class ChatListComponent implements OnInit {
-  chats$: Observable<any[]>;
+  items$: Observable<any[]>;
 
   constructor(
     private router: Router,
     private chatService: ChatService,
-    private changeDetectorRef: ChangeDetectorRef
+    private alertMessageService: AlertMessageService
   ) {}
 
   ngOnInit(): void {
-    this.getChatList();
+    this.list();
   }
 
-  getChatList(): void {
-    this.chats$ = this.chatService.getChatList();
-    this.changeDetectorRef.detectChanges();
+  list(): void {
+    this.items$ = this.chatService.listForType('free-chat');
   }
 
-  goToChat(chatUuid: string): void {
-    // this.router.navigate(['/conversational/chat-gpt', chatUuid]);
-    window.location.href = `/conversational/chat-gpt/${chatUuid}`;
+  goTo(uuid?: string): void {
+    if (!uuid) this.router.navigate(['/conversational/new-chat']);
+    else this.router.navigate(['/conversational/chat-gpt', uuid]);
   }
 
-  confirmDeleteChat(chatUuid: string): void {
-    if (confirm('Tem certeza?')) {
-      this.deleteChat(chatUuid);
-    }
+  confirmDelete(uuid: string): void {
+    this.alertMessageService.alertWithHandler(`Tem certeza?`, 'question', () =>
+      this.deleteChat(uuid)
+    );
   }
 
-  deleteChat(chatUuid: string): void {
-    this.chatService.deleteChat(chatUuid).subscribe((res) => {
-      this.getChatList();
+  deleteChat(uuid: string): void {
+    this.chatService.delete(uuid).subscribe((res) => {
+      this.list();
     });
   }
 }

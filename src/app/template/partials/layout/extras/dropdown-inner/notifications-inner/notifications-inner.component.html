@@ -1,163 +1,63 @@
-<div
-  class="d-flex flex-column bgi-no-repeat rounded-top"
-  [style.background-image]="'url(./assets/media/misc/pattern-1.jpg)'"
->
-  <h3 class="text-white fw-bold px-9 mt-10 mb-6">
-    Notifications <span class="fs-8 opacity-75 ps-3">24 reports</span>
+<div class="d-flex flex-column rounded-top bg-dark">
+  <h3 class="text-white fw-bold px-9 mt-6 mb-6 d-flex justify-content-between">
+    <div>Notificações</div>
+    <div class="fs-8 opacity-75 ps-3 align-self-center">
+      {{ unreadCount }} {{ unreadCount === 1 ? 'nova' : 'novas' }}
+    </div>
   </h3>
-
-  <ul class="nav nav-line-tabs nav-line-tabs-2x nav-stretch fw-bold px-9">
-    <li class="nav-item">
-      <a
-        class="nav-link text-white opacity-75 opacity-state-100 pb-4 cursor-pointer"
-        data-bs-toggle="tab"
-        [ngClass]="activeTabId === 'kt_topbar_notifications_1' ? 'active' : ''"
-        (click)="setActiveTabId('kt_topbar_notifications_1')"
-      >
-        Alerts
-      </a>
-    </li>
-
-    <li class="nav-item">
-      <a
-        class="nav-link text-white opacity-75 opacity-state-100 pb-4 cursor-pointer"
-        data-bs-toggle="tab"
-        [ngClass]="activeTabId === 'kt_topbar_notifications_2' ? 'active' : ''"
-        (click)="setActiveTabId('kt_topbar_notifications_2')"
-      >
-        Updates
-      </a>
-    </li>
-
-    <li class="nav-item">
-      <a
-        class="nav-link text-white opacity-75 opacity-state-100 pb-4 cursor-pointer"
-        data-bs-toggle="tab"
-        [ngClass]="activeTabId === 'kt_topbar_notifications_3' ? 'active' : ''"
-        (click)="setActiveTabId('kt_topbar_notifications_3')"
-      >
-        Logs
-      </a>
-    </li>
-  </ul>
 </div>
 
-<div class="tab-content">
-  <div
-    class="tab-pane fade"
-    id="kt_topbar_notifications_1"
-    role="tabpanel"
-    [ngClass]="activeTabId === 'kt_topbar_notifications_1' ? 'show active' : ''"
-  >
-    <div class="scroll-y mh-325px my-5 px-8">
-      <div *ngFor="let alert of alerts" class="d-flex flex-stack py-4">
-        <div class="d-flex align-items-center">
-          <div class="symbol symbol-35px me-4">
-            <span class="symbol-label" [ngClass]="'bg-light-' + alert.state">
-              <span
-                [inlineSVG]="'./assets/media/' + alert.icon"
-                class="svg-icon svg-icon-2"
-                [ngClass]="'svg-icon-' + alert.state"
-              ></span>
-            </span>
-          </div>
-
-          <div class="mb-0 me-2">
-            <a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bolder">
-              {{ alert.title }}
-            </a>
-            <div class="text-gray-400 fs-7">{{ alert.description }}</div>
-          </div>
-        </div>
-
-        <span class="badge badge-light fs-8">{{ alert.time }}</span>
-      </div>
-    </div>
-
-    <div class="py-3 text-center border-top">
-      <a
-        routerLink="/crafted/pages/profile"
-        class="btn btn-color-gray-600 btn-active-color-primary"
-      >
-        View All
-        <span
-          [inlineSVG]="'./assets/media/icons/duotune/arrows/arr064.svg'"
-          class="svg-icon svg-icon-5"
-        ></span>
+<div class="scroll-y mh-325px">
+  <div class="d-flex h-auto w-100" *ngIf="items.length > 0">
+    <div class="pe-2 border-bottom border-gray-300 py-2 w-100 text-end">
+      <a (click)="markAllAsRead()" class="link cursor-pointer fs-7">
+        Marcar todas lidas
       </a>
     </div>
   </div>
 
   <div
-    class="tab-pane fade"
-    id="kt_topbar_notifications_2"
-    role="tabpanel"
-    [ngClass]="activeTabId === 'kt_topbar_notifications_2' ? 'show active' : ''"
+    *ngIf="items.length === 0"
+    class="d-flex justify-content-center align-items-center py-5"
   >
-    <div class="d-flex flex-column px-9">
-      <div class="pt-10 pb-0">
-        <h3 class="text-dark text-center fw-bolder">Get Pro Access</h3>
-
-        <div class="text-center text-gray-600 fw-bold pt-1">
-          Outlines keep you honest. They stoping you from amazing poorly about
-          drive
-        </div>
-
-        <div class="text-center mt-5 mb-9">
-          <a
-            class="btn btn-sm btn-primary px-6 cursor-pointer"
-            data-bs-toggle="modal"
-            data-bs-target="#kt_modal_upgrade_plan"
-          >
-            Upgrade
-          </a>
-        </div>
-      </div>
-
-      <div class="text-center px-4">
-        <img
-          class="mw-100 mh-200px"
-          src="./assets/media/illustrations/sketchy-1/1.png"
-        />
-      </div>
-    </div>
+    <span class="text-gray-500">Nenhuma notificação</span>
   </div>
 
-  <div
-    class="tab-pane fade"
-    id="kt_topbar_notifications_3"
-    role="tabpanel"
-    [ngClass]="activeTabId === 'kt_topbar_notifications_3' ? 'show active' : ''"
-  >
-    <div class="scroll-y mh-325px my-5 px-8">
-      <div *ngFor="let log of logs" class="d-flex flex-stack py-4">
-        <div class="d-flex align-items-center me-2">
+  <div *ngFor="let item of items" class="d-flex flex-stack">
+    <div
+      class="d-flex px-8 py-5 border-bottom border-gray-300 cursor-pointer"
+      [ngClass]="{ 'bg-gray-200': item.read_at === null }"
+      (click)="goToItem(item)"
+    >
+      <div class="d-flex align-items-center">
+        <div class="symbol symbol-35px me-4">
           <span
-            class="w-70px badge"
-            [ngClass]="'badge-light-' + log.state + ' me-4'"
+            class="symbol-label"
+            [ngClass]="'notification-icon ' + item.data.context"
           >
-            {{ log.code }}
+            <img
+              [ngClass]="'svg-icon'"
+              [src]="
+                'assets/media/icons/duotune/coletivia/' +
+                item.data.icon +
+                '.svg'
+              "
+              class="svg-icon svg-icon-2x"
+            />
           </span>
+        </div>
 
-          <a class="text-gray-800 text-hover-primary fw-bold cursor-pointer">
-            {{ log.message }}
-          </a>
-
-          <span class="badge badge-light fs-8">{{ log.time }}</span>
+        <div class="mb-0 me-2">
+          <span class="fs-6 text-gray-800 fw-bolder">
+            {{ item.data.title }}
+          </span>
+          <div class="text-gray-500 fs-7">{{ item.data.message }}</div>
         </div>
       </div>
-    </div>
-    <div class="py-3 text-center border-top">
-      <a
-        routerLink="/crafted/pages/profile"
-        class="btn btn-color-gray-600 btn-active-color-primary"
-      >
-        View All
-        <span
-          [inlineSVG]="'./assets/media/icons/duotune/arrows/arr064.svg'"
-          class="svg-icon svg-icon-5"
-        ></span>
-      </a>
+
+      <span class="badge badge-light fs-8 h-50 align-self-center">{{
+        item.timeAgo
+      }}</span>
     </div>
   </div>
 </div>
