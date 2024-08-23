@@ -16,7 +16,7 @@ export class FeatureService {
     });
   }
 
-  listFeatoresForDocument(uuid: string): Observable<any[]> {
+  listFeaturesForDocument(uuid: string): Observable<any[]> {
     return this.http.get<any[]>(
       `${environment.apiUrl}/feature/list-for-document/${uuid}`,
       {
@@ -25,9 +25,12 @@ export class FeatureService {
     );
   }
 
-  listForType(type: string): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.apiUrl}/feature/list/${type}`, {
-      headers: this.authService.headerSigned(),
-    });
+  listForSuitness(suitness: string): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${environment.apiUrl}/feature/list/${suitness}`,
+      {
+        headers: this.authService.headerSigned(),
+      }
+    );
   }
 }

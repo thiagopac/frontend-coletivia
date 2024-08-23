@@ -21,6 +21,8 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
   availableRates: number[] = [0.5, 0.75, 1, 1.25, 1.5];
   selectedRate: number = 1;
 
+  private voicesLoadedInterval: any;
+
   constructor(
     private documentAnalysisService: DocumentAnalysisService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -37,12 +39,21 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
 
     if ('speechSynthesis' in window) {
       this.selectedRate = 1;
-      this.speechSynthesis.onvoiceschanged = () => {
-        this.availableVoices = this.speechSynthesis.getVoices();
+      this.loadVoices();
+    }
+  }
+
+  loadVoices() {
+    this.voicesLoadedInterval = setInterval(() => {
+      const voices = this.speechSynthesis.getVoices();
+      if (voices.length !== 0) {
+        this.availableVoices = voices;
         this.selectedVoice =
           this.availableVoices.find((voice) => voice.lang === 'pt-BR') || null;
-      };
-    }
+        this.changeDetectorRef.detectChanges();
+        clearInterval(this.voicesLoadedInterval);
+      }
+    }, 100);
   }
 
   loadDocumentAnalysis(uuid: string) {
@@ -136,5 +147,13 @@ export class DocumentAnalysisComponent implements OnInit, OnDestroy {
       this.speechSynthesis.cancel();
       this.speaking = false;
     }
+    if (this.voicesLoadedInterval) {
+      clearInterval(this.voicesLoadedInterval);
+    }
+  }
+
+  stringContains(string: string, substring: string): boolean {
+    if (!string) return false;
+    return string.includes(substring);
   }
 }

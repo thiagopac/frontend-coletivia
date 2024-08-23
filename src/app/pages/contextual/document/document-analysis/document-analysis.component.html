@@ -1,170 +1,147 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Análise de Documento</title>
-  </head>
+<div class="wrapper">
+  <div class="card border-0 py-5">
+    <div class="card-body">
+      <div class="px-0 text-center pt-5 pb-15">
+        <div class="row mb-10">
+          <div class="col-lg-1">
+            <img
+              *ngIf="analysis?.document?.extension === 'pdf'"
+              class="w-100px"
+              src="./assets/media/extensions/pdf.png"
+              alt="img"
+            />
+            <img
+              *ngIf="
+                analysis?.document?.extension === 'doc' ||
+                analysis?.document?.extension === 'docx'
+              "
+              class="w-100px"
+              src="./assets/media/extensions/word.png"
+              alt="img"
+            />
+            <img
+              *ngIf="
+                analysis?.document?.extension === 'xls' ||
+                analysis?.document?.extension === 'xlsx'
+              "
+              class="w-100px"
+              src="./assets/media/extensions/excel.png"
+              alt="img"
+            />
+          </div>
+          <div class="col-lg-10">
+            <h2 class="fs-2x fw-bold mb-20">Análise de documento</h2>
+          </div>
+        </div>
 
-  <body>
-    <div class="wrapper">
-      <div class="card border-0 py-5">
-        <div class="card-body">
-          <div class="px-0 text-center pt-5 pb-15">
-            <div class="row mb-10">
-              <div class="col-lg-1">
-                <img
-                  *ngIf="analysis?.document?.extension === 'pdf'"
-                  class="w-100px"
-                  src="./assets/media/extensions/pdf.png"
-                  alt="img"
-                />
-                <img
-                  *ngIf="
-                    analysis?.document?.extension === 'doc' ||
-                    analysis?.document?.extension === 'docx'
-                  "
-                  class="w-100px"
-                  src="./assets/media/extensions/word.png"
-                  alt="img"
-                />
-                <img
-                  *ngIf="
-                    analysis?.document?.extension === 'xls' ||
-                    analysis?.document?.extension === 'xlsx'
-                  "
-                  class="w-100px"
-                  src="./assets/media/extensions/excel.png"
-                  alt="img"
-                />
-              </div>
-              <div class="col-lg-10">
-                <h2 class="fs-2x fw-bold mb-20">Análise de documento</h2>
-              </div>
+        <div class="row mb-15">
+          <div class="col text-start flex-column mb-5">
+            <div class="fw-bold text-muted text-uppercase">Arquivo</div>
+            <div class="fw-bold fs-5">{{ analysis?.document.title }}</div>
+          </div>
+
+          <div class="col text-start flex-column mb-5">
+            <div class="fw-bold text-muted text-uppercase">Data do envio</div>
+            <div class="fw-bold fs-5">
+              {{ analysis?.document?.created_at | date : 'dd/MM/yyyy HH:mm' }}
             </div>
+          </div>
 
-            <div class="row mb-15">
-              <div class="col text-start flex-column mb-5">
-                <div class="fw-bold text-muted text-uppercase">Arquivo</div>
-                <div class="fw-bold fs-5">{{ analysis?.document.title }}</div>
-              </div>
-
-              <div class="col text-start flex-column mb-5">
-                <div class="fw-bold text-muted text-uppercase">
-                  Data do envio
-                </div>
-                <div class="fw-bold fs-5">
-                  {{
-                    analysis?.document?.created_at | date : 'dd/MM/yyyy HH:mm'
-                  }}
-                </div>
-              </div>
-
-              <div class="col text-start flex-column mb-5">
-                <div class="fw-bold text-muted text-uppercase">
-                  Data da análise
-                </div>
-                <div class="fw-bold fs-5">
-                  {{ analysis?.created_at | date : 'dd/MM/yyyy HH:mm' }}
-                </div>
-              </div>
-
-              <div class="col text-start flex-column mb-5">
-                <div class="fw-bold text-muted text-uppercase">
-                  Perfil de contexto
-                </div>
-                <div class="fw-bold fs-5">
-                  {{ analysis?.feature.name }}
-                </div>
-              </div>
+          <div class="col text-start flex-column mb-5">
+            <div class="fw-bold text-muted text-uppercase">Data da análise</div>
+            <div class="fw-bold fs-5">
+              {{ analysis?.created_at | date : 'dd/MM/yyyy HH:mm' }}
             </div>
+          </div>
 
-            <div class="d-flex justify-content-end">
-              <div class="align-self-end me-3 mb-3 fw-bold fs-4">
-                Controles de leitura:
-              </div>
-
-              <div
-                *ngIf="analysis?.feature.name === 'Resumo de documento'"
-                class="me-3 text-start"
-              >
-                <label class="mb-1">Selecione a voz:</label>
-                <select
-                  class="form-select"
-                  [(ngModel)]="selectedVoice"
-                  (change)="updateVoice()"
-                >
-                  <option
-                    *ngFor="let voice of availableVoices"
-                    [ngValue]="voice"
-                  >
-                    {{ voice.name }}
-                  </option>
-                </select>
-              </div>
-              <div
-                *ngIf="analysis?.feature.name === 'Resumo de documento'"
-                class="text-start"
-              >
-                <label class="mb-1">Velocidade de leitura:</label>
-                <select
-                  class="form-select"
-                  [(ngModel)]="selectedRate"
-                  (change)="updateRate()"
-                >
-                  <option *ngFor="let rate of availableRates" [ngValue]="rate">
-                    {{ rate }}
-                  </option>
-                </select>
-              </div>
+          <div class="col text-start flex-column mb-5">
+            <div class="fw-bold text-muted text-uppercase">
+              Perfil de contexto
             </div>
-
-            <div
-              class="fs-4 text-start"
-              *ngFor="let fragment of analysisContent; let last = last"
-            >
-              <div>
-                <div class="d-flex justify-content-between">
-                  <div class="text-gray-900 fw-boldest mt-10 mb-5">
-                    {{ replace(fragment.stamp) }}
-                  </div>
-                  <div
-                    class="mt-10 mb-5"
-                    *ngIf="analysis?.feature.name === 'Resumo de documento'"
-                  >
-                    <button
-                      class="btn btn-icon btn-sm btn-light-dark me-2"
-                      (click)="toggleSpeech(fragment.analysis)"
-                    >
-                      <i
-                        class="bi fs-1"
-                        [ngClass]="
-                          speaking
-                            ? 'bi-pause-circle-fill'
-                            : 'bi-play-circle-fill'
-                        "
-                      ></i>
-                    </button>
-                    <button
-                      *ngIf="speaking"
-                      class="btn btn-icon btn-sm btn-light-dark me-2"
-                      (click)="stopSpeech()"
-                    >
-                      <i class="bi bi-stop-circle-fill fs-1"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <span
-                [innerHTML]="replaceNewLinesWithBreaks(fragment.analysis)"
-              ></span>
-
-              <hr class="my-10" *ngIf="!last" />
+            <div class="fw-bold fs-5">
+              {{ analysis?.feature.name }}
             </div>
           </div>
         </div>
+
+        <div
+          class="d-flex justify-content-end"
+          *ngIf="stringContains(analysis?.feature.name, 'Resumo de documento')"
+        >
+          <div class="align-self-end me-3 mb-3 fw-bold fs-4">
+            Controles de leitura:
+          </div>
+
+          <div class="me-3 text-start">
+            <label class="mb-1">Selecione a voz:</label>
+            <select
+              class="form-select"
+              [(ngModel)]="selectedVoice"
+              (change)="updateVoice()"
+            >
+              <option *ngFor="let voice of availableVoices" [ngValue]="voice">
+                {{ voice.name }}
+              </option>
+            </select>
+          </div>
+          <div class="text-start">
+            <label class="mb-1">Velocidade de leitura:</label>
+            <select
+              class="form-select"
+              [(ngModel)]="selectedRate"
+              (change)="updateRate()"
+            >
+              <option *ngFor="let rate of availableRates" [ngValue]="rate">
+                {{ rate }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div
+          class="fs-4 text-start"
+          *ngFor="let fragment of analysisContent; let last = last"
+        >
+          <div>
+            <div class="d-flex justify-content-between">
+              <div class="text-gray-900 fw-boldest mt-10 mb-5">
+                {{ replace(fragment.stamp) }}
+              </div>
+              <div
+                class="mt-10 mb-5"
+                *ngIf="
+                  stringContains(analysis?.feature.name, 'Resumo de documento')
+                "
+              >
+                <button
+                  class="btn btn-icon btn-sm btn-light-dark me-2"
+                  (click)="toggleSpeech(fragment.analysis)"
+                >
+                  <i
+                    class="bi fs-1"
+                    [ngClass]="
+                      speaking ? 'bi-pause-circle-fill' : 'bi-play-circle-fill'
+                    "
+                  ></i>
+                </button>
+                <button
+                  *ngIf="speaking"
+                  class="btn btn-icon btn-sm btn-light-dark me-2"
+                  (click)="stopSpeech()"
+                >
+                  <i class="bi bi-stop-circle-fill fs-1"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <span
+            [innerHTML]="replaceNewLinesWithBreaks(fragment.analysis)"
+          ></span>
+
+          <hr class="my-10" *ngIf="!last" />
+        </div>
       </div>
     </div>
-  </body>
-</html>
+  </div>
+</div>

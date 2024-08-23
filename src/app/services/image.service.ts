@@ -94,4 +94,82 @@ export class ImageService {
       }
     );
   }
+
+  ////////////////
+
+  list(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/image/list`, {
+      headers: this.authService.headerSigned(),
+    });
+  }
+
+  retrieve(uuid: string): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/image/${uuid}`, {
+      headers: this.authService.headerSigned(),
+    });
+  }
+
+  create(uuid: string, extension: string): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}/image/create-image`,
+      { model: uuid, extension: extension },
+      {
+        headers: this.authService.headerSigned(),
+      }
+    );
+  }
+
+  createAndSend(modelUuid: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('model', modelUuid);
+
+    return this.http.post<any>(
+      `${environment.apiUrl}/image/create-image`,
+      formData,
+      {
+        headers: this.authService.headerSigned(),
+      }
+    );
+  }
+
+  sendFile(uuid: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('document', uuid);
+    formData.append('file', file);
+
+    return this.http.post<any>(
+      `${environment.apiUrl}/image/send-image-file`,
+      formData,
+      {
+        headers: this.authService.headerSigned(),
+      }
+    );
+  }
+
+  analyze(uuid: string): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}/image/analyze-image`,
+      { document: uuid },
+      {
+        headers: this.authService.headerSigned(),
+      }
+    );
+  }
+
+  rename(uuid: string, title: string): Observable<any> {
+    return this.http.patch<any>(
+      `${environment.apiUrl}/image/${uuid}/rename`,
+      { title },
+      {
+        headers: this.authService.headerSigned(),
+      }
+    );
+  }
+
+  delete(uuid: string): Observable<any> {
+    return this.http.delete<any>(`${environment.apiUrl}/image/${uuid}/delete`, {
+      headers: this.authService.headerSigned(),
+    });
+  }
 }

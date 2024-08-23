@@ -203,12 +203,38 @@
       <a
         class="menu-link py-3"
         routerLinkActive="active"
+        routerLink="/contextual/image/upload"
+      >
+        <span class="menu-icon">
+          <i class="las la-file-image fs-1"></i>
+        </span>
+        <span class="menu-title"> Enviar imagem </span>
+      </a>
+    </div>
+
+    <div class="menu-item me-lg-1">
+      <a
+        class="menu-link py-3"
+        routerLinkActive="active"
+        routerLink="/contextual/image/list"
+      >
+        <span class="menu-icon">
+          <i class="las la-folder-open fs-1"></i>
+        </span>
+        <span class="menu-title"> Minhas imagens </span>
+      </a>
+    </div>
+
+    <div class="menu-item me-lg-1">
+      <a
+        class="menu-link py-3"
+        routerLinkActive="active"
         routerLink="/contextual/document/upload"
       >
         <span class="menu-icon">
           <i class="las la-file-upload fs-1"></i>
         </span>
-        <span class="menu-title"> Enviar arquivo </span>
+        <span class="menu-title"> Enviar documento </span>
       </a>
     </div>
 
@@ -225,7 +251,7 @@
       </a>
     </div>
 
-    <div class="menu-item">
+    <div class="menu-item" *ngIf="false">
       <div class="menu-content pb-2">
         <span class="menu-section text-muted text-uppercase fs-7 fw-bold"
           >Instagram</span
@@ -233,7 +259,7 @@
       </div>
     </div>
 
-    <div class="menu-item me-lg-1">
+    <div class="menu-item me-lg-1" *ngIf="false">
       <a
         class="menu-link py-3"
         routerLinkActive="active"
@@ -246,7 +272,7 @@
       </a>
     </div>
 
-    <div class="menu-item me-lg-1">
+    <div class="menu-item me-lg-1" *ngIf="false">
       <a
         class="menu-link py-3"
         routerLinkActive="active"

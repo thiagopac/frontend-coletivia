@@ -1,9 +1,10 @@
 import { ChatService } from 'src/app/services/chat.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AlertMessageService } from 'src/app/services/alert-message.service';
 import { InsufficientBalanceService } from 'src/app/services/insufficient-balance.service';
+import { ModelService } from 'src/app/services/model.service';
 
 @Component({
   selector: 'app-new-chat',
@@ -14,12 +15,14 @@ export class NewChatComponent implements OnInit, OnDestroy {
   selectedModel: any = undefined;
   mostrarBloqueio: boolean = false;
   subBloqueio: Subscription;
+  models$: Observable<any>;
 
   constructor(
     private chatService: ChatService,
     private router: Router,
     private alertMessageService: AlertMessageService,
-    private insufficientBalanceService: InsufficientBalanceService
+    private insufficientBalanceService: InsufficientBalanceService,
+    private modelService: ModelService
   ) {}
 
   ngOnInit(): void {
@@ -28,6 +31,8 @@ export class NewChatComponent implements OnInit, OnDestroy {
       .subscribe((bloqueio) => {
         this.mostrarBloqueio = bloqueio;
       });
+
+    this.models$ = this.modelService.listForType('text');
   }
 
   createChat(): void {

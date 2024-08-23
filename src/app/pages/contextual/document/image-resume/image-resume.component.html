@@ -5,56 +5,21 @@
         <div class="row">
           <div class="col-lg-3">
             <img
-              *ngIf="document?.extension === 'pdf'"
-              class="w-200px"
-              src="./assets/media/extensions/pdf.png"
-              alt="img"
-            />
-            <img
-              *ngIf="
-                document?.extension === 'doc' || document?.extension === 'docx'
-              "
-              class="w-200px"
-              src="./assets/media/extensions/word.png"
-              alt="img"
-            />
-            <img
-              *ngIf="
-                document?.extension === 'xls' || document?.extension === 'xlsx'
-              "
-              class="w-200px"
-              src="./assets/media/extensions/excel.png"
-              alt="img"
+              [src]="image?.url"
+              class="img-thumbnail w-200px"
+              alt="Thumbnail da Imagem"
             />
           </div>
           <div class="col-lg-5">
             <div class="d-flex text-start flex-column mb-5">
-              <div class="fw-bold text-muted text-uppercase">Arquivo</div>
-              <div class="fw-bold fs-5">{{ document?.title }}</div>
+              <div class="fw-bold text-muted text-uppercase">Imagem</div>
+              <div class="fw-bold fs-5">{{ image?.title }}</div>
             </div>
 
             <div class="d-flex text-start flex-column mb-5">
               <div class="fw-bold text-muted text-uppercase">Data do envio</div>
               <div class="fw-bold fs-5">
-                {{ document?.created_at | date : 'dd/MM/yyyy HH:mm' }}
-              </div>
-            </div>
-
-            <div class="d-flex text-start flex-column mb-5">
-              <div class="fw-bold text-muted text-uppercase">
-                Palavras no documento
-              </div>
-              <div class="fw-bold fs-5">
-                {{ document?.content['wordCount'] | number }}
-              </div>
-            </div>
-
-            <div class="d-flex text-start flex-column mb-5">
-              <div class="fw-bold text-muted text-uppercase">
-                Caracteres no documento
-              </div>
-              <div class="fw-bold fs-5">
-                {{ document?.content['charCount'] | number }}
+                {{ image?.created_at | date : 'dd/MM/yyyy HH:mm' }}
               </div>
             </div>
           </div>
@@ -84,7 +49,7 @@
               </div>
             </button>
             <p class="text-muted" *ngIf="analyses?.length === 0">
-              Este documento ainda não possui análises
+              Esta imagem ainda não possui análises
             </p>
           </div>
         </div>

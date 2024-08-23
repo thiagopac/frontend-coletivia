@@ -1,0 +1,59 @@
+<div class="wrapper">
+  <div class="card border-0 py-5">
+    <div class="card-header border-0">
+      <div class="card-title"></div>
+      <div class="card-toolbar">
+        <button
+          class="btn btn-bg-light btn-active-color-primary"
+          (click)="goTo('/contextual/image/upload')"
+        >
+          <i class="las la-file-upload fs-1"></i>
+          Enviar Imagem
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="px-0 text-start" *ngIf="items$ | async as _items">
+        <p class="text-center fs-6" *ngIf="_items.length === 0">
+          Nenhuma imagem encontrada
+        </p>
+        <table
+          class="table table-row-bordered table table-row-dashed table-row-gray-30"
+        >
+          <tbody>
+            <tr *ngFor="let item of _items">
+              <td class="align-middle">
+                <div class="fw-bold fs-5 px-3">
+                  <span
+                    class="cursor-pointer"
+                    (click)="goTo('/contextual/image/resume', item.uuid)"
+                  >
+                    <img
+                      [src]="item.url"
+                      [alt]="item.title"
+                      class="img-thumbnail me-2"
+                      style="width: 50px; height: 50px"
+                    />
+                    {{ item.title }}
+                  </span>
+                </div>
+              </td>
+
+              <td class="text-end text-muted align-middle">
+                {{ item.created_at | date : 'dd/MM/yyyy hh:mm' }}
+              </td>
+              <td class="text-end align-middle">
+                <button
+                  class="btn btn-icon btn-danger mx-2 btn-sm"
+                  (click)="confirmDelete(item.uuid)"
+                >
+                  <i class="las la-trash fs-2"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -21,7 +21,7 @@ export class ConversationalService {
     this.stop$.next();
   }
 
-  continue(chatUuid: string) {
+  continue(chatUuid: string): Observable<any> {
     return new Observable<any>((observer) => {
       const body: any = {
         chat: chatUuid,
@@ -29,7 +29,6 @@ export class ConversationalService {
       const auth = this.authService.getAuthFromLocalStorage();
 
       this.controller = new AbortController();
-      // fetch(`${environment.apiUrl}/generative-text/fake-stream`, {
       fetch(`${environment.apiUrl}/chat/continue`, {
         method: 'POST',
         body: JSON.stringify(body),
@@ -42,46 +41,59 @@ export class ConversationalService {
         .then((response) => {
           const reader = response.body?.getReader();
           const decoder = new TextDecoder();
+          let buffer = '';
+
           if (!response.ok) {
             reader?.read().then(({ done, value }) => {
               try {
                 const err = JSON.parse(decoder.decode(value));
-                // console.log('decoder.decode(value): ', decoder.decode(value));
                 observer.error(err.error.message);
-                console.log('err: ', err);
               } catch (error) {
                 observer.error(error);
-                console.log('error: ', error);
               }
             });
-          }
+          } else {
+            function push() {
+              reader
+                ?.read()
+                .then(({ done, value }) => {
+                  if (done) {
+                    observer.complete();
+                    return;
+                  }
+                  buffer += decoder.decode(value, { stream: true });
 
-          function push() {
-            return reader?.read().then(({ done, value }) => {
-              if (done) {
-                observer.complete();
-                return;
-              }
-              const string = decoder.decode(value);
-              const eventStr = string.split('\n\n');
-              let content = '';
-              let finishReason: string | null | undefined;
-              for (let i = 0; i < eventStr.length; i++) {
-                const str = eventStr[i];
-                if (str === 'data: [DONE]') break;
-                if (str && str.slice(0, 6) === 'data: ') {
-                  const jsonStr = str.slice(6);
-                  const data: ChatStreamData = JSON.parse(jsonStr);
-                  const thisContent = data.choices[0].delta?.content || '';
-                  finishReason = data.choices[0].finish_reason;
-                  content += thisContent;
-                }
-              }
-              observer.next({ content, finishReason });
-              push();
-            });
+                  const eventStr = buffer.split('\n\n');
+                  buffer = eventStr.pop() || '';
+
+                  let content = '';
+                  let finishReason: string | null | undefined;
+                  for (let i = 0; i < eventStr.length; i++) {
+                    const str = eventStr[i];
+                    if (str === 'data: [DONE]') break;
+                    if (str && str.slice(0, 6) === 'data: ') {
+                      try {
+                        const jsonStr = str.slice(6);
+                        const data: ChatStreamData = JSON.parse(jsonStr);
+                        const thisContent =
+                          data.choices[0].delta?.content || '';
+                        finishReason = data.choices[0].finish_reason;
+                        content += thisContent;
+                      } catch (error: any) {
+                        observer.error(`JSON parse error: ${error.message}`);
+                        return;
+                      }
+                    }
+                  }
+                  observer.next({ content, finishReason });
+                  push();
+                })
+                .catch((err: Error) => {
+                  observer.error(err?.message ?? `${err}`);
+                });
+            }
+            push();
           }
-          push();
         })
         .catch((err: Error) => {
           observer.error(err?.message ?? `${err}`);
@@ -105,16 +117,12 @@ export class ConversationalService {
       );
   }
 
-  chatStream(chatUuid: string, prompt: string) {
+  chatStream(chatUuid: string, prompt: string): Observable<any> {
     return new Observable<any>((observer) => {
-      const body: any = {
-        chat: chatUuid,
-        prompt: prompt,
-      };
+      const body: any = { chat: chatUuid, prompt: prompt };
       const auth = this.authService.getAuthFromLocalStorage();
 
       this.controller = new AbortController();
-      // fetch(`${environment.apiUrl}/generative-text/fake-stream`, {
       fetch(`${environment.apiUrl}/chat/send-messages`, {
         method: 'POST',
         body: JSON.stringify(body),
@@ -127,46 +135,59 @@ export class ConversationalService {
         .then((response) => {
           const reader = response.body?.getReader();
           const decoder = new TextDecoder();
+          let buffer = '';
+
           if (!response.ok) {
             reader?.read().then(({ done, value }) => {
               try {
                 const err = JSON.parse(decoder.decode(value));
-                // console.log('decoder.decode(value): ', decoder.decode(value));
                 observer.error(err.error.message);
-                console.log('err: ', err);
               } catch (error) {
                 observer.error(error);
-                console.log('error: ', error);
               }
             });
-          }
+          } else {
+            function push() {
+              reader
+                ?.read()
+                .then(({ done, value }) => {
+                  if (done) {
+                    observer.complete();
+                    return;
+                  }
+                  buffer += decoder.decode(value, { stream: true });
 
-          function push() {
-            return reader?.read().then(({ done, value }) => {
-              if (done) {
-                observer.complete();
-                return;
-              }
-              const string = decoder.decode(value);
-              const eventStr = string.split('\n\n');
-              let content = '';
-              let finishReason: string | null | undefined;
-              for (let i = 0; i < eventStr.length; i++) {
-                const str = eventStr[i];
-                if (str === 'data: [DONE]') break;
-                if (str && str.slice(0, 6) === 'data: ') {
-                  const jsonStr = str.slice(6);
-                  const data: ChatStreamData = JSON.parse(jsonStr);
-                  const thisContent = data.choices[0].delta?.content || '';
-                  finishReason = data.choices[0].finish_reason;
-                  content += thisContent;
-                }
-              }
-              observer.next({ content, finishReason });
-              push();
-            });
+                  const eventStr = buffer.split('\n\n');
+                  buffer = eventStr.pop() || ''; // Save incomplete JSON chunk for the next read
+
+                  let content = '';
+                  let finishReason: string | null | undefined;
+                  for (let i = 0; i < eventStr.length; i++) {
+                    const str = eventStr[i];
+                    if (str === 'data: [DONE]') break;
+                    if (str && str.slice(0, 6) === 'data: ') {
+                      try {
+                        const jsonStr = str.slice(6);
+                        const data: ChatStreamData = JSON.parse(jsonStr);
+                        const thisContent =
+                          data.choices[0].delta?.content || '';
+                        finishReason = data.choices[0].finish_reason;
+                        content += thisContent;
+                      } catch (error: any) {
+                        observer.error(`JSON parse error: ${error.message}`);
+                        return;
+                      }
+                    }
+                  }
+                  observer.next({ content, finishReason });
+                  push();
+                })
+                .catch((err: Error) => {
+                  observer.error(err?.message ?? `${err}`);
+                });
+            }
+            push();
           }
-          push();
         })
         .catch((err: Error) => {
           observer.error(err?.message ?? `${err}`);
@@ -174,7 +195,7 @@ export class ConversationalService {
     }).pipe(takeUntil(this.stop$));
   }
 
-  handleErr(err: {
+  private handleErr(err: {
     error: { error: { message: string } };
     message: any;
   }): string {

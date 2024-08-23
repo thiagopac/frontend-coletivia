@@ -3,13 +3,14 @@
     <div class="card-body">
       <div class="px-0 text-center pt-15 pb-15">
         <h2 class="fs-2x fw-bold mb-0">
-          Envie documentos para análise contextual
+          Envie imagens para análise contextual
         </h2>
         <p class="text-gray-400 fs-4 fw-semibold py-7">
-          Anexe um arquivo do tipo <strong class="text-gray-700">.pdf</strong>,
-          <strong class="text-gray-700">.doc</strong> ou
-          <strong class="text-gray-700">.docx</strong>, escolha o modelo de
-          Inteligência Artificial e faça o envio do arquivo para análise
+          Anexe uma imagem do tipo <strong class="text-gray-700">.png</strong>,
+          <strong class="text-gray-700">.jpg</strong>,
+          <strong class="text-gray-700">.webp</strong> ou
+          <strong class="text-gray-700">.gif (não animado)</strong> e faça a
+          análuse utilizando alguma das funcionalidades disponíveis a seguir.
         </p>
 
         <div class="input-group justify-content-center">
@@ -18,14 +19,14 @@
             class="custom-file-upload"
             type="file"
             id="file"
-            accept=".pdf, .doc, .docx"
+            accept=".png, .jpg, .jpeg, .webp, .gif"
           />
           <div class="input-group-append">
             <button
               class="btn btn-success er fs-6 px-8 py-4 btn-upload h-60px"
-              (click)="createDocumentAndSend(fileInput.files![0])"
+              (click)="createImageAndSend(fileInput.files![0])"
             >
-              Enviar documento
+              Enviar imagem
             </button>
           </div>
         </div>

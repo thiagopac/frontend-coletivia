@@ -1,28 +1,28 @@
-import { FeatureService } from './../../../../services/feature.service';
+import { FeatureService } from '../../../../services/feature.service';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AlertMessageService } from 'src/app/services/alert-message.service';
-import { DocumentAnalysisService } from 'src/app/services/document-analysis.service';
-import { DocumentService } from 'src/app/services/document.service';
+import { ImageAnalysisService } from 'src/app/services/image-analysis.service';
+import { ImageService } from 'src/app/services/image.service';
 import { InsufficientBalanceService } from 'src/app/services/insufficient-balance.service';
 
 @Component({
-  selector: 'app-document-resume',
-  templateUrl: './document-resume.component.html',
-  styleUrls: ['./document-resume.component.scss'],
+  selector: 'app-image-resume',
+  templateUrl: './image-resume.component.html',
+  styleUrls: ['./image-resume.component.scss'],
 })
-export class DocumentResumeComponent implements OnInit {
-  documentUuid: string;
-  document?: any;
+export class ImageResumeComponent implements OnInit {
+  imageUuid: string;
+  image?: any;
   features?: any[];
   analyses?: any[];
   mostrarBloqueio: boolean = false;
   subBloqueio: Subscription;
 
   constructor(
-    private documentService: DocumentService,
-    private documentAnalysisService: DocumentAnalysisService,
+    private imageService: ImageService,
+    private imageAnalysisService: ImageAnalysisService,
     private featureService: FeatureService,
     private changeDetectorRef: ChangeDetectorRef,
     private activatedRoute: ActivatedRoute,
@@ -33,8 +33,8 @@ export class DocumentResumeComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.paramMap.subscribe((params) => {
-      this.documentUuid = params.get('uuid')!;
-      this.loadDocumentResources(this.documentUuid);
+      this.imageUuid = params.get('uuid')!;
+      this.loadImageResources(this.imageUuid);
     });
 
     this.subBloqueio = this.insufficientBalanceService.bloqueio$
@@ -44,39 +44,32 @@ export class DocumentResumeComponent implements OnInit {
       });
   }
 
-  loadDocumentResources(uuid: string) {
-    this.documentService.retrieve(uuid).subscribe((res) => {
-      this.document = res;
+  loadImageResources(uuid: string) {
+    this.imageService.retrieve(uuid).subscribe((res) => {
+      this.image = res;
       this.loadAvailableFeatures();
-      this.loadDocumentAnalyses();
+      this.loadImageAnalyses();
     });
   }
 
   loadAvailableFeatures() {
-    // this.featureService
-    //   .listFeaturesForDocument(this.documentUuid)
-    //   .subscribe((res) => {
-    //     this.features = res;
-    //     this.changeDetectorRef.detectChanges();
-    //   });
-
-    this.featureService.list().subscribe((res) => {
-      this.features = res;
-      this.changeDetectorRef.detectChanges();
-    });
-  }
-
-  loadDocumentAnalyses() {
-    this.documentAnalysisService
-      .listForDocument(this.documentUuid)
+    this.featureService
+      .listForSuitness('image-recognition')
       .subscribe((res) => {
-        this.analyses = res;
-        console.log('res: ', res);
+        this.features = res;
         this.changeDetectorRef.detectChanges();
       });
   }
 
-  AnalysisUsesFeature(uuid: string): any | undefined {
+  loadImageAnalyses() {
+    this.imageAnalysisService.listForImage(this.imageUuid).subscribe((res) => {
+      this.analyses = res;
+      console.log('res: ', res);
+      this.changeDetectorRef.detectChanges();
+    });
+  }
+
+  analysisUsesFeature(uuid: string): any | undefined {
     return this.features!.find((obj) => obj.feature.uuid === uuid);
   }
 
@@ -85,12 +78,12 @@ export class DocumentResumeComponent implements OnInit {
   }
 
   gotoAnalysis(analysis: any) {
-    this.router.navigate(['/contextual/document/analysis/', analysis.uuid]);
+    this.router.navigate(['/contextual/image/analysis/', analysis.uuid]);
   }
 
   confirmAnalyze(feature: any): void {
     this.alertMessageService.alertWithHandler(
-      `Analisar o documento utilizando <strong>${feature.name}</strong>?`,
+      `Analisar a imagem utilizando <strong>${feature.name}</strong>?`,
       'question',
       () => this.analyze(feature),
       true
@@ -101,10 +94,10 @@ export class DocumentResumeComponent implements OnInit {
     if (this.mostrarBloqueio) {
       this.alertMessageService.insufficientBalanceAlert();
     } else {
-      this.documentAnalysisService
-        .analyze(this.documentUuid, feature.uuid)
+      this.imageAnalysisService
+        .analyze(this.imageUuid, feature.uuid)
         .subscribe((res) => {
-          this.router.navigate(['/contextual/document/analysis/', res.uuid]);
+          this.router.navigate(['/contextual/image/analysis/', res.uuid]);
         });
     }
   }

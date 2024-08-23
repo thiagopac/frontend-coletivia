@@ -20,6 +20,10 @@ import {
   MatPaginatorIntl,
 } from '@angular/material/paginator';
 import { CustomPaginatorIntlService } from 'src/app/services/custom-paginator-intl.service';
+import { ImageUploadComponent } from 'src/app/pages/contextual/document/image-upload/image-upload.component';
+import { ImageListComponent } from 'src/app/pages/contextual/document/image-list/image-list.component';
+import { ImageResumeComponent } from 'src/app/pages/contextual/document/image-resume/image-resume.component';
+import { ImageAnalysisComponent } from 'src/app/pages/contextual/document/image-analysis/image-analysis.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +36,10 @@ import { CustomPaginatorIntlService } from 'src/app/services/custom-paginator-in
     InstagramGenerateComponent,
     InstagramListComponent,
     InstagramViewComponent,
+    ImageListComponent,
+    ImageResumeComponent,
+    ImageUploadComponent,
+    ImageAnalysisComponent,
   ],
   imports: [
     CommonModule,
@@ -71,6 +79,22 @@ import { CustomPaginatorIntlService } from 'src/app/services/custom-paginator-in
       {
         path: 'instagram/view/:uuid',
         component: InstagramViewComponent,
+      },
+      {
+        path: 'image/upload',
+        component: ImageUploadComponent,
+      },
+      {
+        path: 'image/list',
+        component: ImageListComponent,
+      },
+      {
+        path: 'image/resume/:uuid',
+        component: ImageResumeComponent,
+      },
+      {
+        path: 'image/analysis/:uuid',
+        component: ImageAnalysisComponent,
       },
     ]),
     FormsModule,
