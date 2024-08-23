@@ -54,7 +54,7 @@ export class DocumentResumeComponent implements OnInit {
 
   loadAvailableFeatures() {
     // this.featureService
-    //   .listFeaturesForDocument(this.documentUuid)
+    //   .listFeatoresForDocument(this.documentUuid)
     //   .subscribe((res) => {
     //     this.features = res;
     //     this.changeDetectorRef.detectChanges();
